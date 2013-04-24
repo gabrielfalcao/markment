@@ -1,14 +1,7 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from sure import expect
 from markment import Markment
-
-
-def MARKDOWN(m):
-    """The tests below have 4 spaces of indentation in the beginning,
-    so this function dedents it and strips the final result"""
-
-    return "\n".join(s[4:] for s in m.splitlines()).strip()
+from .base import MARKDOWN
 
 
 def test_markment_contains_the_raw_markdown():
@@ -23,7 +16,7 @@ def test_markment_contains_the_raw_markdown():
 
     mm = Markment(MD)
 
-    expect(mm.raw).to.equal(MD)
+    mm.raw.should.equal(MD)
 
 
 def test_markment_finds_1st_level_headers():
@@ -40,7 +33,7 @@ def test_markment_finds_1st_level_headers():
 
     mm = Markment(MD)
 
-    expect(mm.index()).to.equal([
+    mm.index().should.equal([
         {"text": "Installation", "level": 1},
         {"text": "Tutorial", "level": 1},
         {"text": "API Reference", "level": 1},
@@ -91,7 +84,7 @@ def test_markment_finds_3rd_level_headers():
 
     mm = Markment(MD)
 
-    expect(mm.index()).to.equal([
+    mm.index().should.equal([
         {"text": "Installation", "level": 1, "child": [
             {"text": "Through PIP", "level": 2},
             {"text": "Compiling manually", "level": 2, "child": [

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import re
@@ -16,6 +15,10 @@ from misaka import (
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name, guess_lexer
 from pygments.formatters import HtmlFormatter
+
+
+def slugify(text):
+    return re.sub(r'\W', '-', text.strip().lower())
 
 
 class MarkmentRenderer(HtmlRenderer, SmartyPants):
@@ -45,6 +48,14 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
             indexes = self.last_index_plus_child(level - 1)
 
         indexes.append(item)
+        return '<h{level} name="{slug}"><a href="#{slug}">{text}</a></h{level}>'.format(
+            level=level,
+            text=text,
+            slug=slugify(text)
+        )
+
+    def add_attributes_to_code(self, code):
+        return code
 
     def block_code(self, text, lang):
         if lang:
@@ -53,12 +64,10 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
             lexer = guess_lexer(text, stripall=True)
 
         formatter = HtmlFormatter()
-        return highlight(text, lexer, formatter)
+        return self.add_attributes_to_code(highlight(text, lexer, formatter))
 
 
 class Markment(object):
-    compiled = None
-
     extensions = (EXT_FENCED_CODE |
                   EXT_NO_INTRA_EMPHASIS |
                   HTML_SMARTYPANTS |
@@ -73,13 +82,10 @@ class Markment(object):
             self.renderer,
             extensions=self.extensions,
         )
-        self.compile()
+        self.rendered = self.compile()
 
     def compile(self):
-        if self.compiled:
-            return
-
-        self.compiled = self.markdown.render(self.raw)
+        return self.markdown.render(self.raw)
 
     def index(self):
         return deepcopy(self.renderer.markment_indexes)
