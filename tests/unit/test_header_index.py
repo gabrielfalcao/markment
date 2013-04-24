@@ -71,3 +71,31 @@ def test_markment_finds_2nd_level_headers():
             {"text": "Compiling manually", "level": 2},
         ]},
     ])
+
+
+def test_markment_finds_3rd_level_headers():
+    "Markment should find and index 3rd level headers"
+
+    MD = MARKDOWN("""
+    # Installation
+
+    chuck norris
+
+    ## Through PIP
+
+    ## Compiling manually
+
+    ### Caveats
+
+    """)
+
+    mm = Markment(MD)
+
+    expect(mm.index()).to.equal([
+        {"text": "Installation", "level": 1, "child": [
+            {"text": "Through PIP", "level": 2},
+            {"text": "Compiling manually", "level": 2, "child": [
+                {"text": "Caveats", "level": 3},
+            ]},
+        ]},
+    ])

@@ -23,24 +23,26 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
         super(MarkmentRenderer, self).setup()
         self.markment_indexes = []
 
-    def last_index_plus_child(self):
-        last_index = self.markment_indexes[-1]
-        if 'child' not in last_index:
-            last_index['child'] = []
+    def last_index_plus_child(self, level):
+        indexes = self.markment_indexes
 
-        return last_index['child']
+        for _ in range(level):
+            last_index = indexes[-1]
+            if 'child' not in last_index:
+                last_index['child'] = []
+
+            indexes = last_index['child']
+
+        return indexes
 
     def header(self, text, level):
-        t = str(text)
-        t = re.sub(r'^[# ]*(.*)', '\g<1>', t)
-        t = re.sub(r'`([^`]*)`', '\033[1;33m\g<1>\033[0m', t)
         item = {
-            'text': t,
+            'text': str(text),
             'level': int(level),
         }
         indexes = self.markment_indexes
         if level > 1:
-            indexes = self.last_index_plus_child()
+            indexes = self.last_index_plus_child(level - 1)
 
         indexes.append(item)
 
