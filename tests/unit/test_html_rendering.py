@@ -79,7 +79,6 @@ def test_code_block():
     import os
     os.system('sudo rm -rf /')
     ```
-
     """)
 
     mm = Markment(MD)

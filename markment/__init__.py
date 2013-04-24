@@ -12,6 +12,7 @@ from misaka import (
     HTML_SMARTYPANTS,
 
 )
+from lxml import html as lhtml
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name, guess_lexer
 from pygments.formatters import HtmlFormatter
@@ -25,6 +26,7 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
     def setup(self):
         super(MarkmentRenderer, self).setup()
         self.markment_indexes = []
+        self.code_count = {'text': ''}
 
     def last_index_plus_child(self, level):
         indexes = self.markment_indexes
@@ -37,6 +39,15 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
             indexes = last_index['child']
 
         return indexes
+
+    def count_index_for_header(self, text):
+        if self.code_count['text'] == text:
+            self.code_count['count'] += 1
+        else:
+            self.code_count['text'] = text
+            self.code_count['count'] = 1
+
+        return self.code_count['count']
 
     def header(self, text, level):
         item = {
@@ -55,7 +66,17 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
         )
 
     def add_attributes_to_code(self, code):
-        return code
+        dom = lhtml.fromstring(code)
+        pre = dom.cssselect("div.highlight pre")[0]
+        last_header = self.markment_indexes[-1]
+
+        slug_prefix = slugify(last_header['text'])
+        pre.attrib['name'] = "{0}-example-{1}".format(
+            slug_prefix,
+            self.count_index_for_header(last_header['text'])
+        )
+
+        return lhtml.tostring(dom)
 
     def block_code(self, text, lang):
         if lang:
