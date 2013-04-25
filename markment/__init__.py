@@ -97,7 +97,7 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
             indexes = self.last_index_plus_child(level - 1)
 
         indexes.append(item)
-        return '<h{level} name="{slug}"><a href="#{slug}">{text}</a></h{level}>'.format(
+        return '<h{level} id="{slug}" name="{slug}"><a href="#{slug}">{text}</a></h{level}>'.format(
             level=level,
             text=text,
             slug=slugify(text)

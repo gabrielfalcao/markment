@@ -48,6 +48,7 @@ def test_anchors_in_1st_level_headers():
 
     h1 = headers[0]
     h1.attrib.should.have.key("name").being.equal("api-reference")
+    h1.attrib.should.have.key("id").being.equal("api-reference")
 
     links = h1.getchildren()
     links.should.have.length_of(1)
@@ -76,6 +77,7 @@ def test_anchors_in_2nd_level_headers():
 
     h2 = headers[0]
     h2.attrib.should.have.key("name").being.equal("rendering-content")
+    h2.attrib.should.have.key("id").being.equal("rendering-content")
 
     links = h2.getchildren()
     links.should.have.length_of(1)
