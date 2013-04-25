@@ -26,7 +26,6 @@
 
 import os
 from setuptools import setup
-from markment.version import version
 
 
 def get_packages():
@@ -47,7 +46,7 @@ requirements = [
 
 
 setup(name='markment',
-    version=version,
+    version='0.0.2',
     description=(u'Structured documentation generator for markdown'),
     author=u'Gabriel Falcao',
     author_email='gabriel@nacaolivre.org',
