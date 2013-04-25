@@ -5,5 +5,4 @@ python:
 install:
   - pip install -r requirements.pip
 # command to run tests
-script: 
-  - nosetests tests/unit
+script: nosetests --with-coverage --cover-erase --cover-package=markment --verbosity=2 -s tests/unit
