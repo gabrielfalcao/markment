@@ -34,7 +34,7 @@ absolute path to fallback relative links (optional):
 >>> from markment import Markment
 >>> mm = Markment("#Title One")
 >>> mm.rendered
-u'<h1 name="title-one"><a href="#title-one">Title One</a></h1>'
+u'<h1 id="title-one" name="title-one"><a href="#title-one">Title One</a></h1>'
 ```
 
 
