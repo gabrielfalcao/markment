@@ -5,3 +5,4 @@ steadymark-0.1.4.tar.gz
 *.pyc
 build
 steadymark-*.*.*.tar.gz
+.coverage

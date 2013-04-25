@@ -10,12 +10,13 @@ from misaka import (
     EXT_AUTOLINK,
     HTML_USE_XHTML,
     HTML_SMARTYPANTS,
-
 )
 from lxml import html as lhtml
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name, guess_lexer
 from pygments.formatters import HtmlFormatter
+
+version = '0.0.1'
 
 
 def slugify(text):
@@ -26,6 +27,7 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
     def setup(self):
         super(MarkmentRenderer, self).setup()
         self.markment_indexes = []
+        self.relative_url_prefix = None
         self.code_count = {'text': ''}
 
     def last_index_plus_child(self, level):
@@ -49,9 +51,47 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
 
         return self.code_count['count']
 
+    def prefix_link_if_needed(self, link):
+        needs_prefix = not link.startswith('http')
+
+        if not needs_prefix or not self.relative_url_prefix:
+            return ''
+
+        if needs_prefix:
+            prefix = self.relative_url_prefix.rstrip('/') + '/'
+
+        return prefix + link.lstrip('/')
+
+    def image(self, link, title, alt):
+        url = link
+        prefixed = self.prefix_link_if_needed(link)
+        if prefixed:
+            url = prefixed
+
+        element = '<img src="{0}" title="{1}" alt="{2}" />'.format(
+            url,
+            title,
+            alt
+        )
+        return element
+
+    def link(self, link, title, content):
+        url = link
+        prefixed = self.prefix_link_if_needed(link)
+        if prefixed:
+            url = prefixed
+
+        element = '<a href="{0}" title="{1}">{2}</a>'.format(
+            url,
+            title,
+            content,
+        )
+        return element
+
     def header(self, text, level):
         item = {
             'text': str(text),
+            'anchor': '#{0}'.format(slugify(text)),
             'level': int(level),
         }
         indexes = self.markment_indexes
@@ -96,9 +136,10 @@ class Markment(object):
                   EXT_SUPERSCRIPT |
                   HTML_USE_XHTML)
 
-    def __init__(self, markdown, renderer=None):
+    def __init__(self, markdown, renderer=None, relative_url_prefix=None):
         self.raw = markdown
         self.renderer = renderer or MarkmentRenderer()
+        self.renderer.relative_url_prefix = relative_url_prefix
         self.markdown = Markdown(
             self.renderer,
             extensions=self.extensions,

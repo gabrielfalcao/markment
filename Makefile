@@ -8,7 +8,7 @@ test: clean unit functional integration
 
 unit:
 	@echo "Running unit tests"
-	@nosetests --verbosity=2 -s tests/unit
+	@nosetests --with-coverage --cover-erase --cover-package=markment --verbosity=2 -s tests/unit
 
 integration:
 	@python markment/__init__.py

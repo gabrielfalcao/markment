@@ -34,9 +34,9 @@ def test_markment_finds_1st_level_headers():
     mm = Markment(MD)
 
     mm.index().should.equal([
-        {"text": "Installation", "level": 1},
-        {"text": "Tutorial", "level": 1},
-        {"text": "API Reference", "level": 1},
+        {"text": "Installation", "level": 1, "anchor": "#installation"},
+        {"text": "Tutorial", "level": 1, "anchor": "#tutorial"},
+        {"text": "API Reference", "level": 1, "anchor": "#api-reference"},
     ])
 
 
@@ -59,10 +59,12 @@ def test_markment_finds_2nd_level_headers():
     mm = Markment(MD)
 
     expect(mm.index()).to.equal([
-        {"text": "Installation", "level": 1, "child": [
-            {"text": "Through PIP", "level": 2},
-            {"text": "Compiling manually", "level": 2},
-        ]},
+        {"text": "Installation",
+         "anchor": "#installation",
+         "level": 1, "child": [
+             {"text": "Through PIP", "level": 2, "anchor": "#through-pip"},
+             {"text": "Compiling manually", "level": 2, "anchor": "#compiling-manually"},
+         ]},
     ])
 
 
@@ -85,10 +87,14 @@ def test_markment_finds_3rd_level_headers():
     mm = Markment(MD)
 
     mm.index().should.equal([
-        {"text": "Installation", "level": 1, "child": [
-            {"text": "Through PIP", "level": 2},
-            {"text": "Compiling manually", "level": 2, "child": [
-                {"text": "Caveats", "level": 3},
-            ]},
-        ]},
+        {"text": "Installation", "level": 1,
+         "anchor": "#installation",
+         "child": [
+             {"text": "Through PIP", "level": 2, "anchor": "#through-pip"},
+             {"text": "Compiling manually", "level": 2,
+              "anchor": "#compiling-manually",
+              "child": [
+                  {"text": "Caveats", "level": 3, "anchor": "#caveats"},
+              ]},
+         ]},
     ])

@@ -26,7 +26,6 @@
 
 import os
 from setuptools import setup
-from markment.six import PY3
 from markment.version import version
 
 
@@ -40,17 +39,16 @@ def get_packages():
     return packages
 
 requirements = [
-          'misaka==1.0.2',
+    "Pygments==1.5",
+    "misaka==1.0.2",
+    "cssselect==0.8",
+    "lxml==3.1.2",
 ]
-if not PY3:
-    # Couleur is not py3 compatible.
-    requirements.append('couleur>=0.4.1')
 
 
 setup(name='markment',
     version=version,
-    description=(u'Markdown-based test runner for python. '
-                 'Good for github projects'),
+    description=(u'Structured documentation generator for markdown'),
     author=u'Gabriel Falcao',
     author_email='gabriel@nacaolivre.org',
     url='http://github.com/gabrielfalcao/markment',
@@ -58,7 +56,7 @@ setup(name='markment',
     install_requires=requirements,
     entry_points={
         'console_scripts': ['markment = markment:main'],
-        },
+    },
     package_data={
         'lettuce': ['COPYING', '*.md'],
     },
