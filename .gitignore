@@ -6,3 +6,4 @@ steadymark-0.1.4.tar.gz
 build
 steadymark-*.*.*.tar.gz
 .coverage
+markment*.gz

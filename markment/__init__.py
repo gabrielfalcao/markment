@@ -16,8 +16,6 @@ from pygments import highlight
 from pygments.lexers import get_lexer_by_name, guess_lexer
 from pygments.formatters import HtmlFormatter
 
-version = '0.0.1'
-
 
 def slugify(text):
     return re.sub(r'\W', '-', text.strip().lower())

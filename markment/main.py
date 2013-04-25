@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-from markment import version
+from markment.version import version
+
 print '''
                                   `7MM
                                     MM

@@ -1,10 +1,10 @@
 all: test
 
-filename=markment-`python -c 'import markment;print markment.version'`.tar.gz
+filename=markment-`python -c 'import markment.version;print markment.version.version'`.tar.gz
 
 export PYTHONPATH:=  ${PWD}
 
-test: clean unit functional integration
+test: clean unit docs integration
 
 unit:
 	@echo "Running unit tests"
@@ -12,6 +12,9 @@ unit:
 
 integration:
 	@python markment/__init__.py
+
+docs:
+	@steadymark README.md
 
 clean:
 	@printf "Cleaning up files that are already in .gitignore... "
