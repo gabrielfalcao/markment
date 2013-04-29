@@ -10,8 +10,12 @@ unit:
 	@echo "Running unit tests"
 	@nosetests --with-coverage --cover-erase --cover-package=markment --verbosity=2 -s tests/unit
 
+functional:
+	@echo "Running unit tests"
+	@nosetests --with-coverage --cover-erase --cover-package=markment --verbosity=2 -s tests/functional
+
 integration:
-	@python markment/__init__.py
+	@python markment/main.py tests/index.md
 
 docs:
 	@steadymark README.md

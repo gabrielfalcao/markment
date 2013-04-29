@@ -47,14 +47,9 @@ u'<h1 id="title-one" name="title-one"><a href="#title-one">Title One</a></h1>'
 [{u'text': 'Title One', u'level': 1, u'anchor': u'#title-one', u'child': [{u'text': 'Subtitle One', u'anchor': u'#subtitle-one', u'level': 2}, {u'text': 'Subtitle Two', u'level': 2, u'anchor': u'#subtitle-two', u'child': [{u'text': 'And so on...', u'anchor': u'#and-so-on---', u'level': 3}]}]}]
 ```
 
+## purpose
 
+Markment was created to empower the documentation pages at
+[octomarks.io](http://octomarks.io).
 
-## theming
-
-It currently has 1 theme: octomarks
-
-```console
-markment -t octomarks html
-```
-
-But you can develop themes very easily by writing jinja2 templates
+You can see it live [here](http://octomarks.io/gabrielfalcao/markment)
