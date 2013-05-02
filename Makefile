@@ -11,7 +11,7 @@ unit:
 	@nosetests --with-coverage --cover-erase --cover-package=markment --verbosity=2 -s tests/unit
 
 functional:
-	@echo "Running unit tests"
+	@echo "Running functional tests"
 	@nosetests --with-coverage --cover-erase --cover-package=markment --verbosity=2 -s tests/functional
 
 integration:
