@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+
 import json
 import yaml
+
 from collections import OrderedDict
+
 from .fs import PathWalker, TreeMaker
 from .engine import Markment
 from .views import TemplateContext
@@ -49,12 +52,14 @@ class Project(object):
         return self._found_files
 
     def generate(self, theme, static_prefix=None, **kw):
-        markdown_files = self.find_markdown_files().values()
+        master_index = self.find_markdown_files().values()
 
-        for info in markdown_files:
-            yield self.render_html_from_markdown_info(info, theme, static_prefix, markdown_files, **kw)
+        for info in master_index:
+            yield self.render_html_from_markdown_info(
+                info, theme, static_prefix, master_index, **kw)
 
-    def render_html_from_markdown_info(self, info, theme, static_prefix, master_index, **kw):
+    def render_html_from_markdown_info(self, info, theme, static_prefix,
+                                       master_index, **kw):
         with self.walker.open(info['path']) as f:
             data = f.read()
 

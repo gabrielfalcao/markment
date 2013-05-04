@@ -1,13 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import os
+import uuid
 import mimetypes
-from flask import Flask, Response, url_for, session, redirect
+
+from flask import (
+    Flask,
+    Response,
+    url_for,
+    session,
+    redirect,
+)
+
 from markment.core import Project
 from markment.ui import Theme
 
+
 app = Flask(__name__)
-app.secret_key = 'Ahakjnsl;masd8736t7dg33fe'
+app.secret_key = uuid.uuid4().hex
 
 project = Project.discover(os.getcwdu())
 
