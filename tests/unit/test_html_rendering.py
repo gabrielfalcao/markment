@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-from markment import Markment, MarkmentRenderer
+from markment import Markment
+from markment.engine import MarkmentRenderer
+
 from lxml import html as lhtml
 from .base import MARKDOWN
 

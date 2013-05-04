@@ -7,3 +7,4 @@ build
 steadymark-*.*.*.tar.gz
 .coverage
 markment*.gz
+output/*

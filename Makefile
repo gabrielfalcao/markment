@@ -4,13 +4,13 @@ filename=markment-`python -c 'import markment.version;print markment.version.ver
 
 export PYTHONPATH:=  ${PWD}
 
-test: clean unit docs integration
+test: clean unit functional docs integration
 
 unit:
 	@echo "Running unit tests"
 	@nosetests --with-coverage --cover-erase --cover-package=markment --verbosity=2 -s tests/unit
 
-functional:
+functional: prepare
 	@echo "Running functional tests"
 	@nosetests --with-coverage --cover-erase --cover-package=markment --verbosity=2 -s tests/functional
 
@@ -32,3 +32,9 @@ release: test publish
 
 publish:
 	@python setup.py sdist register upload
+
+prepare:
+	@mkdir -p output
+
+run:
+	@reset && python markment/server.py

@@ -4,7 +4,7 @@
 from __future__ import unicode_literals
 from markment.version import version
 
-print '''
+print '''\033[1;2;32m
                                   `7MM
                                     MM
 `7MMpMMMb.pMMMb.   ,6"Yb.  `7Mb,od8 MM  ,MP'
@@ -12,7 +12,7 @@ print '''
   MM    MM    MM   ,pm9MM    MM     MM;Mm
   MM    MM    MM  8M   MM    MM     MM `Mb.
 .JMML  JMML  JMML.`Moo9^Yo..JMML. .JMML. YA.
-
+\033[1;33m
                                      mm
                                      MM
 `7MMpMMMb.pMMMb.  .gP"Ya `7MMpMMMb.mmMMmm
@@ -20,7 +20,7 @@ print '''
   MM    MM    MM 8M""""""  MM    MM  MM
   MM    MM    MM YM.    ,  MM    MM  MM
 .JMML  JMML  JMML.`Mbmmd'.JMML  JMML.`Mbmo
-'''
+\033[0m'''
 
 print "Welcome to Markment", version
 print "LOL, nothing here yet :)"
