@@ -18,7 +18,9 @@ class TemplateContext(object):
             self.static_prefix = static_prefix
 
         ctx = {}
-        ctx['static_file'] = self.static_file
         ctx['link'] = self.link
+        ctx['static_file'] = self.static_file
+
         ctx.update(self.data)
+
         return ctx

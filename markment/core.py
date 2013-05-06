@@ -14,8 +14,10 @@ from .views import TemplateContext
 class Project(object):
     metadata_filename = '.markment.yml'
 
-    def __init__(self, path):
+    def __init__(self, path, url_prefix=None):
         self.path = path
+        self.url_prefix = url_prefix or './'
+
         self.walker = PathWalker(path)
         self.tree = TreeMaker(path)
         self.meta = {}
@@ -64,7 +66,7 @@ class Project(object):
             data = f.read()
 
         decoded = data.decode('utf-8')
-        md = Markment(decoded)
+        md = Markment(decoded, relative_url_prefix=self.url_prefix)
 
         info['markdown'] = md.raw
         info['indexes'] = md.index()
@@ -83,8 +85,8 @@ class Project(object):
         return info
 
     @classmethod
-    def discover(cls, path):
-        return cls(path)
+    def discover(cls, path, *args, **kw):
+        return cls(path, *args, **kw)
 
     def __repr__(self):
         return '<Project({0})>'.format(repr(self.path))

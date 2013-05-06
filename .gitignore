@@ -7,4 +7,5 @@ build
 steadymark-*.*.*.tar.gz
 .coverage
 markment*.gz
-output/*
+output
+*.DS_Store

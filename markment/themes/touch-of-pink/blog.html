@@ -31,11 +31,12 @@
 	<h1><a href="/">{{ project.name }}</a></h1>
 	<div id="description">
 	  <p>{{ project.description }}</p>
-          <hr />
-        {% for item in index %}
-        {{ render_menu_item(item) }}{% if not loop.last %},{% endif %}
-        {% endfor %}
-        <hr />
+          <div style="margin: 20px auto; border-top: 4px solid #FEFEFE;border-bottom: 4px solid #FEFEFE;width:680px;padding: 10px 0;background: rgba(100,100,0,.03)">
+            <h4>Chapters</h4>
+            {% for item in index %}
+              {{ render_menu_item(item) }}{% if not loop.last %},{% endif %}
+            {% endfor %}
+          </div>
 
 	</div>
       </div>
@@ -44,9 +45,9 @@
 	  <ul class="pages links" role="navigation">
 	    <li><a href="{URL}">{{ project.name }}</a></li>
 	  </ul>
-	  <form id="search" role="search" action="/search" method="get">
-	    <input type="text" name="q" class="search" value="" placeholder="search in the docs" />
-	  </form>
+          <div style="float: right;font-family: Helvetica;Sans-Serif;margin-top: 3px;font-size: 18px;color: #666">
+            version <strong>{{ project.version }}</strong>
+          </div>
 	</div>
       </div>
       <div id="content" role="main">

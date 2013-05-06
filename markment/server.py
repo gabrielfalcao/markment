@@ -18,10 +18,13 @@ from markment.core import Project
 from markment.ui import Theme
 
 
-app = Flask(__name__)
+current_dir = os.path.abspath(os.getcwdu())
+static_url_path = '/raw'
+
+app = Flask(__name__, static_folder=current_dir, static_url_path=static_url_path)
 app.secret_key = uuid.uuid4().hex
 
-project = Project.discover(os.getcwdu())
+project = Project.discover(current_dir, url_prefix=static_url_path)
 
 
 def link(path):
@@ -35,9 +38,16 @@ def index():
     return redirect(url_for('.render_path', path='README.md'))
 
 
+def get_theme():
+    if 'theme_name' not in session:
+        session['theme_name'] = 'touch-of-pink'
+
+    return session['theme_name']
+
+
 @app.route("/preview/<path:path>")
 def render_path(path):
-    theme_name = session['theme_name']
+    theme_name = get_theme()
 
     theme = Theme.load_by_name(theme_name)
     prefix = '/assets/{0}/'.format(theme_name)
