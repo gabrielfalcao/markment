@@ -2,3 +2,6 @@ project:
   name: Markment
   version: 0.0.2
   description: A markdown-based automatic documentation generator
+
+documentation:
+  index: TODO.md

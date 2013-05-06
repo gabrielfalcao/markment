@@ -9,7 +9,7 @@ from .base import MARKDOWN
 def test_prefix_link_when_needed():
     "MarkmentRenderer#prefix_link_if_needed should prefix if link is relative"
     renderer = MarkmentRenderer()
-    renderer.relative_url_prefix = 'http://awesome.com'
+    renderer.url_prefix = 'http://awesome.com'
 
     result = renderer.prefix_link_if_needed('bar.png')
     result.should.equal('http://awesome.com/bar.png')
@@ -18,7 +18,7 @@ def test_prefix_link_when_needed():
 def test_prefix_link_when_not_needed():
     "MarkmentRenderer#prefix_link_if_needed should NOT prefix if link is absolute"
     renderer = MarkmentRenderer()
-    renderer.relative_url_prefix = 'http://awesome.com'
+    renderer.url_prefix = 'http://awesome.com'
 
     result = renderer.prefix_link_if_needed('http://ok.com/bar.png')
     result.should.equal('')
@@ -168,7 +168,7 @@ def test_image_relative():
     ![LOGO](logo.png)
     """)
 
-    mm = Markment(MD, relative_url_prefix='http://falcao.it')
+    mm = Markment(MD, url_prefix='http://falcao.it')
 
     dom = lhtml.fromstring(mm.rendered)
 
@@ -182,6 +182,45 @@ def test_image_relative():
     img.attrib.should.have.key("alt").equal("LOGO")
 
 
+def test_image_relative_with_callback():
+    "Markment should render images with relative path"
+
+    MD = MARKDOWN("""
+    # Awesome project
+
+    ![LOGO](logo.png)
+
+    [Documentation](docs.md)
+    """)
+
+    def process_url(path):
+        if path.lower().endswith("md"):
+            return "http://markdown.com/{0}".format(path)
+        else:
+            return "http://images.com/{0}".format(path)
+
+    mm = Markment(MD, url_prefix=process_url)
+
+    dom = lhtml.fromstring(mm.rendered)
+
+    images = dom.cssselect("img")
+
+    images.should.have.length_of(1)
+
+    img = images[0]
+
+    img.attrib.should.have.key("src").equal("http://images.com/logo.png")
+    img.attrib.should.have.key("alt").equal("LOGO")
+
+    links = dom.cssselect("a")
+
+    links.should.have.length_of(2)
+
+    a = links[-1]
+
+    a.attrib.should.have.key("href").equal("http://markdown.com/docs.md")
+
+
 def test_image_absolute():
     "Markment should render images with absolute path"
 
@@ -191,7 +230,7 @@ def test_image_absolute():
     ![LOGO](http://octomarks.io/logo.png)
     """)
 
-    mm = Markment(MD, relative_url_prefix='http://falcao.it')
+    mm = Markment(MD, url_prefix='http://falcao.it')
 
     dom = lhtml.fromstring(mm.rendered)
 
@@ -212,7 +251,7 @@ def test_link_relative():
     [LOGO](file.md)
     """)
 
-    mm = Markment(MD, relative_url_prefix='http://falcao.it')
+    mm = Markment(MD, url_prefix='http://falcao.it')
 
     dom = lhtml.fromstring(mm.rendered)
 
@@ -233,7 +272,7 @@ def test_link_absolute():
     [LOGO](http://octomarks.io/file.md)
     """)
 
-    mm = Markment(MD, relative_url_prefix='http://falcao.it')
+    mm = Markment(MD, url_prefix='http://falcao.it')
 
     dom = lhtml.fromstring(mm.rendered)
 

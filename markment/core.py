@@ -66,7 +66,7 @@ class Project(object):
             data = f.read()
 
         decoded = data.decode('utf-8')
-        md = Markment(decoded, relative_url_prefix=self.url_prefix)
+        md = Markment(decoded, url_prefix=self.url_prefix)
 
         info['markdown'] = md.raw
         info['indexes'] = md.index()

@@ -24,7 +24,16 @@ static_url_path = '/raw'
 app = Flask(__name__, static_folder=current_dir, static_url_path=static_url_path)
 app.secret_key = uuid.uuid4().hex
 
-project = Project.discover(current_dir, url_prefix=static_url_path)
+
+def url_prefix_callback(link):
+    target = link.lower()
+
+    if target.endswith(".md") or target.endswith(".markdown"):
+        return link
+    else:
+        return "{0}/{1}".format(static_url_path, link.lstrip('/'))
+
+project = Project.discover(current_dir, url_prefix=url_prefix_callback)
 
 
 def link(path):
@@ -34,8 +43,7 @@ def link(path):
 @app.route("/")
 def index():
     session['theme_name'] = 'touch-of-pink'
-
-    return redirect(url_for('.render_path', path='README.md'))
+    return redirect(url_for('.render_path', path=project.meta['documentation']['index']))
 
 
 def get_theme():

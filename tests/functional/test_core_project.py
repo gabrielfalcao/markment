@@ -43,5 +43,5 @@ def test_project_should_render_all_markdown_files_with_certain_theme():
     readme.should.have.key('relative_path')
 
     readme['html'].should.contain(readme['documentation'])
-    readme['path'].should.equal(CWD_FILE('README.md'))
-    readme['relative_path'].should.equal(relpath(CWD_FILE('README.md')))
+    readme['path'].should.equal(CWD_FILE('index.md'))
+    readme['relative_path'].should.equal(relpath(CWD_FILE('index.md')))

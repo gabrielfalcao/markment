@@ -25,7 +25,7 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
     def setup(self):
         super(MarkmentRenderer, self).setup()
         self.markment_indexes = []
-        self.relative_url_prefix = None
+        self.url_prefix = None
         self.code_count = {'text': ''}
 
     def last_index_plus_child(self, level):
@@ -56,11 +56,14 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
     def prefix_link_if_needed(self, link):
         needs_prefix = not link.startswith('http')
 
-        if not needs_prefix or not self.relative_url_prefix:
+        if not needs_prefix or not self.url_prefix:
             return ''
 
         if needs_prefix:
-            prefix = self.relative_url_prefix.rstrip('/') + '/'
+            if callable(self.url_prefix):
+                return self.url_prefix(link)
+            else:
+                prefix = self.url_prefix.rstrip('/') + '/'
 
         return prefix + link.lstrip('/')
 
@@ -138,10 +141,10 @@ class Markment(object):
                   EXT_SUPERSCRIPT |
                   HTML_USE_XHTML)
 
-    def __init__(self, markdown, renderer=None, relative_url_prefix=None):
+    def __init__(self, markdown, renderer=None, url_prefix=None):
         self.raw = markdown
         self.renderer = renderer or MarkmentRenderer()
-        self.renderer.relative_url_prefix = relative_url_prefix
+        self.renderer.url_prefix = url_prefix
         self.markdown = Markdown(
             self.renderer,
             extensions=self.extensions,
