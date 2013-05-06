@@ -8,14 +8,15 @@ test: clean unit functional docs integration
 
 unit:
 	@echo "Running unit tests"
-	@nosetests --with-coverage --cover-erase --cover-package=markment --verbosity=2 -s tests/unit
+	@nosetests --with-coverage --cover-erase --cover-package=markment -v -s tests/unit
 
 functional: prepare
 	@echo "Running functional tests"
-	@nosetests --with-coverage --cover-erase --cover-package=markment --verbosity=2 -s tests/functional
+	@nosetests -v -s tests/functional
 
 integration:
-	@python markment/main.py tests/index.md
+	@nosetests -v -s tests/integration
+	@python markment/main.py -t slate -o ./generated/
 
 docs:
 	@steadymark README.md
