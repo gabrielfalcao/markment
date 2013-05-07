@@ -6,7 +6,7 @@ import yaml
 
 from collections import OrderedDict
 
-from .fs import PathWalker, TreeMaker
+from .fs import Node, TreeMaker, dirname
 from .engine import Markment
 from .views import TemplateContext
 
@@ -18,9 +18,13 @@ class Project(object):
         self.path = path
         self.url_prefix = url_prefix or './'
 
-        self.walker = PathWalker(path)
+        self.node = Node(path)
         self.tree = TreeMaker(path)
-        self.meta = {}
+        self.meta = {
+            'project': {
+                'name': dirname(path),
+            }
+        }
         self._found_files = OrderedDict()
         self.load(path)
 
@@ -29,13 +33,16 @@ class Project(object):
 
         self.meta.update(metadata)
 
-        p = metadata['project']
-        self.name = p['name']
-        self.version = p['version']
-        self.description = p['description']
+        p = self.meta['project']
+        self.name = p.get('name', '')
+        self.version = p.get('version', '')
+        self.description = p.get('description', '')
 
     def parse_metadata(self, path):
-        with self.walker.open(self.metadata_filename) as f:
+        if not self.node.contains(self.metadata_filename):
+            return {}
+
+        with self.node.open(self.metadata_filename) as f:
             data = f.read()
 
         return yaml.load(data.decode('utf-8'))
@@ -62,7 +69,7 @@ class Project(object):
 
     def render_html_from_markdown_info(self, info, theme, static_prefix,
                                        master_index, **kw):
-        with self.walker.open(info['path']) as f:
+        with self.node.open(info['path']) as f:
             data = f.read()
 
         decoded = data.decode('utf-8')
@@ -78,9 +85,10 @@ class Project(object):
             index=md.index(),
             master_index=list(master_index),
             json=json,
+            static_prefix=static_prefix,
             **kw)
 
-        ctx = Context.ready_to_render(static_prefix=static_prefix)
+        ctx = Context.ready_to_render()
         info['html'] = theme.render(**ctx)
         return info
 

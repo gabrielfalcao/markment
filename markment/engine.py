@@ -61,6 +61,7 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
 
         if needs_prefix:
             if callable(self.url_prefix):
+
                 return self.url_prefix(link)
             else:
                 prefix = self.url_prefix.rstrip('/') + '/'

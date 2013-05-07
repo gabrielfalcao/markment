@@ -6,19 +6,18 @@ export PYTHONPATH:=  ${PWD}
 
 test: clean unit functional docs integration
 
-unit:
+unit: clean
 	@echo "Running unit tests"
 	@nosetests --with-coverage --cover-erase --cover-package=markment -v -s tests/unit
 
-functional: prepare
+functional: clean prepare
 	@echo "Running functional tests"
 	@nosetests -v -s tests/functional
 
-integration:
-	@nosetests -v -s tests/integration
-	@python markment/main.py -t slate -o ./generated/
+integration: clean
+	@python markment/bin.py -t slate -o ./generated/
 
-docs:
+docs: clean
 	@steadymark README.md
 
 clean:

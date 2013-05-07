@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 import yaml
 from jinja2 import Template
-from .fs import PathWalker, LOCAL_FILE, join
+from .fs import Node, LOCAL_FILE, join
 
 THEME_ROOT = LOCAL_FILE('themes')
 
@@ -11,12 +11,12 @@ class Theme(object):
     index_filename = 'markment.yml'
 
     def __init__(self, path):
-        self.walker = PathWalker(path)
+        self.node = Node(path)
         self._index = {}
 
     @property
     def path(self):
-        return self.walker.base_path
+        return self.node.base_path
 
     def static_file(self, *path):
         return join(self.index['static_path'], *path)
@@ -33,7 +33,7 @@ class Theme(object):
 
     def _load_file_contents(self, path):
         "Loads the bytes of a file and decode as utf-8"
-        with self.walker.open(path) as template:
+        with self.node.open(path) as template:
             content = template.read()
 
         return content.decode('utf-8')
@@ -48,12 +48,12 @@ class Theme(object):
     def calculate_index(self):
         index = self._load_file_contents(self.index_filename)
         parsed = yaml.load(index)
-        parsed['static_path'] = self.walker.join(parsed.get('static_path', 'assets'))
+        parsed['static_path'] = self.node.join(parsed.get('static_path', 'assets'))
         return parsed
 
     @classmethod
     def load_from_path(cls, path):
-        if not PathWalker(path).contains(cls.index_filename):
+        if not Node(path).contains(cls.index_filename):
             m = ('The folder "{0}" should contain a {1} file but '
                  'doesn\'t'.format(path, cls.index_filename))
 
@@ -64,7 +64,7 @@ class Theme(object):
     @classmethod
     def load_by_name(cls, name):
         path = join(THEME_ROOT, name)
-        if not PathWalker(THEME_ROOT).contains(name):
+        if not Node(THEME_ROOT).contains(name):
             m = 'Markment does not have a builtin theme called "{0}"'
             raise InvalidThemePackage(m.format(name))
 
