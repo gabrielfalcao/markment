@@ -95,7 +95,7 @@ def test_index_has_correct_links_for_md_files(context):
 
 
 @fs_test
-def test_toc_links_point_to_html_files(context):
+def test_index_toc_links_point_to_html_files(context):
     "The index file should have correct html links for markdown files"
 
     project = Project.discover(context.project_path)
@@ -120,7 +120,7 @@ def test_toc_links_point_to_html_files(context):
 
 
 @fs_test
-def test_images_point_to_right_place(context):
+def test_index_images_point_to_right_place(context):
     "The index file should have correct html paths to images"
 
     project = Project.discover(context.project_path)
@@ -139,4 +139,100 @@ def test_images_point_to_right_place(context):
 
     img = images[0]
 
-    img.attrib.should.have.key('src').being.equal("img/logo.png")
+    img.attrib.should.have.key('src').being.equal("./img/logo.png")
+
+
+@fs_test
+def test_second_level_file(context):
+    "The second_level file should have the assets pointing to the right path"
+
+    project = Project.discover(context.project_path)
+    theme = Theme.load_by_name('touch-of-pink')
+    destination = Generator(project, theme)
+    generated = destination.persist(context.output_path)
+
+    second_level = generated[1]
+
+    html = open(second_level).read()
+    dom = lhtml.fromstring(html)
+
+    links = dom.cssselect('link[rel="stylesheet"]')
+
+    links.should.have.length_of(2)
+
+    tango, style = links
+
+    style.attrib.should.have.key("href").being.equal("../assets/style.css")
+
+
+@fs_test
+def test_second_level_has_correct_links_for_md_files(context):
+    "The second_level file should have correct html links for markdown files"
+
+    project = Project.discover(context.project_path)
+    theme = Theme.load_from_path(LOCAL_FILE('fixtures', 'themes', 'turbo'))
+    destination = Generator(project, theme)
+    generated = destination.persist(context.output_path)
+
+    second_level = generated[1]
+
+    html = open(second_level).read()
+    dom = lhtml.fromstring(html)
+
+    links = dom.cssselect('a')
+
+    links.should.have.length_of(3)
+
+    l1, l2, l3 = links
+
+    l1.attrib.should.have.key('href').being.equal('#python-tutorial')
+    l2.attrib.should.have.key('href').being.equal('../docs/output.html')
+    l3.attrib.should.have.key('href').being.equal('../docs/strings.html')
+
+
+@fs_test
+def test_second_level_toc_links_point_to_html_files(context):
+    "The second_level file should have correct html links for markdown files"
+
+    project = Project.discover(context.project_path)
+    theme = Theme.load_by_name('touch-of-pink')
+    destination = Generator(project, theme)
+    generated = destination.persist(context.output_path)
+
+    second_level = generated[1]
+
+    html = open(second_level).read()
+    dom = lhtml.fromstring(html)
+
+    links = dom.cssselect('a.toc')
+
+    links.should.have.length_of(3)
+
+    l1, l2, l3 = links
+
+    l1.attrib.should.have.key('href').being.equal('../second_level.html')
+    l2.attrib.should.have.key('href').being.equal('../docs/output.html')
+    l3.attrib.should.have.key('href').being.equal('../docs/strings.html')
+
+
+@fs_test
+def test_second_level_images_point_to_right_place(context):
+    "The second_level file should have correct html paths to images"
+
+    project = Project.discover(context.project_path)
+    theme = Theme.load_by_name('touch-of-pink')
+    destination = Generator(project, theme)
+    generated = destination.persist(context.output_path)
+
+    second_level = generated[1]
+
+    html = open(second_level).read()
+    dom = lhtml.fromstring(html)
+
+    images = dom.cssselect('img')
+
+    images.should.have.length_of(1)
+
+    img = images[0]
+
+    img.attrib.should.have.key('src').being.equal("../img/logo.png")

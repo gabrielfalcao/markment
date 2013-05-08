@@ -3,9 +3,9 @@ from __future__ import unicode_literals
 
 import json
 import yaml
-
+from functools import partial
 from collections import OrderedDict
-
+from copy import deepcopy
 from .fs import Node, TreeMaker, dirname
 from .engine import Markment
 from .views import TemplateContext
@@ -63,9 +63,12 @@ class Project(object):
     def generate(self, theme, static_prefix=None, **kw):
         master_index = self.find_markdown_files().values()
 
+        generated = []
         for info in master_index:
-            yield self.render_html_from_markdown_info(
-                info, theme, static_prefix, master_index, **kw)
+            generated.append(self.render_html_from_markdown_info(
+                info, theme, static_prefix, master_index, **kw))
+
+        return generated
 
     def render_html_from_markdown_info(self, info, theme, static_prefix,
                                        master_index, **kw):
@@ -73,7 +76,13 @@ class Project(object):
             data = f.read()
 
         decoded = data.decode('utf-8')
-        md = Markment(decoded, url_prefix=kw.get("url_prefix", self.url_prefix))
+        url_prefix = kw.get("url_prefix", self.url_prefix)
+        if not hasattr(url_prefix, 'lower'):
+            prefix = lambda link: url_prefix(link, info)
+        else:
+            prefix = url_prefix
+
+        md = Markment(decoded, url_prefix=prefix)
 
         info['markdown'] = md.raw
         info['indexes'] = md.index()

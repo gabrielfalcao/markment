@@ -9,7 +9,17 @@ import shutil
 
 from fnmatch import fnmatch
 from functools import partial
-from os.path import abspath, join, dirname, exists, split, relpath, expanduser
+from os.path import (
+    abspath,
+    join,
+    dirname,
+    exists,
+    split,
+    relpath,
+    expanduser,
+    isfile,
+    isdir
+)
 
 LOCAL_FILE = lambda *path: join(abspath(dirname(__file__)), *path)
 
@@ -38,6 +48,19 @@ class Node(object):
             stats = [0] * len(STAT_LABELS)
 
         self.metadata = DotDict(zip(STAT_LABELS, stats))
+        self.is_file = isfile(self.base_path)
+        self.is_dir = isdir(self.base_path)
+
+    @property
+    def dir(self):
+        if not self.is_dir:
+            return self.parent
+        else:
+            return self
+
+    @property
+    def parent(self):
+        return self.__class__(dirname(self.base_path))
 
     def could_be_updated_by(self, other):
         return self.metadata.mtime < other.metadata.mtime
@@ -135,7 +158,7 @@ class Node(object):
     def open(self, path, *args, **kw):
         return open(self.join(path), *args, **kw)
 
-    def __unicode__(self):
+    def __repr__(self):
         return '<markment.fs.Node (path={0})>'.format(self.base_path)
 
 
@@ -145,7 +168,7 @@ class TreeMaker(object):
         self.base_path_regex = '^{0}'.format(re.escape(self.base_path))
         self.node = Node(base_path)
 
-    def __unicode__(self):
+    def __repr__(self):
         return '<markment.fs.TreeMaker(path={0})>'.format(self.base_path)
 
     def relative(self, path):
@@ -182,20 +205,32 @@ class Generator(object):
     def rename_markdown_filename(self, path):
         return self.regex.sub('.html', path)
 
-    def calculate_prefix(self, link, assets_folder, project, theme):
+    def calculate_prefix(self, link, info, assets_folder, project, theme):
         is_markdown = self.regex.search(link)
 
+        in_theme = theme.node.find(link)
+        in_local = project.node.find(link)
+        found = in_local or in_theme
+
         if is_markdown:
-            path = './{0}'.format(self.rename_markdown_filename(link.lstrip('/')))
+            prefix = './{0}'.format(self.rename_markdown_filename(link.lstrip('/')))
         else:
-            self.files_to_copy.append(link)
-            if project.node.contains(link.lstrip('/')):
-                return project.node.relative(link.lstrip('/'))
+            level = 1
+            current_document = Node(info['relative_path'])
 
-            path = './{0}/{1}'.format(assets_folder, link.lstrip('/'))
-            self.files_to_copy.append(path)
+            print "*" * 10, info['relative_path'], "*" * 10
 
-        return path
+            while current_document.parent and not current_document.dir.find(link):
+                level += 1
+                current_document = current_document.parent
+
+            relative = current_document.relative(link)
+
+            prefix = '{0}/{1}'.format('.' * level, link.lstrip('/'))
+            if found:
+                self.files_to_copy.append(relative)
+
+        return prefix
 
     def persist(self, destination_path, gently=False):
         destination = Node(destination_path)
