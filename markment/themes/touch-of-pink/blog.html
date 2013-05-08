@@ -17,7 +17,7 @@
   </head>
 
 {% macro render_menu_item(header) -%}
-  <a href="{{ header.anchor }}">{{ header.text|safe }}</a>
+  <a class="anchor" href="{{ header.anchor }}">{{ header.text|safe }}</a>
   {% if 'child' in header %}
     {% for child in header['child'] %}
       {{ render_menu_item(child) }}{% if not loop.last %},{% endif %}
@@ -63,7 +63,7 @@
       <div class="wrapper">
 	<ul class="links" role="navigation">
           {% for item in master_index %}
-	    <p><a href="{{ link(item.relative_path) }}">{{ item.relative_path }}</a></p>
+	    <p><a class="toc" href="{{ link(item.relative_path) }}">{{ link(item.relative_path) }}</a></p>
           {% endfor %}
 	</ul>
 	<p class="info-theme" role="contentinfo">Powered by <a href="http://github.com/gabrielfalcao/markment">Markment</a> and designed by <a href="http://kcmr.tumblr.com">Kcmr</a>.</p>

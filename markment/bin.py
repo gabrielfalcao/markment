@@ -2,25 +2,18 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-from markment.version import version
+import os
 
-print '''\033[1;2;32m
-                                  `7MM
-                                    MM
-`7MMpMMMb.pMMMb.   ,6"Yb.  `7Mb,od8 MM  ,MP'
-  MM    MM    MM  8)   MM    MM' "' MM ;Y
-  MM    MM    MM   ,pm9MM    MM     MM;Mm
-  MM    MM    MM  8M   MM    MM     MM `Mb.
-.JMML  JMML  JMML.`Moo9^Yo..JMML. .JMML. YA.
-\033[1;33m
-                                     mm
-                                     MM
-`7MMpMMMb.pMMMb.  .gP"Ya `7MMpMMMb.mmMMmm
-  MM    MM    MM ,M'   Yb  MM    MM  MM
-  MM    MM    MM 8M""""""  MM    MM  MM
-  MM    MM    MM YM.    ,  MM    MM  MM
-.JMML  JMML  JMML.`Mbmmd'.JMML  JMML.`Mbmo
-\033[0m'''
+from markment.core import Project
+from markment.fs import Generator
+from markment.ui import Theme
 
-print "Welcome to Markment", version
-print "LOL, nothing here yet :)"
+project = Project.discover(os.getcwdu())
+theme = Theme.load_by_name('touch-of-pink')
+
+destination = Generator(project, theme)
+
+generated = destination.persist(os.path.join(project.path, '_public'), gently=True)
+
+for f in generated:
+    print "\033[1;32mGenerated:\033[0m  ", os.path.relpath(f)

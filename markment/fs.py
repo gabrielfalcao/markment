@@ -1,38 +1,142 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+
 import os
 import re
+import time
 import shutil
 
 from fnmatch import fnmatch
 from functools import partial
-from os.path import abspath, join, dirname, exists, split, basename
+from os.path import abspath, join, dirname, exists, split, relpath, expanduser
 
 LOCAL_FILE = lambda *path: join(abspath(dirname(__file__)), *path)
 
 
+class DotDict(dict):
+    def __getattr__(self, attr):
+        try:
+            return super(DotDict, self).__getattribute(attr)
+        except AttributeError:
+            return self[attr]
+
+STAT_LABELS = ["mode", "ino", "dev", "nlink", "uid", "gid", "size", "atime", "mtime", "ctime"]
+
+
 class Node(object):
     def __init__(self, base_path):
-        self.base_path = abspath(base_path)
+        self.base_path = abspath(expanduser(base_path))
+        {
+        # TODO : rename all base_path to path
+        }
         self.base_path_regex = '^{0}'.format(re.escape(self.base_path))
+        self.exists = exists(self.base_path)
+        try:
+            stats = os.stat(self.base_path)
+        except OSError:
+            stats = [0] * len(STAT_LABELS)
+
+        self.metadata = DotDict(zip(STAT_LABELS, stats))
+
+    def could_be_updated_by(self, other):
+        return self.metadata.mtime < other.metadata.mtime
 
     def relative(self, path):
+        """##### `Node#relative(path)`
+
+        returns a given path subtracted by the node.base_path [python`unicode`]
+
+        ```python
+        rel = Node('/Users/gabrielfalcao/').relative('/Users/gabrielfalcao/profile-picture.png')
+        assert rel == 'profile-picture.png'
+        ```
+        """
         return re.sub(self.base_path_regex, '', path).lstrip(os.sep)
 
-    def walk(self, path=None):
-        for root, folders, filenames in os.walk(path or self.base_path):
+    def trip_at(self, path):
+        """ ##### `Node#trip_at(path)`
+
+        does a os.walk at the given path and yields the absolute path
+        to each file
+
+        ```python
+        for filename in node.trip_at('/etc/smb'):
+            print filename
+        ```
+        """
+        for root, folders, filenames in os.walk(path):
             for filename in filenames:
                 yield join(root, filename)
+
+    def walk(self):
+        return self.trip_at(self.base_path)
+
+    def glob(self, pattern):
+        """ ##### `Node#glob(pattern)`
+
+        searches for globs recursively in all the children node of the
+        current node returning a respective [python`Node`] instance
+        for that given.
+
+        ```python
+        for node in Node('/Users/gabrifalcao').glob('*.png'):
+            print node.path  # will print the absolute
+                             # path of the found file
+        ```
+        """
+        for filename in self.walk():
+            if fnmatch(filename, pattern):
+                yield self.__class__(filename)
+
+    def grep(self, pattern, flags=0):
+        """ ##### `Node#grep(pattern)`
+
+        searches recursively for children that match the given regex
+        returning a respective [python`Node`] instance for that given.
+
+        ```python
+        for node in Node('/Users/gabrifalcao').glob('*.png'):
+            print node.path  # will print the absolute
+                             # path of the found file
+        ```
+        """
+        for filename in self.walk():
+            if re.search(pattern, filename, flags):
+                yield self.__class__(filename)
+
+    def find(self, relative_path):
+        """ ##### `Node#find(relative_path)`
+
+        finds a file given the relative_path, it glob and grep using
+        the given relative_path to match as a glob and then tries
+        to return the first found node.
+
+        If nothing is found, returns None
+
+        ```python
+
+        logo = Node('~/projects/personal/markment').find('logo.png')
+        assert logo.path == os.path.expanduser('~/projects/personal/markment')
+        ```
+        """
+        found = list(self.glob(relative_path)) + list(self.grep(relative_path))
+        if found:
+            return found[0]
+
+        return None
 
     def contains(self, path):
         return exists(self.join(path))
 
     def join(self, path):
-        return join(self.base_path, path)
+        return abspath(join(self.base_path, path))
 
     def open(self, path, *args, **kw):
         return open(self.join(path), *args, **kw)
+
+    def __unicode__(self):
+        return '<markment.fs.Node (path={0})>'.format(self.base_path)
 
 
 class TreeMaker(object):
@@ -41,12 +145,15 @@ class TreeMaker(object):
         self.base_path_regex = '^{0}'.format(re.escape(self.base_path))
         self.node = Node(base_path)
 
+    def __unicode__(self):
+        return '<markment.fs.TreeMaker(path={0})>'.format(self.base_path)
+
     def relative(self, path):
         return re.sub(self.base_path_regex, '', path).lstrip(os.sep)
 
     def find_all_markdown_files(self):
         dirs = []
-        for fullpath in self.node.walk(self.base_path):
+        for fullpath in self.node.walk():
             folder = dirname(fullpath)
             if fnmatch(fullpath, '*.md'):
                 if folder != self.base_path and folder not in dirs:
@@ -67,36 +174,48 @@ class TreeMaker(object):
 class Generator(object):
     regex = re.compile(r'[.](md|markdown)$', re.I)
 
-    def __init__(self, destination_path):
-        self.destination_path = destination_path
+    def __init__(self, project, theme):
         self.files_to_copy = []
-        self.destination = Node(destination_path)
+        self.project = project
+        self.theme = theme
 
     def rename_markdown_filename(self, path):
         return self.regex.sub('.html', path)
 
-    def calculate_prefix(self, link, assets_folder):
+    def calculate_prefix(self, link, assets_folder, project, theme):
         is_markdown = self.regex.search(link)
 
         if is_markdown:
             path = './{0}'.format(self.rename_markdown_filename(link.lstrip('/')))
         else:
+            self.files_to_copy.append(link)
+            if project.node.contains(link.lstrip('/')):
+                return project.node.relative(link.lstrip('/'))
+
             path = './{0}/{1}'.format(assets_folder, link.lstrip('/'))
             self.files_to_copy.append(path)
 
         return path
 
-    def persist(self, project, theme):
-        assets_folder = theme.index['static_path']
+    def persist(self, destination_path, gently=False):
+        destination = Node(destination_path)
+
+        assets_folder = self.theme.index['static_path']
         assets_folder_root = dirname(assets_folder)
         assets_folder_name = Node(assets_folder_root).relative(assets_folder)
 
-        master_index = project.generate(theme,
-                                        static_prefix=assets_folder_name,
-                                        url_prefix=partial(self.calculate_prefix,
-                                                           assets_folder=assets_folder_name))
+        url_prefix_callback = partial(
+            self.calculate_prefix,
+            assets_folder=assets_folder_name,
+            project=self.project,
+            theme=self.theme,
+        )
+        master_index = self.project.generate(self.theme,
+                                             static_prefix=assets_folder_name,
+                                             url_prefix=url_prefix_callback)
 
-        os.makedirs(self.destination_path)
+        if not exists(destination_path):
+            os.makedirs(destination_path)
 
         ret = []
 
@@ -105,24 +224,57 @@ class Generator(object):
                 continue
 
             dest_filename = self.rename_markdown_filename(item['relative_path'])
-            destiny = self.destination.join(dest_filename)
+            destiny = destination.join(dest_filename)
             relative_destiny = split(destiny)[0]
 
             if relative_destiny and not exists(relative_destiny):
                 os.makedirs(relative_destiny)
 
-            with self.destination.open(destiny, 'w') as f:
+            with destination.open(destiny, 'w') as f:
                 f.write(item['html'])
 
             ret.append(destiny)
 
-        for dest in self.files_to_copy:
-            destiny = self.destination.join(dest)
+            references = item.get('url_references', [])
+
+            self.files_to_copy.extend(references)
+            ret.extend(references)
+
+        missed_files = []
+        for src in self.files_to_copy:
+
+            src = relpath(src)
+            in_theme = self.theme.node.find(src)
+            in_local = self.project.node.find(src)
+
+            if in_theme:
+                source = in_theme.base_path
+            elif in_local:
+                source = in_local.base_path
+            else:  # not really there
+                missed_files.append(src)
+                continue
+
+            destiny = destination.join(src)
             ret.append(destiny)
-            shutil.copy2(dest, destiny)
+            destiny_folder = dirname(destiny)
+            if not exists(destiny_folder):
+                os.makedirs(destiny_folder)
+
+            already_exists = exists(destiny)
+            should_update = already_exists and Node(destiny).could_be_updated_by(Node(source))
+
+            if not already_exists or should_update:
+                shutil.copy2(source, destiny)
 
         cloner = AssetsCloner(assets_folder)
-        ret.extend(cloner.clone_to(self.destination_path))
+
+        ret.extend(cloner.clone_to(destination_path))
+
+        if missed_files and not gently:
+            raise IOError("The documentation refers to {0} "
+                          "but they doesn't exist anythere".format(
+                              ", ".join(missed_files)))
 
         return ret
 
@@ -139,7 +291,7 @@ class AssetsCloner(object):
 
         dest_node = Node(root)
 
-        for source_path in self.node.walk(self.assets_path):
+        for source_path in self.node.trip_at(self.assets_path):
             relative_path = self.node.relative(source_path)
             destination_path = dest_node.join(relative_path)
             destination_dir = dirname(destination_path)

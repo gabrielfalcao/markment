@@ -9,3 +9,4 @@ steadymark-*.*.*.tar.gz
 markment*.gz
 output
 *.DS_Store
+_public/

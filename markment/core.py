@@ -73,7 +73,7 @@ class Project(object):
             data = f.read()
 
         decoded = data.decode('utf-8')
-        md = Markment(decoded, url_prefix=self.url_prefix)
+        md = Markment(decoded, url_prefix=kw.get("url_prefix", self.url_prefix))
 
         info['markdown'] = md.raw
         info['indexes'] = md.index()
@@ -90,6 +90,7 @@ class Project(object):
 
         ctx = Context.ready_to_render()
         info['html'] = theme.render(**ctx)
+        info['references'] = md.url_references
         return info
 
     @classmethod

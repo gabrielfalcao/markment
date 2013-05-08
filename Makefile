@@ -8,11 +8,11 @@ test: clean unit functional docs integration
 
 unit: clean
 	@echo "Running unit tests"
-	@nosetests --with-coverage --cover-erase --cover-package=markment -v -s tests/unit
+	@nosetests --with-coverage --cover-erase --cover-package=markment --stop -v -s tests/unit
 
 functional: clean prepare
 	@echo "Running functional tests"
-	@nosetests -v -s tests/functional
+	@nosetests --stop -v -s tests/functional
 
 integration: clean
 	@python markment/bin.py -t slate -o ./generated/

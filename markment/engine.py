@@ -27,6 +27,7 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
         self.markment_indexes = []
         self.url_prefix = None
         self.code_count = {'text': ''}
+        self.url_references = []
 
     def last_index_plus_child(self, level):
         indexes = self.markment_indexes
@@ -54,19 +55,22 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
         return self.code_count['count']
 
     def prefix_link_if_needed(self, link):
-        needs_prefix = not link.startswith('http')
-
-        if not needs_prefix or not self.url_prefix:
+        needs_prefix = '://' not in link and not link.startswith('//')
+        if not self.url_prefix:
             return ''
 
         if needs_prefix:
             if callable(self.url_prefix):
-
-                return self.url_prefix(link)
+                prefixed = self.url_prefix(link)
             else:
                 prefix = self.url_prefix.rstrip('/') + '/'
+                prefixed = prefix + link.lstrip('/')
 
-        return prefix + link.lstrip('/')
+            self.url_references.append(prefixed)
+        else:
+            prefixed = ''
+
+        return prefixed
 
     def image(self, link, title, alt):
         url = link
@@ -151,6 +155,7 @@ class Markment(object):
             extensions=self.extensions,
         )
         self.rendered = self.compile()
+        self.url_references = self.renderer.url_references
 
     def compile(self):
         return self.markdown.render(self.raw)
