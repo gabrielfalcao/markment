@@ -16,7 +16,7 @@ class Theme(object):
 
     @property
     def path(self):
-        return self.node.base_path
+        return self.node.path
 
     def static_file(self, *path):
         return join(self.index['static_path'], *path)

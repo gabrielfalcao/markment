@@ -35,21 +35,21 @@ STAT_LABELS = ["mode", "ino", "dev", "nlink", "uid", "gid", "size", "atime", "mt
 
 
 class Node(object):
-    def __init__(self, base_path):
-        self.base_path = abspath(expanduser(base_path))
+    def __init__(self, path):
+        self.path = abspath(expanduser(path))
         {
-        # TODO : rename all base_path to path
+        # TODO : rename all path to path
         }
-        self.base_path_regex = '^{0}'.format(re.escape(self.base_path))
-        self.exists = exists(self.base_path)
+        self.path_regex = '^{0}'.format(re.escape(self.path))
+        self.exists = exists(self.path)
         try:
-            stats = os.stat(self.base_path)
+            stats = os.stat(self.path)
         except OSError:
             stats = [0] * len(STAT_LABELS)
 
         self.metadata = DotDict(zip(STAT_LABELS, stats))
-        self.is_file = isfile(self.base_path)
-        self.is_dir = isdir(self.base_path)
+        self.is_file = isfile(self.path)
+        self.is_dir = isdir(self.path)
 
     @property
     def dir(self):
@@ -60,7 +60,7 @@ class Node(object):
 
     @property
     def parent(self):
-        return self.__class__(dirname(self.base_path))
+        return self.__class__(dirname(self.path))
 
     def could_be_updated_by(self, other):
         return self.metadata.mtime < other.metadata.mtime
@@ -68,14 +68,14 @@ class Node(object):
     def relative(self, path):
         """##### `Node#relative(path)`
 
-        returns a given path subtracted by the node.base_path [python`unicode`]
+        returns a given path subtracted by the node.path [python`unicode`]
 
         ```python
         rel = Node('/Users/gabrielfalcao/').relative('/Users/gabrielfalcao/profile-picture.png')
         assert rel == 'profile-picture.png'
         ```
         """
-        return re.sub(self.base_path_regex, '', path).lstrip(os.sep)
+        return re.sub(self.path_regex, '', path).lstrip(os.sep)
 
     def trip_at(self, path):
         """ ##### `Node#trip_at(path)`
@@ -93,7 +93,7 @@ class Node(object):
                 yield join(root, filename)
 
     def walk(self):
-        return self.trip_at(self.base_path)
+        return self.trip_at(self.path)
 
     def glob(self, pattern):
         """ ##### `Node#glob(pattern)`
@@ -153,33 +153,33 @@ class Node(object):
         return exists(self.join(path))
 
     def join(self, path):
-        return abspath(join(self.base_path, path))
+        return abspath(join(self.path, path))
 
     def open(self, path, *args, **kw):
         return open(self.join(path), *args, **kw)
 
     def __repr__(self):
-        return '<markment.fs.Node (path={0})>'.format(self.base_path)
+        return '<markment.fs.Node (path={0})>'.format(self.path)
 
 
 class TreeMaker(object):
-    def __init__(self, base_path):
-        self.base_path = abspath(base_path)
-        self.base_path_regex = '^{0}'.format(re.escape(self.base_path))
-        self.node = Node(base_path)
+    def __init__(self, path):
+        self.path = abspath(path)
+        self.path_regex = '^{0}'.format(re.escape(self.path))
+        self.node = Node(path)
 
     def __repr__(self):
-        return '<markment.fs.TreeMaker(path={0})>'.format(self.base_path)
+        return '<markment.fs.TreeMaker(path={0})>'.format(self.path)
 
     def relative(self, path):
-        return re.sub(self.base_path_regex, '', path).lstrip(os.sep)
+        return re.sub(self.path_regex, '', path).lstrip(os.sep)
 
     def find_all_markdown_files(self):
         dirs = []
         for fullpath in self.node.walk():
             folder = dirname(fullpath)
             if fnmatch(fullpath, '*.md'):
-                if folder != self.base_path and folder not in dirs:
+                if folder != self.path and folder not in dirs:
                     dirs.append(folder)
                     yield {
                         'path': folder,
@@ -283,9 +283,9 @@ class Generator(object):
             in_local = self.project.node.find(src)
 
             if in_theme:
-                source = in_theme.base_path
+                source = in_theme.path
             elif in_local:
-                source = in_local.base_path
+                source = in_local.path
             else:  # not really there
                 missed_files.append(src)
                 continue
