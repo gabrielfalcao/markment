@@ -55,17 +55,18 @@ def test_index_file(context):
     theme = Theme.load_by_name('touch-of-pink')
     destination = Generator(project, theme)
     generated = destination.persist(context.output_path)
+    generated.should.have.length_of(7)
 
     index = generated[0]
 
     html = open(index).read()
     dom = lhtml.fromstring(html)
 
-    links = dom.cssselect('link[rel="stylesheet"]')
+    links = dom.cssselect('link.theme-asset')
 
-    links.should.have.length_of(2)
+    links.should.have.length_of(1)
 
-    tango, style = links
+    style = links[0]
 
     style.attrib.should.have.key("href").being.equal("./assets/style.css")
 
@@ -78,6 +79,7 @@ def test_index_has_correct_links_for_md_files(context):
     theme = Theme.load_from_path(LOCAL_FILE('fixtures', 'themes', 'turbo'))
     destination = Generator(project, theme)
     generated = destination.persist(context.output_path)
+    generated.should.have.length_of(5)
 
     index = generated[0]
     index.should.contain('index')
@@ -104,6 +106,7 @@ def test_index_toc_links_point_to_html_files(context):
     theme = Theme.load_by_name('touch-of-pink')
     destination = Generator(project, theme)
     generated = destination.persist(context.output_path)
+    generated.should.have.length_of(7)
 
     index = generated[0]
     index.should.contain('index')
@@ -131,6 +134,7 @@ def test_index_images_point_to_right_place(context):
     theme = Theme.load_by_name('touch-of-pink')
     destination = Generator(project, theme)
     generated = destination.persist(context.output_path)
+    generated.should.have.length_of(7)
 
     index = generated[0]
     index.should.contain('index')
@@ -155,6 +159,7 @@ def test_second_level_file(context):
     theme = Theme.load_by_name('touch-of-pink')
     destination = Generator(project, theme)
     generated = destination.persist(context.output_path)
+    generated.should.have.length_of(7)
 
     second_level = generated[1]
     second_level.should.contain('docs/output.html')
@@ -162,11 +167,11 @@ def test_second_level_file(context):
     html = open(second_level).read()
     dom = lhtml.fromstring(html)
 
-    links = dom.cssselect('link[rel="stylesheet"]')
+    links = dom.cssselect('link.theme-asset')
 
-    links.should.have.length_of(2)
+    links.should.have.length_of(1)
 
-    tango, style = links
+    style = links[0]
 
     style.attrib.should.have.key("href").being.equal("../assets/style.css")
 
@@ -179,6 +184,7 @@ def test_second_level_has_correct_links_for_md_files(context):
     theme = Theme.load_from_path(LOCAL_FILE('fixtures', 'themes', 'simple-index'))
     destination = Generator(project, theme)
     generated = destination.persist(context.output_path)
+    generated.should.have.length_of(5)
 
     second_level = generated[1]
     second_level.should.contain('docs/output.html')
@@ -206,6 +212,7 @@ def test_second_level_toc_links_point_to_html_files(context):
     theme = Theme.load_by_name('touch-of-pink')
     destination = Generator(project, theme)
     generated = destination.persist(context.output_path)
+    generated.should.have.length_of(7)
 
     second_level = generated[1]
     second_level.should.contain('docs/output.html')
@@ -233,6 +240,7 @@ def test_second_level_stylesheets_point_to_right_place(context):
     theme = Theme.load_by_name('touch-of-pink')
     destination = Generator(project, theme)
     generated = destination.persist(context.output_path)
+    generated.should.have.length_of(7)
 
     second_level = generated[1]
     second_level.should.contain('docs/output.html')

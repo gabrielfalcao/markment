@@ -3,10 +3,11 @@ from __future__ import unicode_literals
 
 import json
 import yaml
+from os.path import basename
 from functools import partial
 from collections import OrderedDict
-from copy import deepcopy
-from .fs import Node, TreeMaker, dirname
+
+from .fs import Node, TreeMaker
 from .engine import Markment
 from .views import TemplateContext
 
@@ -19,9 +20,13 @@ class Project(object):
 
         self.node = Node(path)
         self.tree = TreeMaker(path)
+        self.name = basename(path)
+        self.version = ''
+        self.description = ''
+
         self.meta = {
             'project': {
-                'name': dirname(path),
+                'name': self.name,
             }
         }
         self._found_files = OrderedDict()
@@ -33,9 +38,9 @@ class Project(object):
         self.meta.update(metadata)
 
         p = self.meta['project']
-        self.name = p.get('name', '')
-        self.version = p.get('version', '')
-        self.description = p.get('description', '')
+        self.name = p.get('name', self.name)
+        self.version = p.get('version', self.version)
+        self.description = p.get('description', self.description)
 
     def parse_metadata(self, path):
         if not self.node.contains(self.metadata_filename):
