@@ -19,7 +19,7 @@ print "Generating documentation from", project_path
 print "  Destination:", output_path
 
 project = Project.discover(project_path)
-theme = Theme.load_by_name('touch-of-pink')
+theme = Theme.load_by_name('slate')
 destination = Generator(project, theme)
 generated = destination.persist(output_path, gently=True)
 

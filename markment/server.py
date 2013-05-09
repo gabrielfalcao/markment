@@ -20,7 +20,7 @@ from markment.ui import Theme
 from markment.fs import Node
 
 
-current_dir = os.path.join(os.path.abspath(os.getcwdu()), 'tests/functional/fixtures')
+current_dir = os.path.join(os.path.abspath(os.getcwdu()), 'example')
 current_node = Node(current_dir)
 static_url_path = '/raw'
 
@@ -57,13 +57,13 @@ def static_url_callback(path, current_document_info, theme):
 
 @app.route("/")
 def index():
-    session['theme_name'] = 'touch-of-pink'
+    session['theme_name'] = 'slate'
     return redirect(url_for('.render_path', path=project.meta['documentation']['index']))
 
 
 def get_theme():
     if 'theme_name' not in session:
-        session['theme_name'] = 'touch-of-pink'
+        session['theme_name'] = 'slate'
 
     return session['theme_name']
 

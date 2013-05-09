@@ -51,6 +51,16 @@ class Project(object):
         self.name = p.get('name', self.name)
         self.version = p.get('version', self.version)
         self.description = p.get('description', self.description)
+        self.github_url = p.get('github_url', '')
+
+        tarball_fallback = zipball_fallback = ''
+
+        if self.github_url:
+            tarball_fallback = '{0}/archive/master.tar.gz'.format(self.github_url)
+            zipball_fallback = '{0}/archive/master.zip'.format(self.github_url)
+
+        self.zipball_download_url = p.get('zipball_download_url', zipball_fallback)
+        self.tarball_download_url = p.get('tarball_download_url', tarball_fallback)
 
     def parse_metadata(self, path):
         if not self.node.contains(self.metadata_filename):
