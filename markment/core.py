@@ -14,9 +14,8 @@ from .views import TemplateContext
 class Project(object):
     metadata_filename = '.markment.yml'
 
-    def __init__(self, path, url_prefix=None):
+    def __init__(self, path):
         self.path = path
-        self.url_prefix = url_prefix or './'
 
         self.node = Node(path)
         self.tree = TreeMaker(path)
@@ -60,29 +59,28 @@ class Project(object):
 
         return self._found_files
 
-    def generate(self, theme, static_prefix=None, **kw):
+    def generate(self, theme, static_url_cb=None, link_cb=None, **kw):
         master_index = self.find_markdown_files().values()
 
-        generated = []
         for info in master_index:
-            generated.append(self.render_html_from_markdown_info(
-                info, theme, static_prefix, master_index, **kw))
+            yield self.render_html_from_markdown_info(
+                info, theme, static_url_cb, link_cb, master_index, **kw)
 
-        return generated
+    def render_html_from_markdown_info(
+            self, info, theme, static_url_cb, link_cb, master_index, **kw):
 
-    def render_html_from_markdown_info(self, info, theme, static_prefix,
-                                       master_index, **kw):
+        if static_url_cb:
+            static_url_cb = partial(static_url_cb, current_document_info=info)
+
+        if link_cb:
+            link_cb = partial(link_cb, current_document_info=info)
+
         with self.node.open(info['path']) as f:
             data = f.read()
 
         decoded = data.decode('utf-8')
-        url_prefix = kw.get("url_prefix", self.url_prefix)
-        if not hasattr(url_prefix, 'lower'):
-            prefix = lambda link: url_prefix(link, info)
-        else:
-            prefix = url_prefix
 
-        md = Markment(decoded, url_prefix=prefix)
+        md = Markment(decoded, url_prefix=link_cb)
 
         info['markdown'] = md.raw
         info['indexes'] = md.index()
@@ -94,7 +92,8 @@ class Project(object):
             index=md.index(),
             master_index=list(master_index),
             json=json,
-            static_prefix=static_prefix,
+            static_url_cb=static_url_cb,
+            link_cb=link_cb,
             **kw)
 
         ctx = Context.ready_to_render()

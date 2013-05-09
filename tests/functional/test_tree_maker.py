@@ -13,7 +13,7 @@ def test_treemaker_finds_all_files():
     tm = TreeMaker(LOCAL_FILE('fixtures'))
 
     files = list(tm.find_all_markdown_files())
-    files.should.have.length_of(4)
+    files.should.have.length_of(6)
 
     files.should.equal([
         {
@@ -34,6 +34,16 @@ def test_treemaker_finds_all_files():
         {
             'path': LOCAL_FILE('fixtures', 'docs', 'strings.md'),
             'relative_path': 'docs/strings.md',
+            'type': 'blob',
+        },
+        {
+            'path': LOCAL_FILE('fixtures', 'docs', 'even', 'deeper'),
+            'relative_path': 'docs/even/deeper',
+            'type': 'tree',
+        },
+        {
+            'path': LOCAL_FILE('fixtures', 'docs', 'even', 'deeper', 'item.md'),
+            'relative_path': 'docs/even/deeper/item.md',
             'type': 'blob',
         },
     ])

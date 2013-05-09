@@ -17,11 +17,26 @@ from os.path import (
     split,
     relpath,
     expanduser,
-    isfile,
-    isdir
 )
+from os.path import isfile as isfile_base
+from os.path import isdir as isdir_base
+
 
 LOCAL_FILE = lambda *path: join(abspath(dirname(__file__)), *path)
+
+
+def isfile(path):
+    if exists(path):
+        return isfile_base(path)
+
+    return '.' in split(path)[-1]
+
+
+def isdir(path):
+    if exists(path):
+        return isdir_base(path)
+
+    return '.' not in split(path)[-1]
 
 
 class DotDict(dict):
@@ -34,12 +49,12 @@ class DotDict(dict):
 STAT_LABELS = ["mode", "ino", "dev", "nlink", "uid", "gid", "size", "atime", "mtime", "ctime"]
 
 
+DOTDOTSLASH = '..{0}'.format(os.sep)
+
+
 class Node(object):
     def __init__(self, path):
-        self.path = abspath(expanduser(path))
-        {
-        # TODO : rename all path to path
-        }
+        self.path = abspath(expanduser(path)).rstrip('/')
         self.path_regex = '^{0}'.format(re.escape(self.path))
         self.exists = exists(self.path)
         try:
@@ -62,8 +77,21 @@ class Node(object):
     def parent(self):
         return self.__class__(dirname(self.path))
 
+    def reduce_to_base_path(self, path):
+        levels = []
+        while path.startswith(DOTDOTSLASH):
+            levels.append('..')
+            path = path.replace(DOTDOTSLASH, '', 1)
+
+        way_back = os.sep.join(levels)
+        return self.cd(way_back).dir.path, path, way_back
+
     def could_be_updated_by(self, other):
         return self.metadata.mtime < other.metadata.mtime
+
+    def create_tree_if_not_exists(self):
+        if not self.dir.exists:
+            os.makedirs(self.dir.path)
 
     def relative(self, path):
         """##### `Node#relative(path)`
@@ -149,6 +177,59 @@ class Node(object):
 
         return None
 
+    def depth_of(self, path):
+        """Returns the level of depth of the given path inside of the
+        instance's path.
+
+        Only really works with paths that are relative to the class.
+
+        ```python
+        level = Node('/foo/bar').depth_of('/foo/bar/another/dir/file.py')
+        assert level == 2
+        ```
+        """
+        new_path = self.relative(path)
+        if isfile(self.join(new_path)):
+            new_path = dirname(new_path)
+
+        new_path = new_path.rstrip('/')
+        new_path = "{0}/".format(new_path)
+        return new_path.count(os.sep)
+
+    def path_to_related(self, path):
+        """Returns the path to a related file. (is under a subtree the
+        same tree as the node).
+
+        It's useful to know how to go back to the root of this node
+        instance.
+
+        ```python
+        way_back = Node('/foo/bar').depth_of('/foo/bar/another/dir/file.py')
+        assert way_back == '../../'
+
+        way_back = Node('/foo/bar/docs/static/file.css').depth_of('/foo/bar/docs/intro/index.md')
+        assert way_back == '../static/file.css'
+        ```
+        """
+        # self.path = "...functional/fixtures/img/logo.png"
+        # path = "...functional/fixtures/docs/index.md"
+        current = self.dir
+
+        while not path.startswith(current.dir.path):
+            current = current.dir.parent.dir
+
+        remaining = current.relative(self.path)
+
+        level = current.relative(path).count(os.sep)
+
+        way_back = os.sep.join(['..'] * level) or '.'
+        result = "{0}/{1}".format(way_back, remaining)
+
+        return result
+
+    def cd(self, path):
+        return self.__class__(self.join(path))
+
     def contains(self, path):
         return exists(self.join(path))
 
@@ -164,7 +245,7 @@ class Node(object):
 
 class TreeMaker(object):
     def __init__(self, path):
-        self.path = abspath(path)
+        self.path = abspath(path.rstrip('/'))
         self.path_regex = '^{0}'.format(re.escape(self.path))
         self.node = Node(path)
 
@@ -205,49 +286,87 @@ class Generator(object):
     def rename_markdown_filename(self, path):
         return self.regex.sub('.html', path)
 
-    def calculate_prefix(self, link, info, assets_folder, project, theme):
-        is_markdown = self.regex.search(link)
+    def relative_link_callback(self, original_link, current_document_info, destination_root):
+        fixed_link, levels = self.get_levels(original_link)
 
-        in_theme = theme.node.find(link)
-        in_local = project.node.find(link)
-        found = in_local or in_theme
+        is_markdown = self.regex.search(original_link)
+
+        found = self.project.node.find(fixed_link)
+
+        found_base = self.project.node.dir
+
+        relative_path = found_base.relative(found.path)
+
+        current_document_path = self.rename_markdown_filename(current_document_info['relative_path'])
+
+        item_destination = destination_root.cd(relative_path)
+        destination_document = destination_root.cd(current_document_path)
+
+        prefix = item_destination.path_to_related(destination_document.path)
+
+        if found.path not in self.files_to_copy and not is_markdown:
+            self.files_to_copy.append(found.path)
+
+        if prefix == './':
+            prefix = prefix + fixed_link
 
         if is_markdown:
-            prefix = './{0}'.format(self.rename_markdown_filename(link.lstrip('/')))
+            prefix = self.rename_markdown_filename(prefix)
+
+        return prefix
+
+    def get_levels(self, link):
+        levels = []
+        while link.startswith(DOTDOTSLASH):
+            levels.append('..')
+            link = link.replace(DOTDOTSLASH, '', 1)
+
+        return link, levels
+
+    def static_url_callback(self, link, current_document_info, destination_root):
+        is_markdown = self.regex.search(link)
+        prefix = link
+
+        link, levels = self.get_levels(link)
+        in_theme = self.theme.node.find(link)
+        in_local = self.project.node.find(link)
+
+        if levels:
+            prefix = link
+
+        if in_local:
+            found = in_local
+            found_base = self.project.node.dir
+            link = found_base.relative(found.path)
+
+        elif in_theme:
+            found = in_theme
+            found_base = self.theme.node.dir
+            found_relative = found_base.relative(found.path)
+            asset_destination = destination_root.cd(found_relative)
+            current_document_destination = destination_root.cd(current_document_info['relative_path'])
+            if not levels:
+                prefix = asset_destination.path_to_related(current_document_destination.path)
+
         else:
-            level = 1
-            current_document = Node(info['relative_path'])
+            raise IOError("BOOM, could not find {0} anywhere".format(link))
 
-            print "*" * 10, info['relative_path'], "*" * 10
+        if is_markdown:
+            prefix = self.rename_markdown_filename(prefix)
 
-            while current_document.parent and not current_document.dir.find(link):
-                level += 1
-                current_document = current_document.parent
-
-            relative = current_document.relative(link)
-
-            prefix = '{0}/{1}'.format('.' * level, link.lstrip('/'))
-            if found:
-                self.files_to_copy.append(relative)
+        elif found and found.path not in self.files_to_copy:
+            self.files_to_copy.append(found.path)
 
         return prefix
 
     def persist(self, destination_path, gently=False):
         destination = Node(destination_path)
 
-        assets_folder = self.theme.index['static_path']
-        assets_folder_root = dirname(assets_folder)
-        assets_folder_name = Node(assets_folder_root).relative(assets_folder)
-
-        url_prefix_callback = partial(
-            self.calculate_prefix,
-            assets_folder=assets_folder_name,
-            project=self.project,
-            theme=self.theme,
+        master_index = self.project.generate(
+            self.theme,
+            static_url_cb=partial(self.static_url_callback, destination_root=destination),
+            link_cb=partial(self.relative_link_callback, destination_root=destination),
         )
-        master_index = self.project.generate(self.theme,
-                                             static_prefix=assets_folder_name,
-                                             url_prefix=url_prefix_callback)
 
         if not exists(destination_path):
             os.makedirs(destination_path)
@@ -270,11 +389,6 @@ class Generator(object):
 
             ret.append(destiny)
 
-            references = item.get('url_references', [])
-
-            self.files_to_copy.extend(references)
-            ret.extend(references)
-
         missed_files = []
         for src in self.files_to_copy:
 
@@ -282,15 +396,21 @@ class Generator(object):
             in_theme = self.theme.node.find(src)
             in_local = self.project.node.find(src)
 
-            if in_theme:
-                source = in_theme.path
-            elif in_local:
-                source = in_local.path
-            else:  # not really there
+            if in_local:
+                found = in_local
+                found_base = self.project.node.dir
+
+            elif in_theme:
+                found = in_theme
+                found_base = self.theme.node.dir
+
+            else:
                 missed_files.append(src)
                 continue
 
-            destiny = destination.join(src)
+            source = found.path
+            relative_source = found_base.relative(found.path)
+            destiny = destination.join(relative_source)
             ret.append(destiny)
             destiny_folder = dirname(destiny)
             if not exists(destiny_folder):
@@ -302,9 +422,9 @@ class Generator(object):
             if not already_exists or should_update:
                 shutil.copy2(source, destiny)
 
-        cloner = AssetsCloner(assets_folder)
+        cloner = AssetsCloner(self.theme.index['static_path'])
 
-        ret.extend(cloner.clone_to(destination_path))
+        cloner.clone_to(destination_path)
 
         if missed_files and not gently:
             raise IOError("The documentation refers to {0} "

@@ -6,12 +6,15 @@ import re
 class TemplateContext(object):
     link_regex = re.compile(r'[.](md|markdown)$', re.I)
 
-    def __init__(self, static_prefix=None, **data):
+    def __init__(self, static_url_cb=None, link_cb=None, **data):
         self.data = data
-        self.static_prefix = static_prefix or './'
+        if callable(static_url_cb):
+            self.static_file = static_url_cb
+        if callable(link_cb):
+            self.link = link_cb
 
     def static_file(self, name):
-        return "./{0}/{1}".format(self.static_prefix.strip('/'), name.lstrip('/'))
+        return "./{0}".format(name.lstrip('/'))
 
     def link(self, path):
         if self.link_regex.search(path):
@@ -19,10 +22,7 @@ class TemplateContext(object):
 
         return path
 
-    def ready_to_render(self, static_prefix=None):
-        if static_prefix:
-            self.static_prefix = static_prefix
-
+    def ready_to_render(self):
         ctx = {}
         ctx['link'] = self.link
         ctx['static_file'] = self.static_file
