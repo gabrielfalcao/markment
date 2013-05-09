@@ -4,11 +4,12 @@
 from __future__ import unicode_literals
 import os
 import argparse
-from os.path import abspath, join, exists
+from os.path import abspath, join, exists, relpath
 
 from markment.core import Project
 from markment.fs import Generator
 from markment.ui import Theme
+from markment.server import server
 
 
 LOGO = """
@@ -56,6 +57,11 @@ parser.add_argument(
     help='Markment theme name or path')
 
 parser.add_argument(
+    '-s', '--server', dest='RUNSERVER', action="store_true",
+    default=False,
+    help='Enables the builtin HTTP server')
+
+parser.add_argument(
     '-o', '--output-path', dest='OUTPUT', default='./_public/',
     help='Where markment should output the new documentation')
 
@@ -63,21 +69,31 @@ parser.add_argument(
 def main():
     args = parser.parse_args()
 
-    project_path = args.SOURCE
-    output_path = args.OUTPUT
-
-    print "Generating documentation from", project_path
-    print "  Destination:", output_path
+    project_path = abspath(args.SOURCE)
+    output_path = abspath(args.OUTPUT)
 
     project = Project.discover(project_path)
     if exists(join(args.THEME, 'markment.yml')):
-        theme = Theme.load_from_path(args.SOURCE)
+        theme = Theme.load_from_path(args.THEME)
     elif os.sep not in args.THEME:
         theme = Theme.load_by_name(args.THEME)
     else:
         print "Invalid theme name:", args.THEME
 
+    if args.RUNSERVER:
+        print "\033[1;32mMarkment is serving the documentation "
+        print "under \033[1;31m'./{0}' \033[1;32mdynamically\033[0m".format(
+            relpath(project_path))
+        print
+        print "\033[1;33mNow you can just change whatever files you want"
+        print "and refresh your browser\033[0m"
+        print
+        return server(project_path, theme).run(debug=True, use_reloader=False)
+
     destination = Generator(project, theme)
+    print "Generating documentation from", project_path
+    print "  Destination:", output_path
+
     generated = destination.persist(output_path, gently=True)
 
     for f in generated:
