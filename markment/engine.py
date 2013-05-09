@@ -8,6 +8,7 @@ from misaka import (
     EXT_NO_INTRA_EMPHASIS,
     EXT_SUPERSCRIPT,
     EXT_AUTOLINK,
+    EXT_TABLES,
     HTML_USE_XHTML,
     HTML_SMARTYPANTS,
 )
@@ -143,6 +144,7 @@ class Markment(object):
     extensions = (EXT_FENCED_CODE |
                   EXT_NO_INTRA_EMPHASIS |
                   HTML_SMARTYPANTS |
+                  EXT_TABLES |
                   EXT_AUTOLINK |
                   EXT_SUPERSCRIPT |
                   HTML_USE_XHTML)
