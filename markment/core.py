@@ -122,7 +122,7 @@ class Project(object):
             **kw)
 
         ctx = Context.ready_to_render()
-        info['html'] = theme.render(**ctx)
+        info['html'] = theme.render(**ctx).encode('utf-8')
         info['references'] = md.url_references
         return info
 

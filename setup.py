@@ -48,17 +48,24 @@ requirements = [
 ]
 
 setup(name='markment',
-    version='0.1.0',
-    description=(u'Structured documentation generator for markdown'),
-    author=u'Gabriel Falcao',
-    author_email='gabriel@nacaolivre.org',
-    url='http://github.com/gabrielfalcao/markment',
-    packages=get_packages(),
-    install_requires=requirements,
-    entry_points={
-        'console_scripts': ['markment = markment.bin:main'],
-    },
-    package_data={
-        'lettuce': ['COPYING', '*.md'],
-    },
-)
+      version='0.1.0',
+      description=(u'Structured documentation generator for markdown'),
+      author=u'Gabriel Falcao',
+      author_email='gabriel@nacaolivre.org',
+      url='http://github.com/gabrielfalcao/markment',
+      packages=get_packages(),
+      install_requires=requirements,
+      entry_points={
+          'console_scripts': ['markment = markment.bin:main'],
+      },
+      package_data={
+          'markment': [
+              'themes/*/*/*/*/*/*/*.*',
+              'themes/*/*/*/*/*/*.*',
+              'themes/*/*/*/*/*.*',
+              'themes/*/*/*/*.*',
+              'themes/*/*/*.*',
+              'themes/*/*.*',
+              'themes/*.*',
+          ],
+      })

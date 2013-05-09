@@ -307,6 +307,8 @@ class Generator(object):
         is_markdown = self.regex.search(original_link)
 
         found = self.project.node.find(fixed_link)
+        if not found:
+            return original_link
 
         found_base = self.project.node.dir
 

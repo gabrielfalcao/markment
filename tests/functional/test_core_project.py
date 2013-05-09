@@ -5,7 +5,7 @@ import os
 from os.path import relpath
 from markment.core import Project
 from markment.ui import Theme
-from .base import LOCAL_FILE, CWD_FILE
+from .base import CWD_FILE
 
 
 def test_project_should_find_metadata():
@@ -15,7 +15,7 @@ def test_project_should_find_metadata():
 
     project.should.be.a(Project)
     project.should.have.property('name').being.equal('Markment')
-    project.should.have.property('version').being.equal('0.0.2')
+    project.should.have.property('version').being.equal('0.1.0')
     project.should.have.property('description').being.equal(
         'A markdown-based automatic documentation generator')
 

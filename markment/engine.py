@@ -26,7 +26,7 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
         super(MarkmentRenderer, self).setup()
         self.markment_indexes = []
         self.url_prefix = None
-        self.code_count = {'text': ''}
+        self.code_count = {'text': '', 'count': 0}
         self.url_references = []
 
     def last_index_plus_child(self, level):
@@ -118,13 +118,14 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
     def add_attributes_to_code(self, code):
         dom = lhtml.fromstring(code)
         pre = dom.cssselect("div.highlight pre")[0]
-        last_header = self.markment_indexes[-1]
+        if self.markment_indexes:
+            last_header = self.markment_indexes[-1]
 
-        slug_prefix = slugify(last_header['text'])
-        pre.attrib['name'] = "{0}-example-{1}".format(
-            slug_prefix,
-            self.count_index_for_header(last_header['text'])
-        )
+            slug_prefix = slugify(last_header['text'])
+            pre.attrib['name'] = "{0}-example-{1}".format(
+                slug_prefix,
+                self.count_index_for_header(last_header['text'])
+            )
 
         return lhtml.tostring(dom)
 
