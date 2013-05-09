@@ -61,11 +61,9 @@
     </div>
     <div id="footer">
       <div class="wrapper">
-	<ul class="links" role="navigation">
-          {% for item in master_index %}
-	    <p><a class="toc" href="{{ link(item.relative_path) }}">{{ link(item.relative_path) }}</a></p>
-          {% endfor %}
-	</ul>
+      {% for item in master_index %}
+        <a class="toc" href="{{ link(item.relative_path) }}">{{ link(item.relative_path) }}</a>
+      {% endfor %}
 	<p class="info-theme" role="contentinfo">Powered by <a href="http://github.com/gabrielfalcao/markment">Markment</a> and designed by <a href="http://kcmr.tumblr.com">Kcmr</a>.</p>
       </div>
     </div>

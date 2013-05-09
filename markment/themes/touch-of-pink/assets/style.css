@@ -37,11 +37,11 @@ body{background:#f2f2f2;text-align:center;}
 .wrapper{width:690px;max-width:100%;margin:0 auto;}
 #header h1{position:absolute;top:90px;text-align:center;width:100%;text-transform:uppercase;}#header h1 a{color:#000;}#header h1 a:hover{color:#05b2c2;}
 #description{position:absolute;top:140px;text-align:center;width:100%;}#description p{width:690px;max-width:100%;margin:0 auto;font-size:1.125em;color:#817f7f;font-style:italic;line-height:normal;text-shadow:0 1px 0 #fff;}
-#navigation{background:url(http://static.tumblr.com/26l8vc7/qXwlbyaux/sprite.png) repeat-x;position:fixed;z-index:3;left:0;width:100%;height:38px;padding-top:8px;}
+#navigation{position:fixed;z-index:3;left:0;width:100%;height:38px;padding-top:8px;}
 .links{float:left;padding-top:2px;}.links li{float:left;font:1.125em MuseoSlabTumblr,sans-serif;text-shadow:0 1px 0 #fff;margin-right:30px;}.links li:last-child{margin-right:0;}
 .links a{color:#000;text-decoration:none;}.links a:hover{color:#05b2c2;}
 #pages{float:left;}#pages li{float:left;}
-#search{float:right;width:11.4375em;padding-left:0.9375em;height:1.375em;padding-top:1px;background:url(http://static.tumblr.com/26l8vc7/qXwlbyaux/sprite.png) 0 -600px no-repeat;}#search input{font-size:1em;}
+#search{float:right;width:11.4375em;padding-left:0.9375em;height:1.375em;padding-top:1px;}#search input{font-size:1em;}
 #search .search{background:transparent;border:none;color:#a5a5a5;width:9.75em;}
 #content{width:690px;max-width:100%;margin:0 auto;padding-top:255px;}
 .post{background:#ffffff;padding:25px 90px 22px;margin-bottom:90px;-moz-box-shadow:0 4px 0 rgba(94, 94, 94, 0.1);-webkit-box-shadow:0 4px 0 rgba(94, 94, 94, 0.1);box-shadow:0 4px 0 rgba(94, 94, 94, 0.1);position:relative;}
@@ -85,7 +85,7 @@ blockquote{font-size:1.5em;margin-bottom:0.9166666666666666em;}blockquote p,bloc
 #pagination .older{float:left;}
 #pagination .newer{float:right;}
 .search-results{font-size:1.125em;}
-#footer{padding:25px 0;background:url(http://static.tumblr.com/26l8vc7/qXwlbyaux/sprite.png) 0 -300px repeat-x;margin-top:-5px;position:relative;}
+#footer{padding:25px 0; 0 -300px repeat-x;margin-top:-5px;position:relative;}
 .info-theme{clear:both;color:#474646;font-size:0.875em;text-align:left;}
 .tags-label{float:left;padding-right:8px;}
 .tags{float:left;margin-bottom:0;}

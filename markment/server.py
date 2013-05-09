@@ -13,19 +13,22 @@ from flask import (
     session,
     redirect,
 )
+from functools import partial
 
 from markment.core import Project
 from markment.ui import Theme
+from markment.fs import Node
 
 
-current_dir = os.path.abspath(os.getcwdu())
+current_dir = os.path.join(os.path.abspath(os.getcwdu()), 'tests/functional/fixtures')
+current_node = Node(current_dir)
 static_url_path = '/raw'
 
 app = Flask(__name__, static_folder=current_dir, static_url_path=static_url_path)
 app.secret_key = uuid.uuid4().hex
 
 
-def url_prefix_callback(link):
+def url_prefix_callback(link, current_document_info):
     target = link.lower()
 
     if target.endswith(".md") or target.endswith(".markdown"):
@@ -33,11 +36,23 @@ def url_prefix_callback(link):
     else:
         return "{0}/{1}".format(static_url_path, link.lstrip('/'))
 
-project = Project.discover(current_dir, url_prefix=url_prefix_callback)
+project = Project.discover(current_dir)
 
 
-def link(path):
-    return url_for('.render_path', path=path)
+def link(path, current_document_info):
+    if path.endswith('.md') or path.endswith('.markdown'):
+        return url_for('.render_path', path=path)
+    else:
+        found = current_node.cd(path)
+        relative_path = current_node.relative(found.path)
+        return '/raw/{0}'.format(relative_path)
+
+
+def static_url_callback(path, current_document_info, theme):
+    if theme.node.find(path):
+        return '/assets/{0}/{1}'.format(session['theme_name'], path)
+
+    return '/raw/{0}'.format(path)
 
 
 @app.route("/")
@@ -58,9 +73,8 @@ def render_path(path):
     theme_name = get_theme()
 
     theme = Theme.load_by_name(theme_name)
-    prefix = '/assets/{0}/'.format(theme_name)
 
-    items = list(project.generate(theme, static_prefix=prefix, link=link))
+    items = list(project.generate(theme, static_url_cb=partial(static_url_callback, theme=theme), link_cb=link))
 
     for generated in items:
         print "." * 10

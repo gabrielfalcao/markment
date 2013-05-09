@@ -17,6 +17,7 @@ from os.path import (
     split,
     relpath,
     expanduser,
+    basename,
 )
 from os.path import isfile as isfile_base
 from os.path import isdir as isdir_base
@@ -67,6 +68,10 @@ class Node(object):
         self.is_dir = isdir(self.path)
 
     @property
+    def basename(self):
+        return basename(self.path)
+
+    @property
     def dir(self):
         if not self.is_dir:
             return self.parent
@@ -105,7 +110,7 @@ class Node(object):
         """
         return re.sub(self.path_regex, '', path).lstrip(os.sep)
 
-    def trip_at(self, path):
+    def trip_at(self, path, lazy=False):
         """ ##### `Node#trip_at(path)`
 
         does a os.walk at the given path and yields the absolute path
@@ -116,14 +121,17 @@ class Node(object):
             print filename
         ```
         """
-        for root, folders, filenames in os.walk(path):
-            for filename in filenames:
-                yield join(root, filename)
+        def iterator():
+            for root, folders, filenames in os.walk(path):
+                for filename in filenames:
+                    yield join(root, filename)
+
+        return lazy and iterator() or list(iterator())
 
     def walk(self):
         return self.trip_at(self.path)
 
-    def glob(self, pattern):
+    def glob(self, pattern, lazy=False):
         """ ##### `Node#glob(pattern)`
 
         searches for globs recursively in all the children node of the
@@ -136,11 +144,14 @@ class Node(object):
                              # path of the found file
         ```
         """
-        for filename in self.walk():
-            if fnmatch(filename, pattern):
-                yield self.__class__(filename)
+        def iterator():
+            for filename in self.walk():
+                if fnmatch(filename, pattern):
+                    yield self.__class__(filename)
 
-    def grep(self, pattern, flags=0):
+        return lazy and iterator() or list(iterator())
+
+    def grep(self, pattern, flags=0, lazy=False):
         """ ##### `Node#grep(pattern)`
 
         searches recursively for children that match the given regex
@@ -152,9 +163,13 @@ class Node(object):
                              # path of the found file
         ```
         """
-        for filename in self.walk():
-            if re.search(pattern, filename, flags):
-                yield self.__class__(filename)
+
+        def iterator():
+            for filename in self.walk():
+                if re.search(pattern, filename, flags):
+                    yield self.__class__(filename)
+
+        return lazy and iterator() or list(iterator())
 
     def find(self, relative_path):
         """ ##### `Node#find(relative_path)`

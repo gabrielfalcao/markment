@@ -15,7 +15,8 @@ functional: clean prepare
 	@nosetests --stop -v -s tests/functional
 
 integration: clean
-	@python markment/bin.py -t slate -o ./generated/
+	@python markment/bin.py -t slate -o ./_public/
+	@egrep --color -r 'style.css' _public
 
 docs: clean
 	@steadymark README.md
@@ -36,5 +37,5 @@ publish:
 prepare:
 	@mkdir -p output
 
-run:
+run: clean
 	@reset && python markment/server.py

@@ -24,9 +24,19 @@ class Project(object):
         self.version = ''
         self.description = ''
 
+        documentation_index_fallback = 'README.md'
+
+        found = self.node.grep(r'\.(md|markdown)')
+
+        if found:
+            documentation_index_fallback = found[0].basename
+
         self.meta = {
             'project': {
                 'name': self.name,
+            },
+            'documentation': {
+                'index': documentation_index_fallback
             }
         }
         self._found_files = OrderedDict()
