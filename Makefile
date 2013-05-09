@@ -16,7 +16,8 @@ functional: clean prepare
 
 integration: clean
 	@python markment/bin.py -t slate -o ./_public/
-	@egrep --color -r 'style.css' _public
+	@echo "Checking if the documentation has the correct assets"
+	@egrep --color -r 'stylesheet.css' ./_public/
 
 docs: clean
 	@steadymark README.md

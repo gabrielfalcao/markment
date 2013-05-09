@@ -42,11 +42,13 @@ requirements = [
     "misaka==1.0.2",
     "cssselect==0.8",
     "lxml==3.1.2",
+    "PyYAML==3.10",
+    "Flask==0.9",
+    "Jinja2==2.6",
 ]
 
-
 setup(name='markment',
-    version='0.0.3',
+    version='0.1.0',
     description=(u'Structured documentation generator for markdown'),
     author=u'Gabriel Falcao',
     author_email='gabriel@nacaolivre.org',
@@ -54,7 +56,7 @@ setup(name='markment',
     packages=get_packages(),
     install_requires=requirements,
     entry_points={
-        'console_scripts': ['markment = markment:main'],
+        'console_scripts': ['markment = markment.bin:main'],
     },
     package_data={
         'lettuce': ['COPYING', '*.md'],
