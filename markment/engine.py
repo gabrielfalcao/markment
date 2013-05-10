@@ -73,6 +73,14 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
 
         return prefixed
 
+    def table(self, header, body):
+        return "".join([
+            '<table class="table">',
+            '<thead>', header.strip(), '</thead>',
+            '<tbody>', body.strip(), '</tbody>',
+            '</table>',
+        ])
+
     def image(self, link, title, alt):
         url = link
         prefixed = self.prefix_link_if_needed(link)
