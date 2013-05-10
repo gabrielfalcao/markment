@@ -15,7 +15,7 @@ functional: clean prepare
 	@nosetests --stop -v -s tests/functional
 
 integration: clean
-	@python markment/bin.py -t slate -o ./_public/
+	@python markment/bin.py -t slate -o ./_public/ example
 	@echo "Checking if the documentation has the correct assets"
 	@egrep --color -r 'stylesheet.css' ./_public/
 
