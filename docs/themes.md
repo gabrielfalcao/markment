@@ -36,7 +36,7 @@ Here is where you will specify the names of the files below.
 
 ### example `markment.yml`
 
-```yml
+```yaml
 index_template: template.html
 assets_path: static-files
 ```

@@ -44,7 +44,7 @@ def test_project_should_render_all_markdown_files_with_certain_theme():
 
     project = Project.discover(os.getcwdu())
 
-    generated = list(project.generate(theme))
+    generated = list(sorted(project.generate(theme), key=lambda x: len(x['relative_path'].split(os.sep))))
 
     generated.should_not.be.empty
 

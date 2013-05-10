@@ -18,5 +18,4 @@ project:
 
 documentation:
   index: TODO.md  # the file that should be considered the main one. Defaults to README.md
-
 ```

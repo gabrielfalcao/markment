@@ -40,6 +40,7 @@ def cleanup(context):
 
 
 fs_test = scenario([prepare], [cleanup])
+sort_files = lambda x: "{0}{1}".format(len(relpath(x).split(os.sep)), x)
 
 
 @fs_test
@@ -49,17 +50,16 @@ def test_generate_files(context):
     project = Project.discover(context.project_path)
     theme = Theme.load_by_name('touch-of-pink')
     destination = Generator(project, theme)
-    generated = destination.persist(context.output_path)
-
+    generated = sorted(destination.persist(context.output_path), key=sort_files)
     generated.should.be.a(list)
     map(relpath, generated).should.equal(map(relpath, [
         LOCAL_FILE('output/index.html'),
+        LOCAL_FILE('output/assets/style.css'),
         LOCAL_FILE('output/docs/output.html'),
         LOCAL_FILE('output/docs/strings.html'),
-        LOCAL_FILE('output/docs/even/deeper/item.html'),
         LOCAL_FILE('output/img/logo.png'),
         LOCAL_FILE('output/assets/img/favicon.png'),
-        LOCAL_FILE('output/assets/style.css'),
+        LOCAL_FILE('output/docs/even/deeper/item.html'),
     ]))
 
 
@@ -70,7 +70,7 @@ def test_index_file(context):
     project = Project.discover(context.project_path)
     theme = Theme.load_by_name('touch-of-pink')
     destination = Generator(project, theme)
-    generated = destination.persist(context.output_path)
+    generated = sorted(destination.persist(context.output_path), key=lambda x: len(x.split(os.sep)))
     generated.should.have.length_of(7)
 
     index = generated[0]
@@ -94,7 +94,7 @@ def test_index_has_correct_links_for_md_files(context):
     project = Project.discover(context.project_path)
     theme = Theme.load_from_path(LOCAL_FILE('fixtures', 'themes', 'turbo'))
     destination = Generator(project, theme)
-    generated = destination.persist(context.output_path)
+    generated = sorted(destination.persist(context.output_path), key=sort_files)
     generated.should.have.length_of(5)
 
     index = generated[0]
@@ -121,7 +121,7 @@ def test_index_toc_links_point_to_html_files(context):
     project = Project.discover(context.project_path)
     theme = Theme.load_by_name('touch-of-pink')
     destination = Generator(project, theme)
-    generated = destination.persist(context.output_path)
+    generated = sorted(destination.persist(context.output_path), key=sort_files)
     generated.should.have.length_of(7)
 
     index = generated[0]
@@ -149,7 +149,7 @@ def test_index_images_point_to_right_place(context):
     project = Project.discover(context.project_path)
     theme = Theme.load_by_name('touch-of-pink')
     destination = Generator(project, theme)
-    generated = destination.persist(context.output_path)
+    generated = sorted(destination.persist(context.output_path), key=sort_files)
     generated.should.have.length_of(7)
 
     index = generated[0]
@@ -174,10 +174,10 @@ def test_second_level_file(context):
     project = Project.discover(context.project_path)
     theme = Theme.load_by_name('touch-of-pink')
     destination = Generator(project, theme)
-    generated = destination.persist(context.output_path)
+    generated = sorted(destination.persist(context.output_path), key=sort_files)
     generated.should.have.length_of(7)
 
-    second_level = generated[1]
+    second_level = generated[2]
     second_level.should.contain('docs/output.html')
 
     html = open(second_level).read()
@@ -199,7 +199,7 @@ def test_second_level_has_correct_links_for_md_files(context):
     project = Project.discover(context.project_path)
     theme = Theme.load_from_path(LOCAL_FILE('fixtures', 'themes', 'simple-index'))
     destination = Generator(project, theme)
-    generated = destination.persist(context.output_path)
+    generated = sorted(destination.persist(context.output_path), key=sort_files)
     generated.should.have.length_of(5)
 
     second_level = generated[1]
@@ -227,10 +227,10 @@ def test_second_level_toc_links_point_to_html_files(context):
     project = Project.discover(context.project_path)
     theme = Theme.load_by_name('touch-of-pink')
     destination = Generator(project, theme)
-    generated = destination.persist(context.output_path)
+    generated = sorted(destination.persist(context.output_path), key=sort_files)
     generated.should.have.length_of(7)
 
-    second_level = generated[1]
+    second_level = generated[2]
     second_level.should.contain('docs/output.html')
 
     html = open(second_level).read()
@@ -255,10 +255,10 @@ def test_second_level_stylesheets_point_to_right_place(context):
     project = Project.discover(context.project_path)
     theme = Theme.load_by_name('touch-of-pink')
     destination = Generator(project, theme)
-    generated = destination.persist(context.output_path)
+    generated = sorted(destination.persist(context.output_path), key=sort_files)
     generated.should.have.length_of(7)
 
-    second_level = generated[1]
+    second_level = generated[2]
     second_level.should.contain('docs/output.html')
 
     html = open(second_level).read()
