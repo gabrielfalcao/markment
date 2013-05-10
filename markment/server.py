@@ -11,6 +11,7 @@ from flask import (
     Response,
     url_for,
     redirect,
+    g,
 )
 
 from markment.core import Project
@@ -33,8 +34,6 @@ def server(source_path, theme):
         else:
             return "{0}/{1}".format(static_url_path, link.lstrip('/'))
 
-    project = Project.discover(current_dir)
-
     def link(path, current_document_info):
         if path.endswith('.md') or path.endswith('.markdown'):
             return url_for('.render_path', path=path)
@@ -49,13 +48,23 @@ def server(source_path, theme):
 
         return '/raw/{0}'.format(path)
 
+    @app.before_request
+    def get_project():
+        g.project = Project.discover(current_dir)
+
+    @app.context_processor
+    def inject_basics():
+        return {
+            'server_mode': True
+        }
+
     @app.route("/")
     def index():
-        return redirect(url_for('.render_path', path=project.meta['documentation']['index']))
+        return redirect(url_for('.render_path', path=g.project.meta['documentation']['index']))
 
     @app.route("/preview/<path:path>")
     def render_path(path):
-        items = list(project.generate(theme, static_url_cb=static_url_callback, link_cb=link))
+        items = list(g.project.generate(theme, static_url_cb=static_url_callback, link_cb=link))
 
         for generated in items:
             print "." * 10
