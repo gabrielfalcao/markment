@@ -2,8 +2,11 @@ project:
   name: Markment
   version: 0.0.2
   description: A markdown-based automatic documentation generator
+  github_maintainer: gabrielfalcao
   github_url: http://github.com/gabrielfalcao/markment
+  github_fork_url: https://github.com/gabrielfalcao/markment/archive/master.tar.gz
   tarball_download_url: https://github.com/gabrielfalcao/markment/archive/master.tar.gz
 
+
 documentation:
-  index: TODO.md
+  index: index.md

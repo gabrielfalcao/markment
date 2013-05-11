@@ -38,5 +38,8 @@ publish:
 prepare:
 	@mkdir -p output
 
+theme:
+	@python markment/bin.py -t minimal --server example
+
 run: clean
 	@reset && python markment/server.py
