@@ -28,17 +28,17 @@ from .base import LOCAL_FILE, BUILTIN_FILE
 def test_theme_from_folder_succeeds():
     ("Markment should provide a way to load templates from a folder")
 
-    theme = Theme.load_from_path(LOCAL_FILE('fixtures', 'themes', 'turbo'))
+    theme = Theme.load_from_path(LOCAL_FILE('sandbox_simple', 'themes', 'turbo'))
 
     theme.should_not.be.none
     theme.should.be.a(Theme)
-    theme.path.should.equal(LOCAL_FILE('fixtures', 'themes', 'turbo'))
+    theme.path.should.equal(LOCAL_FILE('sandbox_simple', 'themes', 'turbo'))
 
 
 def test_theme_from_folder_missing_yml_file():
     ("Markment should complain when a folder is not a valid theme")
 
-    destination = LOCAL_FILE('fixtures', 'docs')
+    destination = LOCAL_FILE('sandbox_simple', 'docs')
     message = ('The folder "{0}" should contain a markment.yml '
                'file but doesn\'t'.format(destination))
 
@@ -53,7 +53,7 @@ def test_theme_from_folder_missing_yml_file():
 def test_theme_get_index():
     ("markment.ui.Theme should return the template content")
 
-    theme = Theme.load_from_path(LOCAL_FILE('fixtures', 'themes', 'turbo'))
+    theme = Theme.load_from_path(LOCAL_FILE('sandbox_simple', 'themes', 'turbo'))
 
     theme.should.be.a(Theme)
 
@@ -61,13 +61,13 @@ def test_theme_get_index():
 
     index.should.be.a(dict)
     index.should.have.key('index_template').being.equal('base.html')
-    index.should.have.key('static_path').being.equal(LOCAL_FILE('fixtures', 'themes', 'turbo', 'media'))
+    index.should.have.key('static_path').being.equal(LOCAL_FILE('sandbox_simple', 'themes', 'turbo', 'media'))
 
 
 def test_theme_get_template_content():
     ("markment.ui.Theme should return the template content")
 
-    theme = Theme.load_from_path(LOCAL_FILE('fixtures', 'themes', 'turbo'))
+    theme = Theme.load_from_path(LOCAL_FILE('sandbox_simple', 'themes', 'turbo'))
 
     theme.should.be.a(Theme)
 
@@ -80,7 +80,7 @@ def test_theme_get_template_content():
 def test_theme_get_template():
     ("markment.ui.Theme should return the template")
 
-    theme = Theme.load_from_path(LOCAL_FILE('fixtures', 'themes', 'turbo'))
+    theme = Theme.load_from_path(LOCAL_FILE('sandbox_simple', 'themes', 'turbo'))
 
     theme.should.be.a(Theme)
 
@@ -93,7 +93,7 @@ def test_theme_get_template():
 def test_theme_render():
     ("markment.ui.Theme should be able to render the template")
 
-    theme = Theme.load_from_path(LOCAL_FILE('fixtures', 'themes', 'turbo'))
+    theme = Theme.load_from_path(LOCAL_FILE('sandbox_simple', 'themes', 'turbo'))
 
     theme.should.be.a(Theme)
 

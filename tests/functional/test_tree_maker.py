@@ -26,39 +26,39 @@ LOCAL_FILE = lambda *path: join(abspath(dirname(__file__)), *path)
 def test_treemaker_finds_all_files():
     ("TreeMaker should find all the markdown files in a given directory")
 
-    tm = TreeMaker(LOCAL_FILE('fixtures'))
+    tm = TreeMaker(LOCAL_FILE('sandbox_simple'))
 
     files = list(tm.find_all_markdown_files())
     files.should.have.length_of(6)
 
     files.should.equal([
         {
-            'path': LOCAL_FILE('fixtures', 'index.md'),
+            'path': LOCAL_FILE('sandbox_simple', 'index.md'),
             'relative_path': 'index.md',
             'type': 'blob',
         },
         {
-            'path': LOCAL_FILE('fixtures', 'docs'),
+            'path': LOCAL_FILE('sandbox_simple', 'docs'),
             'relative_path': 'docs',
             'type': 'tree',
         },
         {
-            'path': LOCAL_FILE('fixtures', 'docs', 'output.md'),
+            'path': LOCAL_FILE('sandbox_simple', 'docs', 'output.md'),
             'relative_path': 'docs/output.md',
             'type': 'blob',
         },
         {
-            'path': LOCAL_FILE('fixtures', 'docs', 'strings.md'),
+            'path': LOCAL_FILE('sandbox_simple', 'docs', 'strings.md'),
             'relative_path': 'docs/strings.md',
             'type': 'blob',
         },
         {
-            'path': LOCAL_FILE('fixtures', 'docs', 'even', 'deeper'),
+            'path': LOCAL_FILE('sandbox_simple', 'docs', 'even', 'deeper'),
             'relative_path': 'docs/even/deeper',
             'type': 'tree',
         },
         {
-            'path': LOCAL_FILE('fixtures', 'docs', 'even', 'deeper', 'item.md'),
+            'path': LOCAL_FILE('sandbox_simple', 'docs', 'even', 'deeper', 'item.md'),
             'relative_path': 'docs/even/deeper/item.md',
             'type': 'blob',
         },

@@ -30,7 +30,7 @@ from .base import LOCAL_FILE
 
 
 def prepare(context):
-    context.project_path = LOCAL_FILE('fixtures')
+    context.project_path = LOCAL_FILE('sandbox_simple')
     context.output_path = LOCAL_FILE('output')
 
 
@@ -92,7 +92,7 @@ def test_index_has_correct_links_for_md_files(context):
     "The index file should have correct html links for markdown files"
 
     project = Project.discover(context.project_path)
-    theme = Theme.load_from_path(LOCAL_FILE('fixtures', 'themes', 'turbo'))
+    theme = Theme.load_from_path(LOCAL_FILE('sandbox_simple', 'themes', 'turbo'))
     destination = Generator(project, theme)
     generated = sorted(destination.persist(context.output_path), key=sort_files)
     generated.should.have.length_of(5)
@@ -197,7 +197,7 @@ def test_second_level_has_correct_links_for_md_files(context):
     "The second_level file should have correct html links for markdown files"
 
     project = Project.discover(context.project_path)
-    theme = Theme.load_from_path(LOCAL_FILE('fixtures', 'themes', 'simple-index'))
+    theme = Theme.load_from_path(LOCAL_FILE('sandbox_simple', 'themes', 'simple-index'))
     destination = Generator(project, theme)
     generated = sorted(destination.persist(context.output_path), key=sort_files)
     generated.should.have.length_of(5)
