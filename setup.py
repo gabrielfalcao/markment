@@ -40,7 +40,7 @@ requirements = [
 ]
 
 setup(name='markment',
-      version='0.1.2',
+      version='0.1.3',
       description=(u'Structured documentation generator for markdown'),
       author=u'Gabriel Falcao',
       author_email='gabriel@nacaolivre.org',
