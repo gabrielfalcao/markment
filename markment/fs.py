@@ -361,17 +361,11 @@ class Generator(object):
 
         link, levels = self.get_levels(link)
         in_theme = self.theme.node.find(link)
-        in_local = self.project.node.find(link)
 
         if levels:
             prefix = link
 
-        if in_local:
-            found = in_local
-            found_base = self.project.node.dir
-            link = found_base.relative(found.path)
-
-        elif in_theme:
+        if in_theme:
             found = in_theme
             found_base = self.theme.node.dir
             found_relative = found_base.relative(found.path)
