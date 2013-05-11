@@ -234,10 +234,10 @@ class Node(object):
         instance.
 
         ```python
-        way_back = Node('/foo/bar').depth_of('/foo/bar/another/dir/file.py')
+        way_back = Node('/foo/bar').path_to_related('/foo/bar/another/dir/file.py')
         assert way_back == '../../'
 
-        way_back = Node('/foo/bar/docs/static/file.css').depth_of('/foo/bar/docs/intro/index.md')
+        way_back = Node('/foo/bar/docs/static/file.css').path_to_related('/foo/bar/docs/intro/index.md')
         assert way_back == '../static/file.css'
         ```
         """
