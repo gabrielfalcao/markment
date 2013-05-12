@@ -22,7 +22,7 @@ import argparse
 from os.path import abspath, join, exists, relpath
 
 from markment.core import Project
-from markment.fs import Generator
+from markment.fs import Generator, Node
 from markment.ui import Theme
 from markment.server import server
 
@@ -36,6 +36,9 @@ LOGO = """
 
 ... Generate beautiful documentation for your project
 """
+
+local_node = Node(__file__).dir
+
 
 parser = argparse.ArgumentParser(
     add_help=True,
@@ -80,9 +83,22 @@ parser.add_argument(
     '-o', '--output-path', dest='OUTPUT', default='./_public/',
     help='Where markment should output the new documentation')
 
+parser.add_argument(
+    '--themes', dest='JUST_LIST_THEMES', action="store_true", default=False,
+    help="Just list the names of the available themes. Skips documentation generation")
+
 
 def main():
     args = parser.parse_args()
+
+    if args.JUST_LIST_THEMES:
+        print LOGO
+        print
+        print "Available themes:"
+        for theme in local_node.cd('themes').list():
+            print "  ", theme.basename
+
+        return
 
     project_path = abspath(args.SOURCE)
     output_path = abspath(args.OUTPUT)

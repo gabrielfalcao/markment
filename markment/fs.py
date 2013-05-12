@@ -86,6 +86,9 @@ class Node(object):
     def basename(self):
         return basename(self.path)
 
+    def list(self):
+        return map(self.__class__, os.listdir(self.dir.path))
+
     @property
     def dir(self):
         if not self.is_dir:
