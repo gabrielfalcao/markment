@@ -39,7 +39,7 @@ prepare:
 	@mkdir -p output
 
 theme:
-	@python markment/bin.py -t modernist --server example
+	@python markment/bin.py -t merlot --server example
 
 run: clean
 	@reset && python markment/server.py
