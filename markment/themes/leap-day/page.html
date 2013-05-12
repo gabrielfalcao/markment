@@ -1,0 +1,75 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>{{ project.name }}</title>
+    <link rel="stylesheet" href="{{ static_file('stylesheets/styles.css') }}">
+    <link rel="stylesheet" href="{{ static_file('stylesheets/pygment_trac.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+{% macro render_menu_item(header) -%}
+  <li class="tag-h{{ header.level }} active">
+    <a class="toc" href="{{ header.anchor }}">{{ header.text|safe }}</a>
+  </li>
+  {% if 'child' in header %}
+    {% for child in header['child'] %}
+      {{ render_menu_item(child) }}{% if not loop.last %},{% endif %}
+    {% endfor %}
+  {% endif %}
+{%- endmacro %}
+
+  <header>
+    <h1>{{ project.name }}</h1>
+    {% if project.description %}
+    <p>{{ project.description }}</p>
+    {% endif %}
+  </header>
+
+  <div id="banner">
+    <span id="logo"></span>
+    <a href="{{ project.github_url }}" class="button fork"><strong>Fork On GitHub</strong></a>
+    <div class="downloads">
+      <span>Downloads:</span>
+      <ul>
+        <li><a href="{{ project.zipball_download_url }}" class="button">ZIP</a></li>
+        <li><a href="{{ project.tarball_download_url }}" class="button">TAR</a></li>
+      </ul>
+    </div>
+  </div><!-- end banner -->
+
+  <div class="wrapper">
+    <nav>
+      <ul>
+      {% for item in index %}
+        {{ render_menu_item(item) }}{% if not loop.last %},{% endif %}
+      {% endfor %}
+      </ul>
+      <ul>
+        <li class="tag-h1 active">
+          <a>Table of contents</a>
+        </li>
+      {% for item in master_index %}
+        <li>
+          <a class="toc" href="{{ link(item.relative_path) }}">{{ item.relative_path.split('/')[-1] }}</a>
+        </li>
+      {% endfor %}
+      </ul>
+
+    </nav>
+    <section>{{ documentation|safe }}</section>
+    <footer>
+      <p>Project maintained by <a href="{{ project.github_maintainer_url }}">{{ project.github_maintainer }}</a></p>
+      <p><span class="small">Webpage generated with <a href="http://octomarks.io/gabrielfalcao/markment">markment</a> <a href="{{ project.github_maintainer_url }}">{{ project.github_maintainer }}</a></span></p>
+    </footer>
+  </div>
+  <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+  </body>
+</html>
