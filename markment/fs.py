@@ -19,7 +19,6 @@ from __future__ import unicode_literals
 
 import os
 import re
-import time
 import shutil
 
 from fnmatch import fnmatch
@@ -100,21 +99,8 @@ class Node(object):
     def parent(self):
         return self.__class__(dirname(self.path))
 
-    def reduce_to_base_path(self, path):
-        levels = []
-        while path.startswith(DOTDOTSLASH):
-            levels.append('..')
-            path = path.replace(DOTDOTSLASH, '', 1)
-
-        way_back = os.sep.join(levels)
-        return self.cd(way_back).dir.path, path, way_back
-
     def could_be_updated_by(self, other):
         return self.metadata.mtime < other.metadata.mtime
-
-    def create_tree_if_not_exists(self):
-        if not self.dir.exists:
-            os.makedirs(self.dir.path)
 
     def relative(self, path):
         """##### `Node#relative(path)`
@@ -140,14 +126,14 @@ class Node(object):
         ```
         """
         def iterator():
-            for root, folders, filenames in os.walk(path):
+            for root, folders, filenames in os.walk(self.join(path)):
                 for filename in filenames:
                     yield join(root, filename)
 
         return lazy and iterator() or list(iterator())
 
-    def walk(self):
-        return self.trip_at(self.path)
+    def walk(self, lazy=False):
+        return self.trip_at(self.path, lazy=lazy)
 
     def glob(self, pattern, lazy=False):
         """ ##### `Node#glob(pattern)`

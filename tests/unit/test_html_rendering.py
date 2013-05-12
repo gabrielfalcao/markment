@@ -300,3 +300,49 @@ def test_link_absolute():
 
     a.attrib.should.have.key("href").equal("http://octomarks.io/file.md")
     a.text.should.equal('LOGO')
+
+
+def test_markment_doesnt_fail_if_has_no_headers():
+    "Markment should find and index 3rd level headers"
+
+    MD = MARKDOWN("""
+    ```python
+    poor code, doesn't have a title
+    ```
+
+    """)
+
+    mm = Markment(MD)
+
+    mm.index().should.equal([])
+
+
+def test_markment_renders_tables():
+    "Markment should be able to render tables"
+
+    MD = MARKDOWN('''
+    | button                                     | code                                         |
+    | ---------------------------                | :-------------------------------:            |
+    | <a class="btn btn-success">Success</a>     | `<a class="btn btn-success">Success</a>`     |
+    ''')
+
+    mm = Markment(MD)
+
+    dom = lhtml.fromstring(mm.rendered)
+
+    table = dom.cssselect("table.table")
+
+    table.should_not.be.empty
+
+    table_data = dom.cssselect('tr > td')
+    table_data.should.have.length_of(2)
+
+    column1, column2 = table_data
+
+    button = column1.getchildren()
+    button.should_not.be.empty
+    button[0].text.should.equal('Success')
+
+    code = column2.getchildren()
+    code.should_not.be.empty
+    code[0].text.should.equal('<a class="btn btn-success">Success</a>')

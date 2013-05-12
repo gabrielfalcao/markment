@@ -114,3 +114,21 @@ def test_markment_finds_3rd_level_headers():
               ]},
          ]},
     ])
+
+
+def test_markment_doesnt_fail_if_has_no_headers():
+    "Markment should find and index 3rd level headers"
+
+    MD = MARKDOWN("""
+    ## Installation
+    """)
+
+    mm = Markment(MD)
+
+    mm.index().should.equal([
+        {
+            "text": "Installation",
+            "level": 2,
+            "anchor": "#installation"
+        },
+    ])

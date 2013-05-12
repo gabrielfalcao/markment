@@ -26,7 +26,7 @@ from os.path import abspath, join, exists, relpath
 
 from markment.core import Project
 from markment.fs import Generator, Node
-from markment.ui import Theme
+from markment.ui import Theme, InvalidThemePackage
 from markment.server import server
 
 
@@ -90,25 +90,42 @@ parser.add_argument(
     '--themes', dest='JUST_LIST_THEMES', action="store_true", default=False,
     help="Just list the names of the available themes. Skips documentation generation")
 
+parser.add_argument(
+    '--porcelain', dest='PORCELAIN', action="store_true", default=False,
+    help="Tells markment to use a format that is less visually rich and more machine-friendly")
+
+
+def get_themes():
+    for theme in local_node.cd('themes').grep('markment.yml'):
+        yield theme
+
+
+def list_themes(porcelain=False):
+    if not porcelain:
+        print "Available themes:"
+    for theme in get_themes():
+        with open(theme.path) as f:
+            raw = f.read()
+
+        meta = yaml.load(raw)
+        if 'author' not in meta:
+            continue
+
+        if porcelain:
+            print theme.dir.basename
+        else:
+            print "  \033[1;32m", theme.dir.basename, "\033[0mby", meta['author']['name'], ' \033[1;33m({0})\033[0m'.format(
+                meta['author']['website']
+            )
+
 
 def main():
     args = parser.parse_args()
 
     if args.JUST_LIST_THEMES:
-        print LOGO
-        print
-        print "Available themes:"
-        for theme in local_node.cd('themes').grep('markment.yml'):
-            with open(theme.path) as f:
-                raw = f.read()
-
-            meta = yaml.load(raw)
-            if 'author' not in meta:
-                continue
-
-            print "  \033[1;32m", theme.dir.basename, "\033[0mby", meta['author']['name'], ' \033[1;33m({0})\033[0m'.format(meta['author']['website'])
-
-        return
+        if not args.PORCELAIN:
+            print LOGO
+        return list_themes(args.PORCELAIN)
 
     project_path = abspath(args.SOURCE)
     output_path = abspath(args.OUTPUT)
@@ -117,9 +134,20 @@ def main():
     if exists(join(args.THEME, 'markment.yml')):
         theme = Theme.load_from_path(args.THEME)
     elif os.sep not in args.THEME:
-        theme = Theme.load_by_name(args.THEME)
+        try:
+            theme = Theme.load_by_name(args.THEME)
+        except InvalidThemePackage:
+            print "." * 20
+            print "\033[1;32m Invalid theme name\033[0m"
+            print "." * 20
+            print
+            print "\033[1;31mMarkment doesn't have a builtin theme called \033[0m'{0}'".format(args.THEME)
+            print
+            return list_themes()
     else:
         print "Invalid theme name:", args.THEME
+        print
+        return list_themes()
 
     if args.RUNSERVER:
         print "\033[1;32mMarkment is serving the documentation "
