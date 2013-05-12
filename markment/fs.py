@@ -149,7 +149,7 @@ class Node(object):
         ```
         """
         def iterator():
-            for filename in self.walk():
+            for filename in self.walk(lazy=lazy):
                 if fnmatch(filename, pattern):
                     yield self.__class__(filename)
 
@@ -169,28 +169,29 @@ class Node(object):
         """
 
         def iterator():
-            for filename in self.walk():
+            for filename in self.walk(lazy=lazy):
                 if re.search(pattern, filename, flags):
                     yield self.__class__(filename)
 
         return lazy and iterator() or list(iterator())
 
+    def __eq__(self, other):
+        return self.path == other.path and self.metadata == other.metadata
+
     def find(self, relative_path):
         """ ##### `Node#find(relative_path)`
 
-        finds a file given the relative_path, it glob and grep using
-        the given relative_path to match as a glob and then tries
-        to return the first found node.
+        Returns the first file that matches the given relative path.
+        Returns None if nothing is returned.
 
         If nothing is found, returns None
-
         ```python
 
         logo = Node('~/projects/personal/markment').find('logo.png')
-        assert logo.path == os.path.expanduser('~/projects/personal/markment')
+        assert logo.path == os.path.expanduser('~/projects/personal/markment/logo.png')
         ```
         """
-        found = list(self.glob(relative_path)) + list(self.grep(relative_path))
+        found = list(self.grep(relative_path, lazy=True))
         if found:
             return found[0]
 

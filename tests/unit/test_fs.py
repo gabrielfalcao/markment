@@ -21,6 +21,75 @@ from mock import Mock, patch, call
 from markment.fs import Node, isfile, isdir, DotDict
 
 
+def test_glob_filters_results_from_walk_using_fnmatch():
+    ('Node#glob returns a lazy list of nodes')
+    nd = Node('/foo/bar')
+    nd.walk = Mock()
+    nd.walk.return_value = [
+        "/foo/wisdom/aaa.py",
+        "/foo/wisdom/bbb.txt",
+        "/foo/wisdom/ccc.php",
+        "/foo/wisdom/ddd.py",
+    ]
+    ret = nd.glob('*.py', lazy='passed-to-walk')
+    ret.should.be.a('types.GeneratorType')
+    list(ret).should.equal([
+        Node("/foo/wisdom/aaa.py"),
+        Node("/foo/wisdom/ddd.py"),
+    ])
+    nd.walk.assert_called_with(lazy='passed-to-walk')
+
+
+def test_grep_filters_results_from_walk_using_regex():
+    ('Node#grep returns a lazy list of nodes')
+    nd = Node('/foo/bar')
+    nd.walk = Mock()
+    nd.walk.return_value = [
+        "/foo/wisdom/aaa.py",
+        "/foo/wisdom/bbb.txt",
+        "/foo/wisdom/ccc.php",
+        "/foo/wisdom/ddd.py",
+    ]
+    ret = nd.grep('[.]\w{3}$', lazy='passed-to-walk')
+    ret.should.be.a('types.GeneratorType')
+    list(ret).should.equal([
+        Node("/foo/wisdom/bbb.txt"),
+        Node("/foo/wisdom/ccc.php"),
+    ])
+    nd.walk.assert_called_with(lazy='passed-to-walk')
+
+
+def test_find_greps_and_get_the_first_one():
+    ('Node#find returns the first result from grep when found')
+    nd = Node('/foo/bar')
+    nd.walk = Mock()
+    nd.walk.return_value = [
+        "/foo/wisdom/aaa.py",
+        "/foo/wisdom/bbb.txt",
+        "/foo/wisdom/ccc.php",
+        "/foo/wisdom/ddd.py",
+    ]
+    ret = nd.find('[.]\w{3}$')
+    ret.should.be.a(Node)
+    ret.should.equal(Node("/foo/wisdom/bbb.txt"))
+    nd.walk.assert_called_with(lazy=True)
+
+
+def test_find_greps_and_get_the_first_one_none():
+    ('Node#find returns the None if nothing is found')
+    nd = Node('/foo/bar')
+    nd.walk = Mock()
+    nd.walk.return_value = [
+        "/foo/wisdom/aaa.py",
+        "/foo/wisdom/bbb.txt",
+        "/foo/wisdom/ccc.php",
+        "/foo/wisdom/ddd.py",
+    ]
+    ret = nd.find('^$')
+    ret.should.be.none
+    nd.walk.assert_called_with(lazy=True)
+
+
 def test_node_could_be_updated_by_true():
     ("Node#could_be_updated_by returns True if given "
      "node has a newer modification time")

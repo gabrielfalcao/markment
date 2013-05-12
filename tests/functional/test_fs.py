@@ -22,13 +22,6 @@ from markment.fs import Node
 from .base import LOCAL_FILE as L
 
 
-def test_reduce_to_base_path():
-    ("Node#reduce_to_base_path(path) should return the approriate path")
-
-    result = Node(L('sandbox_simple/img/logo.png')).reduce_to_base_path("../../img/logo.png")
-    result.should.equal((L('sandbox_simple'), 'img/logo.png', '../..'))
-
-
 def test_node_depth_of():
     ("Node#depth_of(path) should return the approriate number")
 
