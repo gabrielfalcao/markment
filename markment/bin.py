@@ -57,11 +57,11 @@ Example usage:
 
   Server:
 
-    markment --serve -t slate
+    markment --serve -t modernist
 
   Generate static files:
 
-    markment -o ~/Desktop/myproject-docs/ -t slate
+    markment -o ~/Desktop/myproject-docs/ -t modernist
 
 ''')
 
@@ -71,7 +71,7 @@ parser.add_argument(
     help='The source path in which markdown should recursively find documentation.')
 
 parser.add_argument(
-    '-t', '--theme', dest='THEME', default='slate',
+    '-t', '--theme', dest='THEME', default='modernist',
     help='Markment theme name or path')
 
 parser.add_argument(
