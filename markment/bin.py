@@ -17,8 +17,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import unicode_literals
+
 import os
+import yaml
 import argparse
+
 from os.path import abspath, join, exists, relpath
 
 from markment.core import Project
@@ -95,8 +98,15 @@ def main():
         print LOGO
         print
         print "Available themes:"
-        for theme in local_node.cd('themes').list():
-            print "  ", theme.basename
+        for theme in local_node.cd('themes').grep('markment.yml'):
+            with open(theme.path) as f:
+                raw = f.read()
+
+            meta = yaml.load(raw)
+            if 'author' not in meta:
+                continue
+
+            print "  \033[1;32m", theme.dir.basename, "\033[0mby", meta['author']['name'], ' \033[1;33m({0})\033[0m'.format(meta['author']['website'])
 
         return
 
