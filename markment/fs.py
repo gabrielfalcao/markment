@@ -40,15 +40,15 @@ from os.path import isdir as isdir_base
 LOCAL_FILE = lambda *path: join(abspath(dirname(__file__)), *path)
 
 
-def isfile(path):
-    if exists(path):
+def isfile(path, exists):
+    if exists:
         return isfile_base(path)
 
     return '.' in split(path)[-1]
 
 
-def isdir(path):
-    if exists(path):
+def isdir(path, exists):
+    if exists:
         return isdir_base(path)
 
     return '.' not in split(path)[-1]
@@ -71,15 +71,16 @@ class Node(object):
     def __init__(self, path):
         self.path = abspath(expanduser(path)).rstrip('/')
         self.path_regex = '^{0}'.format(re.escape(self.path))
-        self.exists = exists(self.path)
         try:
             stats = os.stat(self.path)
+            self.exists = True
         except OSError:
             stats = [0] * len(STAT_LABELS)
+            self.exists = False
 
         self.metadata = DotDict(zip(STAT_LABELS, stats))
-        self.is_file = isfile(self.path)
-        self.is_dir = isdir(self.path)
+        self.is_file = isfile(self.path, exists=self.exists)
+        self.is_dir = isdir(self.path, exists=self.exists)
 
     @property
     def basename(self):
@@ -209,7 +210,8 @@ class Node(object):
         ```
         """
         new_path = self.relative(path)
-        if isfile(self.join(new_path)):
+        final_path = self.join(new_path)
+        if isfile(final_path, exists(final_path)):
             new_path = dirname(new_path)
 
         new_path = new_path.rstrip('/')

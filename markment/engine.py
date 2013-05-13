@@ -128,6 +128,7 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
             'anchor': '#{0}'.format(slugify(text)),
             'level': int(level),
         }
+
         indexes = self.markment_indexes
         if level > 1:
             indexes = self.last_index_plus_child(level - 1)

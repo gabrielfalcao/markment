@@ -21,6 +21,42 @@ from mock import Mock, patch, call
 from markment.fs import Node, isfile, isdir, DotDict
 
 
+def test_node_path_to_related():
+    ("Node#path_to_related takes a path and returns the relative way there")
+    nd = Node("/foo/bar/something.py")
+    result = nd.path_to_related("/foo/docs/assets/style.css")
+    result.should.equal('../../bar/something.py')
+
+
+def test_cd_enters_a_path_and_returns_a_node_representing_it():
+    ("Node#cd should return a node representing the given path")
+    nd = Node("/foo/bar/")
+    other = nd.cd("awesome/")
+    other.path.should.equal('/foo/bar/awesome')
+
+
+def test_cd_enters_a_path_and_returns_a_node_representing_it_abs():
+    ("Node#cd should return a node representing the given path. "
+     "Testing with absolute path")
+
+    nd = Node("/foo/bar/")
+    other = nd.cd("/etc/")
+    other.path.should.equal('/etc')
+
+
+@patch('markment.fs.exists')
+def test_contains_checks_if_path_exists(exists):
+    ("Node#cd should return a node representing the given path.")
+
+    exists.return_value = True
+    nd = Node("/foo/bar/")
+    nd.contains("file.py").should.be.truthy
+    exists.assert_has_calls([
+        call('/foo/bar/file.py'),
+    ])
+    exists.call_count.should.equal(1)
+
+
 def test_glob_filters_results_from_walk_using_fnmatch():
     ('Node#glob returns a lazy list of nodes')
     nd = Node('/foo/bar')
@@ -37,7 +73,7 @@ def test_glob_filters_results_from_walk_using_fnmatch():
         Node("/foo/wisdom/aaa.py"),
         Node("/foo/wisdom/ddd.py"),
     ])
-    nd.walk.assert_called_with(lazy='passed-to-walk')
+    nd.walk.assert_once_called_with(lazy='passed-to-walk')
 
 
 def test_grep_filters_results_from_walk_using_regex():
@@ -56,7 +92,7 @@ def test_grep_filters_results_from_walk_using_regex():
         Node("/foo/wisdom/bbb.txt"),
         Node("/foo/wisdom/ccc.php"),
     ])
-    nd.walk.assert_called_with(lazy='passed-to-walk')
+    nd.walk.assert_once_called_with(lazy='passed-to-walk')
 
 
 def test_find_greps_and_get_the_first_one():
@@ -72,7 +108,7 @@ def test_find_greps_and_get_the_first_one():
     ret = nd.find('[.]\w{3}$')
     ret.should.be.a(Node)
     ret.should.equal(Node("/foo/wisdom/bbb.txt"))
-    nd.walk.assert_called_with(lazy=True)
+    nd.walk.assert_once_called_with(lazy=True)
 
 
 def test_find_greps_and_get_the_first_one_none():
@@ -87,7 +123,7 @@ def test_find_greps_and_get_the_first_one_none():
     ]
     ret = nd.find('^$')
     ret.should.be.none
-    nd.walk.assert_called_with(lazy=True)
+    nd.walk.assert_once_called_with(lazy=True)
 
 
 def test_node_could_be_updated_by_true():
@@ -217,7 +253,7 @@ def test_node_list(os):
     nd = Node('/foo/bar/items/')
     nd.list().should.have.length_of(1)
 
-    os.listdir.assert_called_with('/foo/bar/items')
+    os.listdir.assert_once_called_with('/foo/bar/items')
 
 
 def test_node_dir_when_is_file():
@@ -236,64 +272,46 @@ def test_node_dir_when_is_dir():
     nd.dir.path.should.equal('/foo/bar/items')
 
 
-@patch('markment.fs.exists')
 @patch('markment.fs.isfile_base')
-def test_isfile_if_path_exists(isfile_base, exists):
+def test_isfile_if_path_exists(isfile_base):
     ('fs.isfile returns result from os.path.isfile if path exists')
-    exists.return_value = True
-
-    isfile('foobar').should.equal(isfile_base.return_value)
-    isfile_base.assert_called_with('foobar')
+    isfile('foobar', True).should.equal(isfile_base.return_value)
+    isfile_base.assert_once_called_with('foobar')
 
 
-@patch('markment.fs.exists')
 @patch('markment.fs.isfile_base')
-def test_isfile_if_path_doesnt_exists_and_has_dot(isfile_base, exists):
+def test_isfile_if_path_doesnt_exists_and_has_dot(isfile_base):
     ('fs.isfile returns result from os.path.isfile if path doesnt '
      'exist and name has a dot')
-    exists.return_value = False
-
-    isfile('foobar.py').should.equal(True)
+    isfile('foobar.py', False).should.equal(True)
 
 
-@patch('markment.fs.exists')
 @patch('markment.fs.isfile_base')
-def test_isfile_if_path_doesnt_exists_and_hasnt_a_dot(isfile_base, exists):
+def test_isfile_if_path_doesnt_exists_and_hasnt_a_dot(isfile_base):
     ('fs.isfile returns result from os.path.isfile if path doesnt '
      'exist and name doesnt have not a dot')
-    exists.return_value = False
-
-    isfile('foobar').should.equal(False)
+    isfile('foobar', False).should.equal(False)
 
 
-@patch('markment.fs.exists')
 @patch('markment.fs.isdir_base')
-def test_isdir_if_path_exists(isdir_base, exists):
+def test_isdir_if_path_exists(isdir_base):
     ('fs.isdir returns result from os.path.isdir if path exists')
-    exists.return_value = True
-
-    isdir('foobar').should.equal(isdir_base.return_value)
-    isdir_base.assert_called_with('foobar')
+    isdir('foobar', True).should.equal(isdir_base.return_value)
+    isdir_base.assert_once_called_with('foobar')
 
 
-@patch('markment.fs.exists')
 @patch('markment.fs.isdir_base')
-def test_isdir_if_path_doesnt_exists_and_has_dot(isdir_base, exists):
+def test_isdir_if_path_doesnt_exists_and_has_dot(isdir_base):
     ('fs.isdir returns result from os.path.isdir if path doesnt '
      'exist and have not a dot')
-    exists.return_value = False
-
-    isdir('foobar.py').should.equal(False)
+    isdir('foobar.py', False).should.equal(False)
 
 
-@patch('markment.fs.exists')
 @patch('markment.fs.isdir_base')
-def test_isdir_if_path_doesnt_exists_and_hasnt_a_dot(isdir_base, exists):
+def test_isdir_if_path_doesnt_exists_and_hasnt_a_dot(isdir_base):
     ('fs.isdir returns result from os.path.isdir if path doesnt '
      'exist and name doesnt have a dot')
-    exists.return_value = False
-
-    isdir('foobar').should.equal(True)
+    isdir('foobar', False).should.equal(True)
 
 
 @patch('markment.fs.isfile')
