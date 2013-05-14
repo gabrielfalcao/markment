@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from __future__ import unicode_literals
 
-
+import io
 import os
 import re
 import shutil
@@ -259,42 +259,37 @@ class Node(object):
         return abspath(join(self.path, path))
 
     def open(self, path, *args, **kw):
-        return open(self.join(path), *args, **kw)
+        return io.open(self.join(path), *args, **kw)
 
     def __repr__(self):
         return '<markment.fs.Node (path={0})>'.format(self.path)
 
 
-class TreeMaker(object):
+class DocumentIndexer(object):
     def __init__(self, path):
-        self.path = abspath(path.rstrip('/'))
-        self.path_regex = '^{0}'.format(re.escape(self.path))
         self.node = Node(path)
 
     def __repr__(self):
-        return '<markment.fs.TreeMaker(path={0})>'.format(self.path)
-
-    def relative(self, path):
-        return re.sub(self.path_regex, '', path).lstrip(os.sep)
+        return '<markment.fs.DocumentIndexer(path={0})>'.format(self.node.path)
 
     def find_all_markdown_files(self):
         dirs = []
-        for fullpath in self.node.walk():
-            folder = dirname(fullpath)
-            if fnmatch(fullpath, '*.md'):
-                if folder != self.path and folder not in dirs:
-                    dirs.append(folder)
-                    yield {
-                        'path': folder,
-                        'relative_path': self.relative(folder),
-                        'type': 'tree',
-                    }
 
+        for md_node in self.node.grep(r'[.](md|markdown)$', re.I):
+            folder = md_node.dir.path
+            if md_node.dir != self.node.dir and folder not in dirs:
+                dirs.append(folder)
                 yield {
-                    'path': fullpath,
-                    'relative_path': self.relative(fullpath),
-                    'type': 'blob',
+                    'path': folder,
+                    'relative_path': self.node.relative(folder) or './',
+                    'type': 'tree',
                 }
+
+            yield {
+                'path': md_node.path,
+                'relative_path': self.node.relative(md_node.path),
+                'type': 'blob',
+            }
 
 
 class Generator(object):
@@ -403,7 +398,7 @@ class Generator(object):
                 os.makedirs(relative_destiny)
 
             with destination.open(destiny, 'w') as f:
-                f.write(item['html'])
+                f.write(item['html'].decode('utf-8'))
 
             ret.append(destiny)
 

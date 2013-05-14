@@ -21,6 +21,17 @@ from mock import Mock, patch, call
 from markment.fs import Node, isfile, isdir, DotDict
 
 
+@patch('markment.fs.io')
+def test_open(io):
+    ("Node#open should return an open file")
+    io.open.return_value = 'an open file'
+
+    nd = Node('/foo/bar')
+
+    nd.open('wee.py').should.equal('an open file')
+    io.open.assert_once_called_with('/foo/bar/wee.py')
+
+
 def test_node_path_to_related():
     ("Node#path_to_related takes a path and returns the relative way there")
     nd = Node("/foo/bar/something.py")
@@ -241,7 +252,7 @@ def test_dot_dict():
 def test_node_basename():
     ("Node#basename should return the basename for the node.path")
     nd = Node(__file__)
-    nd.basename.should.equal('test_fs.py')
+    nd.basename.should.equal('test_node.py')
 
 
 @patch('markment.fs.os')

@@ -17,21 +17,26 @@
 
 from __future__ import unicode_literals
 from os.path import dirname, abspath, join
-from markment.fs import TreeMaker
+from markment.fs import DocumentIndexer
 
 
 LOCAL_FILE = lambda *path: join(abspath(dirname(__file__)), *path)
 
 
 def test_treemaker_finds_all_files():
-    ("TreeMaker should find all the markdown files in a given directory")
+    ("DocumentIndexer should find all the markdown files in a given directory")
 
-    tm = TreeMaker(LOCAL_FILE('sandbox_simple'))
+    tm = DocumentIndexer(LOCAL_FILE('sandbox_simple'))
 
     files = list(tm.find_all_markdown_files())
-    files.should.have.length_of(6)
+    files.should.have.length_of(7)
 
     files.should.equal([
+        {
+            'path': LOCAL_FILE('sandbox_simple'),
+            'relative_path': './',
+            'type': 'tree',
+        },
         {
             'path': LOCAL_FILE('sandbox_simple', 'index.md'),
             'relative_path': 'index.md',

@@ -22,7 +22,7 @@ from os.path import basename
 from functools import partial
 from collections import OrderedDict
 
-from .fs import Node, TreeMaker
+from .fs import Node, DocumentIndexer
 from .engine import Markment
 from .views import TemplateContext
 
@@ -34,7 +34,7 @@ class Project(object):
         self.path = path
 
         self.node = Node(path)
-        self.tree = TreeMaker(path)
+        self.tree = DocumentIndexer(path)
         self.name = basename(path)
         self.version = ''
         self.description = ''
