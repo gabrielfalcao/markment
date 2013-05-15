@@ -18,4 +18,4 @@
 
 from __future__ import unicode_literals
 
-version = __version__ = '0.1.4'
+version = __version__ = '0.1.5'
