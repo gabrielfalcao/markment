@@ -70,7 +70,7 @@ def test_relative_link_callback_with_markdown(exists):
 @patch('markment.fs.exists')
 def test_relative_link_callback_with_markdown_not_found(exists):
     ("Generator#relative_link_callback(original_link, current_document_info,"
-     " destination_root) with a markdown not found [\033[2;31mTODO\033[0m]")
+     " destination_root) with a markdown not found [\033[2;31mthere is a TODO here\033[0m]")
 
     # TODO: this test should raise an exception
 
@@ -89,6 +89,34 @@ def test_relative_link_callback_with_markdown_not_found(exists):
         destination_root,
     )
     value.should.equal('../docs/index.md')
+
+
+@patch('markment.fs.exists')
+def test_relative_link_callback_with_asset_already_to_copy(exists):
+    ("Generator#relative_link_callback(original_link, current_document_info,"
+     " destination_root) with an asset")
+
+    theme = Mock()
+
+    project = Mock()
+    project.node = FakeNode("/coolproject")
+
+    engine = Generator(project, theme)
+    engine.files_to_copy = [
+        "/coolproject/css/style.css",
+        "/css/style.css",
+        "css/style.css",
+        "style.css",
+    ]
+
+    destination_root = FakeNode("/output")
+
+    value = engine.relative_link_callback(
+        "css/style.css",
+        {"relative_path": "docs/index.md"},
+        destination_root,
+    )
+    value.should.equal(u'../css/style.css')
 
 
 @patch('markment.fs.exists')
@@ -184,7 +212,7 @@ def test_static_url_callback_with_asset(exists):
 @patch('markment.fs.exists')
 def test_static_url_callback_with_asset_with_levels(exists):
     ("Generator#static_url_callback(original_link, current_document_info,"
-     " destination_root) with asset not found [\033[1;31m\033TODO\033[0m]")
+     " destination_root) with asset not found [\033[31mthere is a TODO here\033[0m]")
 
     # TODO: this test should raise an exception
     project = Mock()
@@ -286,6 +314,7 @@ def test_persist_with_files_to_copy(Node, exists, io, os, shutil, Cloner):
     project = Mock()
 
     project.node = FakeNode("/simple/")
+
     theme.node = FakeNode("/themes/cool")
 
     project.generate.return_value = [
@@ -316,3 +345,151 @@ def test_persist_with_files_to_copy(Node, exists, io, os, shutil, Cloner):
         '/output/style.css',
         '/output/logo.png',
     ])
+
+
+@patch('markment.fs.AssetsCloner')
+@patch('markment.fs.shutil')
+@patch('markment.fs.os')
+@patch('markment.fs.io')
+@patch('markment.fs.exists')
+@patch('markment.fs.Node')
+def test_persist_with_files_to_copy_from_theme(
+        Node, exists, io, os, shutil, Cloner):
+    ("Generator#persist(destination_path)"
+     " with files to copy from the theme")
+    os.sep = '/'
+    Node.side_effect = FakeNode
+
+    exists.return_value = False
+    theme = Mock()
+    theme.index = {'static_path': '/themes/cool'}
+    project = Mock()
+
+    project.node = FakeNode("/simple/")
+    project.node.find = Mock(return_value=None)
+    theme.node = FakeNode("/themes/cool")
+
+    project.generate.return_value = [
+        {
+            "type": "tree",
+            "path": "/simple/",
+            "relative_path": "./",
+        },
+        {
+            "type": "blob",
+            "html": "<h1>Foobar</h1>",
+            "markdown": "# Foobar\n",
+            "path": "/simple/index.md",
+            "relative_path": "./index.md",
+        }
+    ]
+
+    engine = Generator(project, theme)
+    engine.files_to_copy = [
+        "style.css",
+        "logo.png",
+    ]
+
+    generated = engine.persist("/output")
+
+    generated.should.equal([
+        '/output/./index.html',
+        '/output/style.css',
+        '/output/logo.png',
+    ])
+
+
+@patch('markment.fs.AssetsCloner')
+@patch('markment.fs.shutil')
+@patch('markment.fs.os')
+@patch('markment.fs.io')
+@patch('markment.fs.exists')
+@patch('markment.fs.Node')
+def test_persist_with_files_to_copy_missing(
+        Node, exists, io, os, shutil, Cloner):
+    ("Generator#persist(destination_path,gently=False)"
+     " with files to copy from the theme")
+    os.sep = '/'
+    Node.side_effect = FakeNode
+
+    exists.return_value = True
+    theme = Mock()
+    theme.index = {'static_path': '/themes/cool'}
+    project = Mock()
+
+    project.node = FakeNode("/simple/")
+    project.node.find = Mock(return_value=None)
+    theme.node = FakeNode("/themes/cool")
+    theme.node.find = Mock(return_value=None)
+
+    project.generate.return_value = [
+        {
+            "type": "tree",
+            "path": "/simple/",
+            "relative_path": "./",
+        },
+        {
+            "type": "blob",
+            "html": "<h1>Foobar</h1>",
+            "markdown": "# Foobar\n",
+            "path": "/simple/index.md",
+            "relative_path": "./index.md",
+        }
+    ]
+
+    engine = Generator(project, theme)
+    engine.files_to_copy = [
+        "style.css",
+        "logo.png",
+    ]
+
+    engine.persist.when.called_with("/output").should.throw(
+        IOError, "The documentation refers to style.css, logo.png but they doesn't exist anythere")
+
+
+@patch('markment.fs.AssetsCloner')
+@patch('markment.fs.shutil')
+@patch('markment.fs.os')
+@patch('markment.fs.io')
+@patch('markment.fs.exists')
+@patch('markment.fs.Node')
+def test_persist_with_files_to_copy_missing_gently(
+        Node, exists, io, os, shutil, Cloner):
+    ("Generator#persist(destination_path, gently=True)"
+     " with files to copy from the theme missing")
+    os.sep = '/'
+    Node.side_effect = FakeNode
+
+    exists.return_value = True
+    theme = Mock()
+    theme.index = {'static_path': '/themes/cool'}
+    project = Mock()
+
+    project.node = FakeNode("/simple/")
+    project.node.find = Mock(return_value=None)
+    theme.node = FakeNode("/themes/cool")
+    theme.node.find = Mock(return_value=None)
+
+    project.generate.return_value = [
+        {
+            "type": "tree",
+            "path": "/simple/",
+            "relative_path": "./",
+        },
+        {
+            "type": "blob",
+            "html": "<h1>Foobar</h1>",
+            "markdown": "# Foobar\n",
+            "path": "/simple/index.md",
+            "relative_path": "./index.md",
+        }
+    ]
+
+    engine = Generator(project, theme)
+    engine.files_to_copy = [
+        "style.css",
+        "logo.png",
+    ]
+
+    generated = engine.persist("/output", gently=True)
+    generated.should.equal(['/output/./index.html'])

@@ -466,6 +466,7 @@ class AssetsCloner(object):
 
         for source_path in self.node.trip_at(self.assets_path):
             relative_path = self.node.relative(source_path)
+
             destination_path = dest_node.join(relative_path)
             destination_dir = dirname(destination_path)
 

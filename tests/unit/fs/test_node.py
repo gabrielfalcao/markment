@@ -92,6 +92,26 @@ def test_glob_filters_results_from_walk_using_fnmatch(exists):
 
 
 @patch('markment.fs.exists')
+def test_glob_filters_results_from_walk_using_fnmatch_nonlazy(exists):
+    ('Node#glob returns an evaluated list of nodes')
+    nd = Node('/foo/bar')
+    nd.walk = Mock()
+    nd.walk.return_value = [
+        "/foo/wisdom/aaa.py",
+        "/foo/wisdom/bbb.txt",
+        "/foo/wisdom/ccc.php",
+        "/foo/wisdom/ddd.py",
+    ]
+    ret = nd.glob('*.py', lazy=False)
+    ret.should.be.a(list)
+    ret.should.equal([
+        Node("/foo/wisdom/aaa.py"),
+        Node("/foo/wisdom/ddd.py"),
+    ])
+    nd.walk.assert_once_called_with(lazy=False)
+
+
+@patch('markment.fs.exists')
 def test_grep_filters_results_from_walk_using_regex(exists):
     ('Node#grep returns a lazy list of nodes')
     nd = Node('/foo/bar')
@@ -109,6 +129,26 @@ def test_grep_filters_results_from_walk_using_regex(exists):
         Node("/foo/wisdom/ccc.php"),
     ])
     nd.walk.assert_once_called_with(lazy='passed-to-walk')
+
+
+@patch('markment.fs.exists')
+def test_grep_filters_results_from_walk_using_regex_nonlazy(exists):
+    ('Node#grep returns an evaluated list of nodes')
+    nd = Node('/foo/bar')
+    nd.walk = Mock()
+    nd.walk.return_value = [
+        "/foo/wisdom/aaa.py",
+        "/foo/wisdom/bbb.txt",
+        "/foo/wisdom/ccc.php",
+        "/foo/wisdom/ddd.py",
+    ]
+    ret = nd.grep('[.]\w{3}$', lazy=False)
+    ret.should.be.a(list)
+    ret.should.equal([
+        Node("/foo/wisdom/bbb.txt"),
+        Node("/foo/wisdom/ccc.php"),
+    ])
+    nd.walk.assert_once_called_with(lazy=False)
 
 
 @patch('markment.fs.exists')

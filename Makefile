@@ -8,7 +8,7 @@ test: clean unit functional docs integration
 
 unit: clean
 	@echo "Running unit tests"
-	@nosetests --with-coverage --cover-erase --cover-package=markment --stop -v -s tests/unit
+	@nosetests --with-coverage --cover-branches --cover-erase --cover-package=markment --stop -v -s tests/unit
 
 functional: clean prepare
 	@echo "Running functional tests"
