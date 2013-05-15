@@ -40,7 +40,7 @@ def cleanup(context):
 
 
 fs_test = scenario([prepare], [cleanup])
-sort_files = lambda x: "{0}{1}".format(len(relpath(x).split(os.sep)), x)
+sort_files = lambda x: (len(relpath(x).split(os.sep)), x)
 
 
 @fs_test
