@@ -17,11 +17,12 @@
 
 from __future__ import unicode_literals
 
-from mock import Mock
+from mock import Mock, patch
 from markment.fs import DocumentIndexer
 
 
-def test_find_all_markdown_in_shallow_repo():
+@patch('markment.fs.exists')
+def test_find_all_markdown_in_shallow_repo(exists):
     "DocumentIndexer#find_all_markdown_files() in a folder with no child nodes"
 
     origin = '/foo/bar'

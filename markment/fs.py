@@ -68,6 +68,19 @@ DOTDOTSLASH = '..{0}'.format(os.sep)
 
 
 class Node(object):
+    """Node is a file abstraction.
+
+    The constructor takes a path as a parameter and grabs filesystem
+    information about it.
+
+    Its attributes `is_file` and `isdir` are booleans and are useful
+    for quickly identifying its 'type', which among Markment's engine
+    codebase is either 'blob', for a file and 'dir' for a directory.
+
+    It also has `self.metadata`, which is just a handy `DotDict`
+    containing the results of calling `os.stat` (mode, ino, dev,
+    nlink, uid, giu, size, atime, mtime, ctime)
+    """
     def __init__(self, path):
         self.path = abspath(expanduser(path)).rstrip('/')
         self.path_regex = '^{0}'.format(re.escape(self.path))
@@ -318,6 +331,9 @@ class Generator(object):
 
         current_document_path = self.rename_markdown_filename(current_document_info['relative_path'])
 
+        if is_markdown:
+            relative_path = self.rename_markdown_filename(relative_path)
+
         item_destination = destination_root.cd(relative_path)
         destination_document = destination_root.cd(current_document_path)
 
@@ -325,12 +341,6 @@ class Generator(object):
 
         if found.path not in self.files_to_copy and not is_markdown:
             self.files_to_copy.append(found.path)
-
-        if prefix == './':
-            prefix = prefix + fixed_link
-
-        if is_markdown:
-            prefix = self.rename_markdown_filename(prefix)
 
         return prefix
 
@@ -348,9 +358,6 @@ class Generator(object):
 
         link, levels = self.get_levels(link)
         in_theme = self.theme.node.find(link)
-
-        if levels:
-            prefix = link
 
         if in_theme:
             found = in_theme
@@ -381,9 +388,6 @@ class Generator(object):
             link_cb=partial(self.relative_link_callback, destination_root=destination),
         )
 
-        if not exists(destination_path):
-            os.makedirs(destination_path)
-
         ret = []
 
         for item in master_index:
@@ -404,7 +408,6 @@ class Generator(object):
 
         missed_files = []
         for src in self.files_to_copy:
-
             src = relpath(src)
             in_theme = self.theme.node.find(src)
             in_local = self.project.node.find(src)
@@ -425,7 +428,9 @@ class Generator(object):
             relative_source = found_base.relative(found.path)
             destiny = destination.join(relative_source)
             ret.append(destiny)
+
             destiny_folder = dirname(destiny)
+
             if not exists(destiny_folder):
                 os.makedirs(destiny_folder)
 

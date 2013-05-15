@@ -32,21 +32,24 @@ def test_open(io):
     io.open.assert_once_called_with('/foo/bar/wee.py')
 
 
-def test_node_path_to_related():
+@patch('markment.fs.exists')
+def test_node_path_to_related(exists):
     ("Node#path_to_related takes a path and returns the relative way there")
     nd = Node("/foo/bar/something.py")
     result = nd.path_to_related("/foo/docs/assets/style.css")
     result.should.equal('../../bar/something.py')
 
 
-def test_cd_enters_a_path_and_returns_a_node_representing_it():
+@patch('markment.fs.exists')
+def test_cd_enters_a_path_and_returns_a_node_representing_it(exists):
     ("Node#cd should return a node representing the given path")
     nd = Node("/foo/bar/")
     other = nd.cd("awesome/")
     other.path.should.equal('/foo/bar/awesome')
 
 
-def test_cd_enters_a_path_and_returns_a_node_representing_it_abs():
+@patch('markment.fs.exists')
+def test_cd_enters_a_path_and_returns_a_node_representing_it_abs(exists):
     ("Node#cd should return a node representing the given path. "
      "Testing with absolute path")
 
@@ -68,7 +71,8 @@ def test_contains_checks_if_path_exists(exists):
     exists.call_count.should.equal(1)
 
 
-def test_glob_filters_results_from_walk_using_fnmatch():
+@patch('markment.fs.exists')
+def test_glob_filters_results_from_walk_using_fnmatch(exists):
     ('Node#glob returns a lazy list of nodes')
     nd = Node('/foo/bar')
     nd.walk = Mock()
@@ -87,7 +91,8 @@ def test_glob_filters_results_from_walk_using_fnmatch():
     nd.walk.assert_once_called_with(lazy='passed-to-walk')
 
 
-def test_grep_filters_results_from_walk_using_regex():
+@patch('markment.fs.exists')
+def test_grep_filters_results_from_walk_using_regex(exists):
     ('Node#grep returns a lazy list of nodes')
     nd = Node('/foo/bar')
     nd.walk = Mock()
@@ -106,7 +111,8 @@ def test_grep_filters_results_from_walk_using_regex():
     nd.walk.assert_once_called_with(lazy='passed-to-walk')
 
 
-def test_find_greps_and_get_the_first_one():
+@patch('markment.fs.exists')
+def test_find_greps_and_get_the_first_one(exists):
     ('Node#find returns the first result from grep when found')
     nd = Node('/foo/bar')
     nd.walk = Mock()
@@ -122,7 +128,8 @@ def test_find_greps_and_get_the_first_one():
     nd.walk.assert_once_called_with(lazy=True)
 
 
-def test_find_greps_and_get_the_first_one_none():
+@patch('markment.fs.exists')
+def test_find_greps_and_get_the_first_one_none(exists):
     ('Node#find returns the None if nothing is found')
     nd = Node('/foo/bar')
     nd.walk = Mock()
@@ -137,7 +144,8 @@ def test_find_greps_and_get_the_first_one_none():
     nd.walk.assert_once_called_with(lazy=True)
 
 
-def test_node_could_be_updated_by_true():
+@patch('markment.fs.exists')
+def test_node_could_be_updated_by_true(exists):
     ("Node#could_be_updated_by returns True if given "
      "node has a newer modification time")
 
@@ -148,7 +156,8 @@ def test_node_could_be_updated_by_true():
     nd.could_be_updated_by(other).should.be.true
 
 
-def test_node_could_be_updated_by_false():
+@patch('markment.fs.exists')
+def test_node_could_be_updated_by_false(exists):
     ("Node#could_be_updated_by returns False if given "
      "node has an older modification time")
 
@@ -159,7 +168,8 @@ def test_node_could_be_updated_by_false():
     nd.could_be_updated_by(other).should.be.false
 
 
-def test_node_relative():
+@patch('markment.fs.exists')
+def test_node_relative(exists):
     ("Node#relative() returns a path relative to the base")
 
     nd = Node("/foo/bar/")

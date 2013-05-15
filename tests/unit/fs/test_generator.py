@@ -17,8 +17,10 @@
 
 from __future__ import unicode_literals
 
-from mock import Mock
+from mock import Mock, patch
 from markment.fs import Generator
+
+from tests.unit.base import FakeNode
 
 
 def test_rename_markdown_file():
@@ -29,3 +31,288 @@ def test_rename_markdown_file():
 
     gen = Generator(project, theme)
     gen.rename_markdown_filename("/bb/foo.md").should.equal('/bb/foo.html')
+
+
+def test_get_levels():
+    ("Generator#get_levels(link)")
+
+    project = Mock()
+    theme = Mock()
+
+    gen = Generator(project, theme)
+    fixed, levels = gen.get_levels('../../buz.py')
+
+    fixed.should.equal('buz.py')
+    levels.should.equal(['..', '..'])
+
+
+@patch('markment.fs.exists')
+def test_relative_link_callback_with_markdown(exists):
+    ("Generator#relative_link_callback(original_link, current_document_info,"
+     " destination_root) with a markdown file")
+
+    theme = Mock()
+
+    project = Mock()
+    project.node = FakeNode("/coolproject/")
+
+    engine = Generator(project, theme)
+    destination_root = FakeNode("/output")
+
+    value = engine.relative_link_callback(
+        "../docs/index.md",
+        {"relative_path": "docs/faq.md"},
+        destination_root,
+    )
+    value.should.equal('./index.html')
+
+
+@patch('markment.fs.exists')
+def test_relative_link_callback_with_markdown_not_found(exists):
+    ("Generator#relative_link_callback(original_link, current_document_info,"
+     " destination_root) with a markdown not found [\033[2;31mTODO\033[0m]")
+
+    # TODO: this test should raise an exception
+
+    theme = Mock()
+
+    project = Mock()
+    project.node = FakeNode("/coolproject/")
+    project.node.find = Mock(return_value=None)
+
+    engine = Generator(project, theme)
+    destination_root = FakeNode("/output")
+
+    value = engine.relative_link_callback(
+        "../docs/index.md",
+        {"relative_path": "docs/faq.md"},
+        destination_root,
+    )
+    value.should.equal('../docs/index.md')
+
+
+@patch('markment.fs.exists')
+def test_relative_link_callback_with_asset(exists):
+    ("Generator#relative_link_callback(original_link, current_document_info,"
+     " destination_root) with an asset")
+
+    theme = Mock()
+
+    project = Mock()
+    project.node = FakeNode("/coolproject")
+
+    engine = Generator(project, theme)
+    destination_root = FakeNode("/output")
+
+    value = engine.relative_link_callback(
+        "css/style.css",
+        {"relative_path": "docs/index.md"},
+        destination_root,
+    )
+    value.should.equal(u'../css/style.css')
+
+
+@patch('markment.fs.exists')
+def test_relative_link_callback_with_asset_not_found(exists):
+    ("Generator#relative_link_callback(original_link, current_document_info,"
+     " destination_root) with asset not found")
+
+    # TODO: this test should raise an exception
+
+    theme = Mock()
+
+    project = Mock()
+    project.node = FakeNode("/coolproject/")
+    project.node.find = Mock(return_value=None)
+
+    engine = Generator(project, theme)
+    destination_root = FakeNode("/output")
+
+    value = engine.relative_link_callback(
+        "../css/style.css",
+        {"relative_path": "css/faq.md"},
+        destination_root,
+    )
+    value.should.equal('../css/style.css')
+
+
+@patch('markment.fs.exists')
+def test_static_url_callback_with_asset_not_found(exists):
+    ("Generator#static_url_callback(original_link, current_document_info,"
+     " destination_root) with asset not found")
+
+    # TODO: this test should raise an exception
+    project = Mock()
+
+    theme = Mock()
+    theme.node = FakeNode("/coolproject/")
+    theme.node.find = Mock(return_value=None)
+
+    engine = Generator(project, theme)
+    destination_root = FakeNode("/output")
+
+    engine.static_url_callback.when.called_with(
+        "style.css",
+        {"relative_path": "css/faq.md"},
+        destination_root,
+    ).should.throw(IOError, "BOOM, could not find style.css anywhere")
+
+
+@patch('markment.fs.exists')
+def test_static_url_callback_with_asset(exists):
+    ("Generator#static_url_callback(original_link, current_document_info,"
+     " destination_root) finding an asset")
+
+    # TODO: this test should raise an exception
+    project = Mock()
+
+    theme = Mock()
+    theme.node = FakeNode("/coolproject/")
+
+    engine = Generator(project, theme)
+    destination_root = FakeNode("/output")
+
+    value = engine.static_url_callback(
+        "css/style.css",
+        {"relative_path": "faq.md"},
+        destination_root,
+    )
+
+    value.should.equal("./css/style.css")
+
+
+@patch('markment.fs.exists')
+def test_static_url_callback_with_asset_with_levels(exists):
+    ("Generator#static_url_callback(original_link, current_document_info,"
+     " destination_root) with asset not found [\033[1;31m\033TODO\033[0m]")
+
+    # TODO: this test should raise an exception
+    project = Mock()
+
+    theme = Mock()
+    theme.node = FakeNode("/coolproject/")
+
+    engine = Generator(project, theme)
+    destination_root = FakeNode("/output")
+
+    value = engine.static_url_callback(
+        "help.md",
+        {"relative_path": "docs/index.md"},
+        destination_root,
+    )
+
+    value.should.equal("../help.html")
+
+
+@patch('markment.fs.io')
+@patch('markment.fs.exists')
+def test_persist_when_exists(io, exists):
+    ("Generator#persist(destination_path)"
+     " when path already exists")
+
+    theme = Mock()
+    theme.index = {'static_path': '/themes/cool'}
+    project = Mock()
+    project.generate.return_value = [
+        {
+            "type": "blob",
+            "html": "<h1>Foobar</h1>",
+            "markdown": "# Foobar\n",
+            "path": "/simple/index.md",
+            "relative_path": "./index.md",
+        }
+    ]
+
+    engine = Generator(project, theme)
+
+    generated = engine.persist("/output")
+
+    generated.should.equal([
+        "/output/index.html"
+    ])
+
+
+@patch('markment.fs.os')
+@patch('markment.fs.io')
+@patch('markment.fs.exists')
+def test_persist_when_does_not_exist(exists, io, os):
+    ("Generator#persist(destination_path)"
+     " when path already does not exist")
+    exists.return_value = False
+    theme = Mock()
+    theme.index = {'static_path': '/themes/cool'}
+    project = Mock()
+    project.generate.return_value = [
+        {
+            "type": "tree",
+            "path": "/simple/",
+            "relative_path": "./",
+        },
+        {
+            "type": "blob",
+            "html": "<h1>Foobar</h1>",
+            "markdown": "# Foobar\n",
+            "path": "/simple/index.md",
+            "relative_path": "./index.md",
+        }
+    ]
+
+    engine = Generator(project, theme)
+
+    generated = engine.persist("/output")
+
+    generated.should.equal([
+        "/output/index.html"
+    ])
+
+    os.makedirs.assert_called_once_with("/output")
+
+
+@patch('markment.fs.AssetsCloner')
+@patch('markment.fs.shutil')
+@patch('markment.fs.os')
+@patch('markment.fs.io')
+@patch('markment.fs.exists')
+@patch('markment.fs.Node')
+def test_persist_with_files_to_copy(Node, exists, io, os, shutil, Cloner):
+    ("Generator#persist(destination_path)"
+     " with files to copy")
+    os.sep = '/'
+    Node.side_effect = FakeNode
+
+    exists.return_value = True
+    theme = Mock()
+    theme.index = {'static_path': '/themes/cool'}
+    project = Mock()
+
+    project.node = FakeNode("/simple/")
+    theme.node = FakeNode("/themes/cool")
+
+    project.generate.return_value = [
+        {
+            "type": "tree",
+            "path": "/simple/",
+            "relative_path": "./",
+        },
+        {
+            "type": "blob",
+            "html": "<h1>Foobar</h1>",
+            "markdown": "# Foobar\n",
+            "path": "/simple/index.md",
+            "relative_path": "./index.md",
+        }
+    ]
+
+    engine = Generator(project, theme)
+    engine.files_to_copy = [
+        "style.css",
+        "logo.png",
+    ]
+
+    generated = engine.persist("/output")
+
+    generated.should.equal([
+        '/output/./index.html',
+        '/output/style.css',
+        '/output/logo.png',
+    ])
