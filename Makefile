@@ -27,12 +27,8 @@ clean:
 	@for pattern in `cat .gitignore`; do rm -rf $$pattern; find . -name "$$pattern" -exec rm -rf {} \;; done
 	@echo "OK!"
 
-release: test publish
-	@printf "Exporting to $(filename)... "
-	@tar czf $(filename) markment setup.py README.md COPYING
-	@echo "DONE!"
-
-publish:
+release: test
+	@./.release
 	@python setup.py sdist register upload
 
 prepare:
