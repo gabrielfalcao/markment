@@ -118,7 +118,10 @@ class Project(object):
         with self.node.open(info['path']) as f:
             data = f.read()
 
-        decoded = data.decode('utf-8')
+        try:
+            decoded = data.decode('utf-8')
+        except UnicodeEncodeError:
+            decoded = data
 
         md = Markment(decoded, url_prefix=link_cb)
 
