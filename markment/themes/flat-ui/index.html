@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Flat UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="{{ static_file('css/bootstrap.css') }}" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="{{ static_file('css/flat-ui.css') }}" rel="stylesheet">
+    <link href="{{ static_file('css/github.css') }}" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ static_file('images/favicon.ico') }}">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+{% macro render_menu_item(header) -%}
+  <a class="btn btn-inverse btn-block btn-large"
+     href="{{ header.anchor }}">
+         {{ header.text|safe }}
+  </a>
+  {% if 'child' in header %}
+    {% for child in header['child'] %}
+      {{ render_menu_item(child) }}
+    {% endfor %}
+  {% endif %}
+{%- endmacro %}
+
+    <div class="container">
+      <div class="demo-headline">
+        <h1 class="demo-logo">{{ project.name }}
+        <small>{{ project.description }}</small></h1>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <div class="sidebar-nav">
+            <ul class="share mrl">
+              <div class="btn btn-primary btn-block btn-large">
+                <h3>Sections</h3>
+              </div>
+              {% for item in index %}
+              {{ render_menu_item(item) }}
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+        <div class="span8">
+          {{ documentation|safe }}
+        </div>
+      </div>
+    </div> <!-- /container -->
+
+<footer>
+      <div class="container">
+        <div class="row">
+          <div class="span7">
+            <h3 class="footer-title">{{ project.name }}</h3>
+            <p>{{ project.name }} is maintained by {{ project.github_maintainer }}. <br />
+              This documentation was generated automatically by <a href="http://octomarks.io/gabrielfalcao/markment">Markment</a>.
+            </p>
+            <p>
+              This theme was written by Gabriel Falcão using the <a href="http://designmodo.github.io/Flat-UI/">Flat-UI</a> library by
+              <a class="footer-brand" href="http://designmodo.com" target="_blank">
+                <img src="{{ static_file('images/footer/logo.png') }}" alt="Designmodo.com">
+              </a>
+            </p>
+          </div> <!-- /span8 -->
+
+          <div class="span5">
+            <div class="footer-banner">
+              <h3 class="footer-title">Table of contents</h3>
+              <ul>
+                 {% for item in master_index %}
+                  <li>
+                    <a href="{{ link(item.relative_path) }}">
+                        {{ item.relative_path.split('/')[-1] }}
+                    </a>
+                  </li>
+                 {% endfor %}
+              </ul>
+              Go to: <a href="http://designmodo.com/flat" target="_blank">designmodo.com/flat</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Load JS here for greater good =============================-->
+    <script src="js/jquery-1.8.2.min.js"></script>
+    <script src="js/jquery-ui-1.10.0.custom.min.js"></script>
+    <script src="js/jquery.dropkick-1.0.0.js"></script>
+    <script src="js/custom_checkbox_and_radio.js"></script>
+    <script src="js/custom_radio.js"></script>
+    <script src="js/jquery.tagsinput.js"></script>
+    <script src="js/bootstrap-tooltip.js"></script>
+    <script src="js/jquery.placeholder.js"></script>
+    <script src="http://vjs.zencdn.net/c/video.js"></script>
+    <script src="js/application.js"></script>
+    <!--[if lt IE 8]>
+      <script src="js/icon-font-ie7.js"></script>
+      <script src="js/icon-font-ie7-24.js"></script>
+    <![endif]-->
+  </body>
+</html>

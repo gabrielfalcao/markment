@@ -52,7 +52,10 @@ class Theme(object):
         with self.node.open(path) as template:
             content = template.read()
 
-        return content.decode('utf-8')
+        try:
+            return content.decode('utf-8')
+        except UnicodeEncodeError:
+            return content
 
     @property
     def index(self):

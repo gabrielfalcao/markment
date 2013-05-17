@@ -8,7 +8,7 @@ test: clean unit functional docs integration
 
 unit: clean
 	@echo "Running unit tests"
-	@nosetests --with-coverage --cover-branches --cover-erase --cover-package=markment --stop -v -s tests/unit
+	@nosetests --cover-branches --with-coverage  --cover-erase --cover-package=markment --stop -v -s tests/unit
 
 functional: clean prepare
 	@echo "Running functional tests"
@@ -35,7 +35,7 @@ prepare:
 	@mkdir -p output
 
 theme:
-	@python markment/bin.py -t leap-day --server example
+	@python markment/bin.py -t flat-ui --server example
 
 run: clean
 	@reset && python markment/server.py
