@@ -64,19 +64,6 @@ def test_theme_get_index():
     index.should.have.key('static_path').being.equal(LOCAL_FILE('sandbox_simple', 'themes', 'turbo', 'media'))
 
 
-def test_theme_get_template_content():
-    ("markment.ui.Theme should return the template content")
-
-    theme = Theme.load_from_path(LOCAL_FILE('sandbox_simple', 'themes', 'turbo'))
-
-    theme.should.be.a(Theme)
-
-    content = theme.get_template_content()
-
-    content.should.be.an(unicode)
-    content.should.look_like('<test>This works {{ documentation|safe }}</test>')
-
-
 def test_theme_get_template():
     ("markment.ui.Theme should return the template")
 

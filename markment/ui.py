@@ -17,7 +17,8 @@
 
 from __future__ import unicode_literals
 import yaml
-from jinja2 import Template
+from jinja2 import Environment
+from jinja2 import FileSystemLoader
 from .fs import Node, LOCAL_FILE, join
 
 THEME_ROOT = LOCAL_FILE('themes')
@@ -28,6 +29,8 @@ class Theme(object):
 
     def __init__(self, path):
         self.node = Node(path)
+        self.loader = FileSystemLoader(self.node.dir.path)
+        self.environment = Environment(loader=self.loader)
         self._index = {}
 
     @property
@@ -37,11 +40,8 @@ class Theme(object):
     def static_file(self, *path):
         return join(self.index['static_path'], *path)
 
-    def get_template_content(self):
-        return self._load_file_contents(self.index['index_template'])
-
     def get_template(self):
-        return Template(self.get_template_content())
+        return self.environment.get_template(self.index['index_template'])
 
     def render(self, **kw):
         template = self.get_template()
