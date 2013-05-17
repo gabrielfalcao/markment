@@ -1,8 +1,8 @@
 index_template: index.html
 assets_path: assets
 author:
-  name: Steve Smith
-  username: orderedlist
-  website: http://orderedlist.com/
+  name: Gabriel Falcao
+  username: gabrielfalcao
+  website: http://falcao.it
 
-github_url: https://github.com/orderedlist/modernist
+github_url: https://github.com/gabrielfalcao/markment

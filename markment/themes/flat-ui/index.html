@@ -15,15 +15,15 @@
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
     <!--[if lt IE 9]>
-      <script src="js/html5shiv.js"></script>
+    <script src="js/html5shiv.js"></script>
     <![endif]-->
   </head>
   <body>
 {% macro render_menu_item(header) -%}
-  <a class="btn btn-inverse btn-block btn-large"
-     href="{{ header.anchor }}">
+    <a class="btn btn-inverse btn-block btn-large"
+       href="{{ header.anchor }}">
          {{ header.text|safe }}
-  </a>
+    </a>
   {% if 'child' in header %}
     {% for child in header['child'] %}
       {{ render_menu_item(child) }}
@@ -34,7 +34,7 @@
     <div class="container">
       <div class="demo-headline">
         <h1 class="demo-logo">{{ project.name }}
-        <small>{{ project.description }}</small></h1>
+          <small>{{ project.description }}</small></h1>
       </div>
       <div class="row">
         <div class="span4">
@@ -55,7 +55,7 @@
       </div>
     </div> <!-- /container -->
 
-<footer>
+    <footer>
       <div class="container">
         <div class="row">
           <div class="span7">
@@ -76,11 +76,11 @@
               <h3 class="footer-title">Table of contents</h3>
               <ul>
                  {% for item in master_index %}
-                  <li>
-                    <a href="{{ link(item.relative_path) }}">
+                <li>
+                  <a href="{{ link(item.relative_path) }}">
                         {{ item.relative_path.split('/')[-1] }}
-                    </a>
-                  </li>
+                  </a>
+                </li>
                  {% endfor %}
               </ul>
             </div>
@@ -88,11 +88,5 @@
         </div>
       </div>
     </footer>
-
-    <!-- Load JS here for greater good =============================-->
-    <!--[if lt IE 8]>
-      <script src="{{ static_file('js/icon-font-ie7.js') }}"></script>
-      <script src="{{ static_file('js/icon-font-ie7-24.js') }}"></script>
-    <![endif]-->
   </body>
 </html>
