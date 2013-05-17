@@ -100,21 +100,38 @@ class Project(object):
         return self._found_files
 
     def generate(self, theme, static_url_cb=None, link_cb=None, **kw):
-        master_index = self.find_markdown_files().values()
+        master_index = list(self.find_markdown_files().values())
+
+        if not static_url_cb:
+            static_url_cb = lambda link, *a, **kw: link
+
+        if not link_cb:
+            link_cb = lambda link, *a, **kw: link
 
         for info in master_index:
-            yield self.render_html_from_markdown_info(
-                info, theme, static_url_cb, link_cb, master_index, **kw)
+            partial_link_cb = partial(link_cb, current_document_info=info)
+            info['extra'] = kw
+            info['markment'] = md = self.load_markment(
+                info, partial_link_cb, **kw)
+            info['markdown'] = md.raw
+            info['indexes'] = md.index()
+            info['documentation'] = md.rendered
 
-    def render_html_from_markdown_info(
-            self, info, theme, static_url_cb, link_cb, master_index, **kw):
+            info.update(self.render_html_from_markdown_info(
+                        md, info, theme,
+                partial(static_url_cb, current_document_info=info),
+                partial_link_cb, [], **kw))
 
-        if static_url_cb:
-            static_url_cb = partial(static_url_cb, current_document_info=info)
+        # rendering again, now with the full master_index
+        for info in master_index:
+            info.update(self.render_html_from_markdown_info(
+                        info['markment'], info, theme,
+                partial(static_url_cb, current_document_info=info),
+                partial(link_cb, current_document_info=info), master_index, **kw))
 
-        if link_cb:
-            link_cb = partial(link_cb, current_document_info=info)
+        return master_index
 
+    def load_markment(self, info, link_cb, **kw):
         with self.node.open(info['path']) as f:
             data = f.read()
 
@@ -123,11 +140,10 @@ class Project(object):
         except UnicodeEncodeError:
             decoded = data
 
-        md = Markment(decoded, url_prefix=link_cb)
+        return Markment(decoded, url_prefix=link_cb)
 
-        info['markdown'] = md.raw
-        info['indexes'] = md.index()
-        info['documentation'] = md.rendered
+    def render_html_from_markdown_info(
+            self, md, info, theme, static_url_cb, link_cb, master_index, **kw):
 
         Context = TemplateContext(
             project=self.meta['project'],
@@ -141,7 +157,6 @@ class Project(object):
 
         ctx = Context.ready_to_render()
         info['html'] = theme.render(**ctx).encode('utf-8')
-        info['references'] = md.url_references
         return info
 
     @classmethod

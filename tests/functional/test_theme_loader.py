@@ -74,7 +74,7 @@ def test_theme_get_template_content():
     content = theme.get_template_content()
 
     content.should.be.an(unicode)
-    content.should.look_like('<test>This works {{ documentation }}</test>')
+    content.should.look_like('<test>This works {{ documentation|safe }}</test>')
 
 
 def test_theme_get_template():

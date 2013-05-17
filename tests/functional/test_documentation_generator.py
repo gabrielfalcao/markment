@@ -96,7 +96,6 @@ def test_index_has_correct_links_for_md_files(context):
     destination = Generator(project, theme)
     generated = sorted(destination.persist(context.output_path), key=sort_files)
     generated.should.have.length_of(5)
-
     index = generated[0]
     index.should.contain('index')
 
