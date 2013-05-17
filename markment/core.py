@@ -153,6 +153,7 @@ class Project(object):
             json=json,
             static_url_cb=static_url_cb,
             link_cb=link_cb,
+            info=info,
             **kw)
 
         ctx = Context.ready_to_render()
