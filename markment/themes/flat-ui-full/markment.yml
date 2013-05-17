@@ -1,0 +1,8 @@
+index_template: index.html
+assets_path: assets
+author:
+  name: Steve Smith
+  username: orderedlist
+  website: http://orderedlist.com/
+
+github_url: https://github.com/orderedlist/modernist

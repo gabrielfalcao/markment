@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Flat UI</title>
+    <title>{{ project.name }} by {{ project.github_maintainer }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Loading Bootstrap -->
@@ -22,7 +22,7 @@
 {% macro render_menu_item(header) -%}
   <a class="btn btn-inverse btn-block btn-large"
      href="{{ header.anchor }}">
-         {{ header.text|safe }}
+       {{ header.text|safe }}
   </a>
   {% if 'child' in header %}
     {% for child in header['child'] %}
@@ -30,7 +30,6 @@
     {% endfor %}
   {% endif %}
 {%- endmacro %}
-
     <div class="container">
       <div class="demo-headline">
         <h1 class="demo-logo">{{ project.name }}
@@ -39,26 +38,30 @@
       <div class="row">
         <div class="span4">
           <div class="sidebar-nav">
-            <ul class="share mrl">
-              <div class="btn btn-primary btn-block btn-large">
-                <h3>Sections</h3>
-              </div>
-              {% for item in index %}
-              {{ render_menu_item(item) }}
+            <div class="btn btn-primary btn-block btn-large">
+              <h3>Sections</h3>
+            </div>
+            {% for page in master_index %}
+              {% for item in page.indexes %}
+                {{ render_menu_item(item) }}
               {% endfor %}
-            </ul>
+            {% endfor %}
           </div>
         </div>
-        <div class="span8">
-          {{ documentation|safe }}
+        <div class="span8" style="padding-bottom: 150px">
+          {% for page in master_index %}
+          <h1>{{ page.relative_path }}</h1>
+            {{ page.documentation|safe }}
+          {% if not loop.last %}<hr />{% endif %}
+          {% endfor %}
         </div>
       </div>
     </div> <!-- /container -->
-
 <footer>
       <div class="container">
         <div class="row">
-          <div class="span7">
+          <div class="span12">
+            <div class="footer-banner">
             <h3 class="footer-title">{{ project.name }}</h3>
             <p>{{ project.name }} is maintained by {{ project.github_maintainer }}. <br />
               This documentation was generated automatically by <a href="http://octomarks.io/gabrielfalcao/markment">Markment</a>.
@@ -69,22 +72,8 @@
                 <img src="{{ static_file('images/footer/logo.png') }}" alt="Designmodo.com">
               </a>
             </p>
-          </div> <!-- /span8 -->
-
-          <div class="span5">
-            <div class="footer-banner">
-              <h3 class="footer-title">Table of contents</h3>
-              <ul>
-                 {% for item in master_index %}
-                  <li>
-                    <a href="{{ link(item.relative_path) }}">
-                        {{ item.relative_path.split('/')[-1] }}
-                    </a>
-                  </li>
-                 {% endfor %}
-              </ul>
             </div>
-          </div>
+          </div> <!-- /span8 -->
         </div>
       </div>
     </footer>
