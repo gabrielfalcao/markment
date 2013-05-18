@@ -32,6 +32,8 @@ from pygments import highlight
 from pygments.lexers import get_lexer_by_name, guess_lexer
 from pygments.formatters import HtmlFormatter
 
+from .registry import call_hook
+
 
 def slugify(text):
     return re.sub(r'\W', '-', text.strip().lower())
@@ -89,12 +91,15 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
         return prefixed
 
     def table(self, header, body):
-        return "".join([
+        table = "".join([
             '<table class="table">',
             '<thead>', header.strip(), '</thead>',
             '<tbody>', body.strip(), '</tbody>',
             '</table>',
         ])
+        memory = {'element': table}
+        call_hook('after_each', 'markdown_table', memory)
+        return memory['element']
 
     def image(self, link, title, alt):
         url = link
@@ -107,7 +112,9 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
             title,
             alt
         )
-        return element
+        memory = {'element': element}
+        call_hook('after_each', 'markdown_image', memory)
+        return memory['element']
 
     def link(self, link, title, content):
         url = link
@@ -120,7 +127,9 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
             title,
             content,
         )
-        return element
+        memory = {'element': element}
+        call_hook('after_each', 'markdown_link', memory)
+        return memory['element']
 
     def header(self, text, level):
         item = {
@@ -134,11 +143,14 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
             indexes = self.last_index_plus_child(level - 1)
 
         indexes.append(item)
-        return '<h{level} id="{slug}" name="{slug}"><a href="#{slug}">{text}</a></h{level}>'.format(
+        element = '<h{level} id="{slug}" name="{slug}"><a href="#{slug}">{text}</a></h{level}>'.format(
             level=level,
             text=text,
             slug=slugify(text)
         )
+        memory = {'element': element}
+        call_hook('after_each', 'markdown_header', memory)
+        return memory['element']
 
     def add_attributes_to_code(self, code):
         dom = lhtml.fromstring(code)
@@ -161,7 +173,10 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
             lexer = guess_lexer(text, stripall=True)
 
         formatter = HtmlFormatter()
-        return self.add_attributes_to_code(highlight(text, lexer, formatter))
+        code = self.add_attributes_to_code(highlight(text, lexer, formatter))
+        memory = {'element': code}
+        call_hook('after_each', 'markdown_code', memory)
+        return memory['element']
 
 
 class Markment(object):

@@ -36,6 +36,7 @@ from os.path import (
 from os.path import isfile as isfile_base
 from os.path import isdir as isdir_base
 
+from .registry import call_hook
 
 LOCAL_FILE = lambda *path: join(abspath(dirname(__file__)), *path)
 
@@ -292,17 +293,21 @@ class DocumentIndexer(object):
             folder = md_node.dir.path
             if md_node.dir != self.node.dir and folder not in dirs:
                 dirs.append(folder)
-                yield {
+                folder_info = {
                     'path': folder,
                     'relative_path': self.node.relative(folder) or './',
                     'type': 'tree',
                 }
+                call_hook('before_each', 'folder_indexed', folder_info)
+                yield folder_info
 
-            yield {
+            file_info = {
                 'path': md_node.path,
                 'relative_path': self.node.relative(md_node.path),
                 'type': 'blob',
             }
+            call_hook('after_each', 'file_indexed', file_info)
+            yield file_info
 
 
 class Generator(object):
@@ -317,6 +322,7 @@ class Generator(object):
         return self.regex.sub('.html', path)
 
     def relative_link_callback(self, original_link, current_document_info, destination_root):
+
         fixed_link, levels = self.get_levels(original_link)
 
         is_markdown = self.regex.search(original_link)
@@ -399,10 +405,15 @@ class Generator(object):
             relative_destiny = split(destiny)[0]
 
             if relative_destiny and not exists(relative_destiny):
+                call_hook('before_each', 'folder_created', relative_destiny)
                 os.makedirs(relative_destiny)
+                call_hook('after_each', 'folder_created', relative_destiny)
 
             with destination.open(destiny, 'w') as f:
-                f.write(item['html'].decode('utf-8'))
+                value = item['html'].decode('utf-8')
+                call_hook('before_each', 'html_persisted', value)
+                f.write(value)
+                call_hook('after_each', 'html_persisted', value)
 
             ret.append(destiny)
 
@@ -415,13 +426,18 @@ class Generator(object):
             if in_local:
                 found = in_local
                 found_base = self.project.node.dir
+                call_hook('after_each', 'project_file_found',
+                          found, found_base)
 
             elif in_theme:
                 found = in_theme
                 found_base = self.theme.node.dir
+                call_hook('after_each', 'theme_file_found',
+                          found, found_base)
 
             else:
                 missed_files.append(src)
+                call_hook('after_each', 'missed_file', src)
                 continue
 
             source = found.path
@@ -432,13 +448,17 @@ class Generator(object):
             destiny_folder = dirname(destiny)
 
             if not exists(destiny_folder):
+                call_hook('before_each', 'folder_created', relative_destiny)
                 os.makedirs(destiny_folder)
+                call_hook('after_each', 'folder_created', relative_destiny)
 
             already_exists = exists(destiny)
             should_update = already_exists and Node(destiny).could_be_updated_by(Node(source))
 
             if not already_exists or should_update:
+                call_hook('before_each', 'file_copied', source, destiny, found)
                 shutil.copy2(source, destiny)
+                call_hook('after_each', 'file_copied', source, destiny)
 
         cloner = AssetsCloner(self.theme.index['static_path'])
 
@@ -471,9 +491,13 @@ class AssetsCloner(object):
             destination_dir = dirname(destination_path)
 
             if not dest_node.contains(destination_dir):
+                call_hook('before_each', 'asset_folder_created', destination_dir)
                 os.makedirs(destination_dir)
+                call_hook('after_each', 'asset_folder_created', destination_dir)
 
+            call_hook('before_each', 'asset_file_copied', source_path, destination_path)
             shutil.copy2(source_path, destination_path)
+            call_hook('after_each', 'asset_file_copied', source_path, destination_path)
             ret.append(destination_path)
 
         return ret
