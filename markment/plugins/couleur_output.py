@@ -134,6 +134,9 @@ def after_all(self, generated):
     sh.white("\nMarkment took ")
     now = datetime.now()
     took = (now - before.started)
-    seconds = took.microseconds / 60.0 / 60.0
+    seconds = took.seconds
+    if not seconds:
+        seconds = took.microseconds / 1000.0 / 1000.0
+
     sh.green("{0:.2f}".format(seconds))
     sh.white(" seconds to run\n")
