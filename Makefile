@@ -4,7 +4,7 @@ filename=markment-`python -c 'import markment.version;print markment.version.ver
 
 export PYTHONPATH:=  ${PWD}
 
-test: clean unit functional docs integration
+test: clean unit functional integration
 
 unit: clean
 	@echo "Running unit tests"
@@ -19,8 +19,7 @@ integration: clean
 
 docs: clean
 	@steadymark spec/*.md
-	@python markment/bin.py -o . -t bootstrap spec
-
+	@git co gh_pages && git merge master && python markment/bin.py -o . -t bootstrap spec && git add . && git commit -am 'documentation' && git push
 clean:
 	@printf "Cleaning up files that are already in .gitignore... "
 	@for pattern in `cat .gitignore`; do rm -rf $$pattern; find . -name "$$pattern" -exec rm -rf {} \;; done
