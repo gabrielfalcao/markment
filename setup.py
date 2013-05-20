@@ -32,6 +32,7 @@ def get_packages():
 requirements = [
     "Pygments==1.5",
     "misaka==1.0.2",
+    "couleur==0.5.0",
     "cssselect==0.8",
     "lxml==3.1.2",
     "PyYAML==3.10",

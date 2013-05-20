@@ -55,9 +55,13 @@
               <div class="span3">
                 <div class="footer-banner" style="position:fixed;bottom:0; width: 300px;padding-bottom: 20px">
                   <h3 class="footer-title">{{ project.name }}</h3>
-                  <p>{{ project.name }} is maintained by {{ project.github_maintainer }}. <br />
-                  This documentation was generated automatically by <a href="http://octomarks.io/gabrielfalcao/markment">Markment</a>.
-                  </p>
+                    {% if project.github_maintainer %}
+                    <p>{{ project.name }} is maintained by <a href="http://github.com/{{ project.github_maintainer }}">{{ project.github_maintainer }}</a>. <br />
+                      This documentation was generated automatically by <a href="http://octomarks.io/gabrielfalcao/markment">Markment</a>.
+                    </p>
+                    {% else %}
+                    <p>{{ project.description }}</p>
+                    {% endif %}
                   <p>
                     This theme was written by Gabriel Falcão using <a href="http://twitter.github.io/bootstrap/">twitter bootstrap</a>
                   </p>
@@ -71,7 +75,7 @@
         <div class="span8" style="padding-bottom: 150px;margin-top: 90px;">
           <a href="#init" id="init" name="init"></a>
           {% for page in master_index %}
-          <h1>{{ page.relative_path }}</h1>
+          <h1>{{ page.relative_path.split('.')[0].title() }}</h1>
             {{ page.documentation|safe }}
           {% if not loop.last %}<hr />{% endif %}
           {% endfor %}

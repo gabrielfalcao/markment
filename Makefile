@@ -19,7 +19,7 @@ integration: clean
 
 docs: clean
 	@steadymark spec/*.md
-	@python markment/bin.py -o . -t self spec
+	@python markment/bin.py -o . -t bootstrap spec
 
 clean:
 	@printf "Cleaning up files that are already in .gitignore... "
@@ -34,7 +34,7 @@ prepare:
 	@mkdir -p output
 
 theme:
-	@python markment/bin.py -t self --server spec
+	@python markment/bin.py -t bootstrap-full --server spec
 
 run: clean
 	@reset && python markment/server.py
