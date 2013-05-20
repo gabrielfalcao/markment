@@ -25,6 +25,7 @@ from collections import OrderedDict
 from .fs import Node, DocumentIndexer
 from .engine import Markment
 from .views import TemplateContext
+from .events import before, after
 
 
 class Project(object):
@@ -108,8 +109,12 @@ class Project(object):
         if not link_cb:
             link_cb = lambda link, *a, **kw: link
 
-        for info in master_index:
+        total_indexes = len(master_index)
+        for position, info in enumerate(master_index, start=1):
             partial_link_cb = partial(link_cb, current_document_info=info)
+            before.rendering_markdown.shout(
+                info, theme, kw, position, total_indexes)
+
             info['extra'] = kw
             info['markment'] = md = self.load_markment(
                 info, partial_link_cb, **kw)
@@ -122,12 +127,17 @@ class Project(object):
                 partial(static_url_cb, current_document_info=info),
                 partial_link_cb, [], **kw))
 
+            after.partially_rendering_markdown.shout(
+                info, theme, kw, position, total_indexes, master_index)
+
         # rendering again, now with the full master_index
-        for info in master_index:
+        for position, info in enumerate(master_index, start=1):
             info.update(self.render_html_from_markdown_info(
                         info['markment'], info, theme,
                 partial(static_url_cb, current_document_info=info),
                 partial(link_cb, current_document_info=info), master_index, **kw))
+            after.rendering_markdown.shout(
+                info, theme, kw, position, total_indexes, master_index)
 
         return master_index
 
@@ -157,7 +167,9 @@ class Project(object):
             **kw)
 
         ctx = Context.ready_to_render()
+        before.rendering_html.shout(info, ctx)
         info['html'] = theme.render(**ctx).encode('utf-8')
+        after.rendering_html.shout(info, ctx)
         return info
 
     @classmethod

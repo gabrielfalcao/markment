@@ -35,6 +35,9 @@ EVENTS = [
     'markdown_code',
     'document_found',
     'html_persisted',
+    'partially_rendering_markdown',
+    'rendering_markdown',
+    'rendering_html',
 ]
 
 before = Speaker('before', EVENTS)

@@ -19,48 +19,80 @@
 from __future__ import unicode_literals
 
 import sys
-from os.path import basename, dirname, relpath
+from datetime import datetime
+from os.path import relpath
 from markment.events import after, before
 from markment.version import version
 from couleur import Shell
 
 
 sh = Shell(sys.stdout)
-has_persisted_html = False
+total_written_html_bytes = False
 
 W = lambda x: relpath(x)
 
 
+@before.exception_handler
+@after.exception_handler
+def print_out(event, exception, args, kw):
+    sh.bold_red("\n#ERROR ({0})#\n".format(exception))
+
+
 @after.file_indexed
 def file_indexed(event, info, pos, total, siblings):
-    sh.bold_blue("\rIndexing file ")
+    sh.blue("\rIndexing file ")
     sh.bold_white(str(pos))
-    sh.bold_blue(" of ")
+    sh.blue(" of ")
     sh.bold_white(str(total))
     if pos == total:
-        sh.bold_blue(" done.")
+        sh.bold_white(" done.")
         sh.normal("\n")
-    sh.bold_blue("\n", replace=True)
+    sh.normal("\n", replace=True)
+
+
+@after.partially_rendering_markdown
+def partialy_render_md(event, info, theme, kw, pos, total, siblings):
+    sh.blue("\rPre-rendering markdown ")
+    sh.bold_white(str(pos))
+    sh.white(" of ")
+    sh.bold_white(str(total))
+    if pos == total:
+        sh.normal(" done.")
+        sh.normal("\n")
+    sh.normal("\n", replace=True)
+
+
+@after.rendering_markdown
+def render_md(event, info, theme, kw, pos, total, siblings):
+    sh.blue("\rPost-processing markdown ")
+    sh.bold_white(str(pos))
+    sh.white(" of ")
+    sh.bold_white(str(total))
+    if pos == total:
+        sh.normal(" done.")
+        sh.normal("\n")
+    sh.normal("\n", replace=True)
 
 
 @after.html_persisted
 def html_persisted(event, destination_path, bites):
-    sh.bold_white('\rCreated ')
-    sh.white(W(destination_path))
-    sh.bold_white(" . {0}kb ".format(len(bites) / 1000.0))
-    sh.white("written\n")
+    global total_written_html_bytes
+    total_written_html_bytes += len(bites) * 1.0
+    sh.bold_white('\rWriting ')
+    sh.green(relpath(destination_path))
+    sh.bold_white(" {0}kb\n".format(total_written_html_bytes / 1000.0))
 
 
 @after.file_copied
 def after_copy_file(event, source_path, destiny_path, pos, total):
-    sh.bold_green("\rCopying file ")
+    sh.blue("\rCopying file ")
     sh.bold_white(str(pos))
-    sh.bold_green(" of ")
+    sh.blue(" of ")
     sh.bold_white(str(total))
     if pos == total:
-        sh.bold_green(" done.")
+        sh.blue(" done.")
         sh.normal("\n")
-    sh.bold_green("\n", replace=True)
+    sh.blue("\n", replace=True)
 
 
 @after.missed_file
@@ -72,13 +104,22 @@ def missed_file(event, path):
 @before.all
 def before_all(self, args):
     sh.white("Markment ")
-    sh.bold_green(version)
+    sh.green(version)
     sh.normal("\n\n")
-    sh.yellow("Scanning {0}...\n".format(args.OUTPUT))
+    sh.bold_white("The documentation will be built with the theme ")
+    sh.green(args.THEME)
+    sh.bold_white("...\n")
+    sh.bold_white("Scanning ")
+    sh.yellow(args.SOURCE)
+    sh.bold_white("...\n")
+    before.started = datetime.now()
 
 
 @after.all
 def after_all(self, generated):
-    sh.normal("\nMarkment has generated ")
-    sh.bold_green(str(len(generated)))
-    sh.bold_white(" new files\n")
+    sh.white("\nMarkment took ")
+    now = datetime.now()
+    took = (now - before.started)
+    seconds = took.microseconds / 60.0 / 60.0 / 60.0
+    sh.green("{0:.2f}".format(seconds))
+    sh.white(" seconds to run\n")
