@@ -25,3 +25,18 @@ def slugify(text):
 
 def underlinefy(text):
     return slugify(text).replace('-', '_')
+
+
+class nicepartial(object):
+    def __init__(self, func, *args, **kw):
+        self.func = func
+        self.args = args
+        self.kwargs = kw
+
+    def __call__(self, *args, **kw):
+        new = self.kwargs.copy()
+        new.update(kw)
+        return self.func(*(self.args + args), **new)
+
+    def __repr__(self):
+        return b'partial:{0}'.format(self.func.__name__)
