@@ -36,7 +36,7 @@ from os.path import (
 from os.path import isfile as isfile_base
 from os.path import isdir as isdir_base
 
-from .registry import call_hook
+from .events import before, after
 
 LOCAL_FILE = lambda *path: join(abspath(dirname(__file__)), *path)
 
@@ -289,7 +289,9 @@ class DocumentIndexer(object):
     def find_all_markdown_files(self):
         dirs = []
 
-        for md_node in self.node.grep(r'[.](md|markdown)$', re.I):
+        grep_result = self.node.grep(r'[.](md|markdown)$', re.I)
+        total_results = len(grep_result)
+        for position, md_node in enumerate(grep_result, start=1):
             folder = md_node.dir.path
             if md_node.dir != self.node.dir and folder not in dirs:
                 dirs.append(folder)
@@ -298,7 +300,8 @@ class DocumentIndexer(object):
                     'relative_path': self.node.relative(folder) or './',
                     'type': 'tree',
                 }
-                call_hook('before_each', 'folder_indexed', folder_info)
+                after.folder_indexed.shout(
+                    folder_info, position, total_results, grep_result)
                 yield folder_info
 
             file_info = {
@@ -306,7 +309,9 @@ class DocumentIndexer(object):
                 'relative_path': self.node.relative(md_node.path),
                 'type': 'blob',
             }
-            call_hook('after_each', 'file_indexed', file_info)
+            after.file_indexed.shout(
+                folder_info, position, total_results, grep_result)
+
             yield file_info
 
 
@@ -405,20 +410,21 @@ class Generator(object):
             relative_destiny = split(destiny)[0]
 
             if relative_destiny and not exists(relative_destiny):
-                call_hook('before_each', 'folder_created', relative_destiny)
+                before.folder_created.shout(relative_destiny)
                 os.makedirs(relative_destiny)
-                call_hook('after_each', 'folder_created', relative_destiny)
+                after.folder_created.shout(relative_destiny)
 
             with destination.open(destiny, 'w') as f:
                 value = item['html'].decode('utf-8')
-                call_hook('before_each', 'html_persisted', value)
+                value = before.html_persisted.shout(destiny, value) or value
                 f.write(value)
-                call_hook('after_each', 'html_persisted', value)
+                after.html_persisted.shout(destiny, value)
 
             ret.append(destiny)
 
         missed_files = []
-        for src in self.files_to_copy:
+        total_files_to_copy = len(self.files_to_copy)
+        for position, src in enumerate(self.files_to_copy, start=1):
             src = relpath(src)
             in_theme = self.theme.node.find(src)
             in_local = self.project.node.find(src)
@@ -426,18 +432,16 @@ class Generator(object):
             if in_local:
                 found = in_local
                 found_base = self.project.node.dir
-                call_hook('after_each', 'project_file_found',
-                          found, found_base)
+                after.project_file_found.shout(found, found_base)
 
             elif in_theme:
                 found = in_theme
                 found_base = self.theme.node.dir
-                call_hook('after_each', 'theme_file_found',
-                          found, found_base)
+                after.theme_file_found.shout(found, found_base)
 
             else:
                 missed_files.append(src)
-                call_hook('after_each', 'missed_file', src)
+                after.missed_file.shout(src)
                 continue
 
             source = found.path
@@ -448,17 +452,19 @@ class Generator(object):
             destiny_folder = dirname(destiny)
 
             if not exists(destiny_folder):
-                call_hook('before_each', 'folder_created', relative_destiny)
+                before.folder_created.shout(relative_destiny)
                 os.makedirs(destiny_folder)
-                call_hook('after_each', 'folder_created', relative_destiny)
+                after.folder_created.shout(relative_destiny)
 
             already_exists = exists(destiny)
             should_update = already_exists and Node(destiny).could_be_updated_by(Node(source))
 
             if not already_exists or should_update:
-                call_hook('before_each', 'file_copied', source, destiny, found)
+                before.file_copied.shout(
+                    source, destiny, position, total_files_to_copy)
                 shutil.copy2(source, destiny)
-                call_hook('after_each', 'file_copied', source, destiny)
+                after.file_copied.shout(
+                    source, destiny, position, total_files_to_copy)
 
         cloner = AssetsCloner(self.theme.index['static_path'])
 
@@ -483,21 +489,25 @@ class AssetsCloner(object):
         ret = []
 
         dest_node = Node(root)
+        source_paths = self.node.trip_at(self.assets_path)
+        total_files_to_copy = len(source_paths)
 
-        for source_path in self.node.trip_at(self.assets_path):
+        for position, source_path in enumerate(source_paths, start=1):
             relative_path = self.node.relative(source_path)
 
             destination_path = dest_node.join(relative_path)
             destination_dir = dirname(destination_path)
 
             if not dest_node.contains(destination_dir):
-                call_hook('before_each', 'asset_folder_created', destination_dir)
+                before.folder_created.shout(destination_dir)
                 os.makedirs(destination_dir)
-                call_hook('after_each', 'asset_folder_created', destination_dir)
+                after.folder_created.shout(destination_dir)
 
-            call_hook('before_each', 'asset_file_copied', source_path, destination_path)
+            before.file_copied.shout(
+                source_path, destination_path, position, total_files_to_copy)
             shutil.copy2(source_path, destination_path)
-            call_hook('after_each', 'asset_file_copied', source_path, destination_path)
+            after.file_copied.shout(
+                source_path, destination_path, position, total_files_to_copy)
             ret.append(destination_path)
 
         return ret

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # <markment - markdown-based documentation generator for python>
 # Copyright (C) <2013>  Gabriel Falcão <gabriel@nacaolivre.org>
@@ -15,27 +14,14 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 from __future__ import unicode_literals
-from markment.bus import Speaker
 
-EVENTS = [
-    'all',
-    'folder_indexed',
-    'file_indexed',
-    'file_copied',
-    'missed_file',
-    'folder_created',
-    'theme_file_found',
-    'project_file_found',
-    'markdown_table',
-    'markdown_link',
-    'markdown_image',
-    'markdown_header',
-    'markdown_code',
-    'document_found',
-    'html_persisted',
-]
+import re
 
-before = Speaker('before', EVENTS)
-after = Speaker('after', EVENTS)
+
+def slugify(text):
+    return re.sub(r'\W', '-', text.strip().lower())
+
+
+def underlinefy(text):
+    return slugify(text).replace('-', '_')

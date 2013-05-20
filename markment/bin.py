@@ -28,7 +28,8 @@ from markment.core import Project
 from markment.fs import Generator, Node
 from markment.ui import Theme, InvalidThemePackage
 from markment.server import server
-
+from markment.events import before, after
+from markment.plugins.couleur_output import *
 
 LOGO = """
                       _                         _
@@ -129,7 +130,7 @@ def main():
 
     project_path = abspath(args.SOURCE)
     output_path = abspath(args.OUTPUT)
-
+    before.all.shout(args)
     project = Project.discover(project_path)
     if exists(join(args.THEME, 'markment.yml')):
         theme = Theme.load_from_path(args.THEME)
@@ -160,13 +161,8 @@ def main():
         return server(project_path, theme).run(debug=True, use_reloader=False)
 
     destination = Generator(project, theme)
-    print "Generating documentation from", project_path
-    print "  Destination:", output_path
-
     generated = destination.persist(output_path, gently=True)
-
-    for f in generated:
-        print "\033[1;32mGenerated:\033[0m  ", os.path.relpath(f)
+    after.all.shout(generated)
 
 
 if __name__ == '__main__':

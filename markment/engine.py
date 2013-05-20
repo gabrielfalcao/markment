@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from __future__ import unicode_literals
-import re
+
 from copy import deepcopy
 from misaka import HtmlRenderer, SmartyPants, Markdown
 from misaka import (
@@ -32,11 +32,8 @@ from pygments import highlight
 from pygments.lexers import get_lexer_by_name, guess_lexer
 from pygments.formatters import HtmlFormatter
 
-from .registry import call_hook
-
-
-def slugify(text):
-    return re.sub(r'\W', '-', text.strip().lower())
+from .events import after
+from .handy import slugify
 
 
 class MarkmentRenderer(HtmlRenderer, SmartyPants):
@@ -98,7 +95,7 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
             '</table>',
         ])
         memory = {'element': table}
-        call_hook('after_each', 'markdown_table', memory)
+        after.shout('markdown_table', memory)
         return memory['element']
 
     def image(self, link, title, alt):
@@ -113,7 +110,7 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
             alt
         )
         memory = {'element': element}
-        call_hook('after_each', 'markdown_image', memory)
+        after.markdown_image.shout(memory)
         return memory['element']
 
     def link(self, link, title, content):
@@ -128,7 +125,7 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
             content,
         )
         memory = {'element': element}
-        call_hook('after_each', 'markdown_link', memory)
+        after.markdown_link.shout(memory)
         return memory['element']
 
     def header(self, text, level):
@@ -149,7 +146,7 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
             slug=slugify(text)
         )
         memory = {'element': element}
-        call_hook('after_each', 'markdown_header', memory)
+        after.markdown_header.shout(memory)
         return memory['element']
 
     def add_attributes_to_code(self, code):
@@ -175,7 +172,7 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
         formatter = HtmlFormatter()
         code = self.add_attributes_to_code(highlight(text, lexer, formatter))
         memory = {'element': code}
-        call_hook('after_each', 'markdown_code', memory)
+        after.markdown_code.shout(memory)
         return memory['element']
 
 
