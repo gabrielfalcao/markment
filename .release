@@ -17,5 +17,5 @@ if [ $sure == "yes" ]; then
     update_files
     printf "New release: \033[1;32m$newversion\033[0m\n"
     git add `egrep -r $newversion .markment.yml tests/*.py markment/*.py | cut -d: -f1 | xargs`
-    git commit -m "New release: $newversion"
+    git commit -am "New release: $newversion"
 fi;
