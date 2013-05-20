@@ -75,7 +75,7 @@ parser.add_argument(
     help='The source path in which markdown should recursively find documentation.')
 
 parser.add_argument(
-    '-t', '--theme', dest='THEME', default='flat-ui',
+    '-t', '--theme', dest='THEME', default='bootstrap-full',
     help='Markment theme name or path')
 
 parser.add_argument(
