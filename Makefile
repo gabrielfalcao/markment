@@ -18,7 +18,8 @@ integration: clean
 	@python markment/bin.py -t slate -o ./_public/ example
 
 docs: clean
-	@steadymark README.md
+	@steadymark spec/*.md
+	@python markment/bin.py -o _html -t self spec
 
 clean:
 	@printf "Cleaning up files that are already in .gitignore... "

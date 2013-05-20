@@ -401,7 +401,8 @@ class Generator(object):
 
         ret = []
 
-        for item in master_index:
+        total_indexes = len(master_index)
+        for position, item in enumerate(master_index, start=1):
             if item['type'] != 'blob':
                 continue
 
@@ -418,7 +419,7 @@ class Generator(object):
                 value = item['html'].decode('utf-8')
                 value = before.html_persisted.shout(destiny, value) or value
                 f.write(value)
-                after.html_persisted.shout(destiny, value)
+                after.html_persisted.shout(destiny, value, position, total_indexes)
 
             ret.append(destiny)
 

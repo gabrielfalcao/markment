@@ -30,6 +30,7 @@ from markment.ui import Theme, InvalidThemePackage
 from markment.server import server
 from markment.events import before, after
 from markment.plugins.couleur_output import *
+from .version import version
 
 LOGO = """
                       _                         _
@@ -38,8 +39,9 @@ LOGO = """
 | | | | | | (_| | |  |   <| | | | | |  __/ | | | |_
 |_| |_| |_|\__,_|_|  |_|\_\_| |_| |_|\___|_| |_|\__|
 
+version {0}
 ... Generate beautiful documentation for your project
-"""
+""".format(version)
 
 local_node = Node(__file__).dir
 

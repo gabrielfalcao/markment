@@ -27,7 +27,6 @@ from couleur import Shell
 
 
 sh = Shell(sys.stdout)
-total_written_html_bytes = False
 
 W = lambda x: relpath(x)
 
@@ -73,14 +72,29 @@ def render_md(event, info, theme, kw, pos, total, siblings):
         sh.normal("\n")
     sh.normal("\n", replace=True)
 
+total_bytes = 0
+
 
 @after.html_persisted
-def html_persisted(event, destination_path, bites):
-    global total_written_html_bytes
-    total_written_html_bytes += len(bites) * 1.0
-    sh.bold_white('\rWriting ')
-    sh.green(relpath(destination_path))
-    sh.bold_white(" {0}kb\n".format(total_written_html_bytes / 1000.0))
+def html_persisted(event, destination_path, raw_bytes, position, total):
+    global total_bytes
+    if total_bytes is 0:
+        sh.normal("\n")
+
+    total_bytes += len(raw_bytes)
+    if position < total:
+        sh.red('\rWriting ')
+        sh.bold_white("{0}kb".format(total_bytes / 1000.0))
+    else:
+        sh.blue('\rWrote ')
+        sh.bold_yellow("{0}kb".format(total_bytes / 1000.0))
+
+    if position == total:
+        sh.blue(' of html')
+        sh.bold_red(b' \xe2\x9d\xa4')
+        sh.normal("\n")
+
+    sh.normal("\n", replace=True)
 
 
 @after.file_copied
