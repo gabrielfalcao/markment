@@ -30,7 +30,7 @@ from markment.ui import Theme, InvalidThemePackage
 from markment.server import server
 from markment.events import before, after
 from markment.plugins.couleur_output import *
-from .version import version
+from markment.version import version
 
 LOGO = """
                       _                         _

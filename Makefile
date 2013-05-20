@@ -34,7 +34,7 @@ prepare:
 	@mkdir -p output
 
 theme:
-	@python markment/bin.py -t bootstrap --server docs
+	@python markment/bin.py -t self --server spec
 
 run: clean
 	@reset && python markment/server.py

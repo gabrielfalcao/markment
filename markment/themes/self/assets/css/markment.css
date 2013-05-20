@@ -1,0 +1,65 @@
+@font-face
+{
+font-family: Harabara;
+src: url('../fonts/Harabara.ttf')
+    ,url('../fonts/Harabara.eot'); /* IE9 */
+}
+
+.logo {
+  display: block;
+  position: fixed;
+  background: url("../images/logo.png") no-repeat;
+  width: 270px;
+  height: 400px;
+  margin-top: 30px;
+}
+
+.logo h1 {
+  font-family: Harabara;
+  font-size: 48px;
+  color: #5083a6;
+  position: relative;
+  margin: 10px 0 0 10px;
+  padding: 0;
+  display: block;
+}
+
+.logo small {
+  font-family: Garamond, Georgia, serif;
+  display: block;
+  font-size: 16px;
+  margin: 10px 0 0 20px;
+  color: #555;
+  position: relative;
+  padding: 0;
+}
+
+.menu {
+  position:fixed;
+  margin-top: 180px;
+  width: 280px
+}
+
+*, .markment * {
+  font-family: Lato;
+  font-weight: 300;
+}
+.markment a:hover {
+  color: #5083a6;
+  text-decoration:none;
+}
+.markment a {
+  color: #5083a6;
+}
+
+a:hover {
+  color: #5083a6;
+  text-decoration:none;
+}
+a {
+  color: #5083a6;
+}
+
+footer {
+  background: white;
+}
