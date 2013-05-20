@@ -6,7 +6,7 @@ read newversion
 
 
 update_files (){
-    egrep -r $current_version *.py .markment.yml tests/* markment/*.py | cut -d: -f1 | xargs gsed -i "s,$current_version,$newversion,g"
+    egrep -r $current_version *.py docs/.markment.yml tests/* markment/*.py | cut -d: -f1 | xargs gsed -i "s,$current_version,$newversion,g"
 }
 
 printf "\033[A\033[A\rI will make a new commit named \033[1;33m'New release $newversion'\033[0m\n"
