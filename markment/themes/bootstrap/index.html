@@ -42,46 +42,33 @@
         <div class="span4">
           <ul class="nav nav-list" style="position:fixed; margin-top: 90px;width: 280px">
             <li><h3><a href="#init">Sections</a></h3></li>
-            {% for page in master_index %}
-              <li class="nav-header">{{ page.relative_path.split('/')[-1].split('.')[0].title() }}</li>
-              {% for item in page.indexes %}
+              {% for item in index %}
                 {{ render_menu_item(item) }}
-
               {% endfor %}
-            {% endfor %}
           </ul>
 
         </div><!-- .span4 -->
         <div class="span8" style="padding-bottom: 150px;margin-top: 90px;">
           <a href="#init" id="init" name="init"></a>
-          {% for page in master_index %}
-          <h1>{{ page.relative_path }}</h1>
-            {{ page.documentation|safe }}
-          {% if not loop.last %}<hr />{% endif %}
-          {% endfor %}
+          {{ documentation|safe }}
         </div>
       </div>
     </div> <!-- /container -->
     <footer>
       <div class="container">
         <div class="row">
-          <div class="span7">
+          <div class="span3">
             <h3 class="footer-title">{{ project.name }}</h3>
             <p>{{ project.name }} is maintained by {{ project.github_maintainer }}. <br />
               This documentation was generated automatically by <a href="http://octomarks.io/gabrielfalcao/markment">Markment</a>.
             </p>
-            <p>
-              This theme was written by Gabriel Falcão using the <a href="http://designmodo.github.io/Flat-UI/">Flat-UI</a> library by
-              <a class="footer-brand" href="http://designmodo.com" target="_blank">
-                <img src="{{ static_file('images/footer/logo.png') }}" alt="Designmodo.com">
-              </a>
-            </p>
           </div> <!-- /span8 -->
-
+          <div class="span4">
+          </div>
           <div class="span5">
-            <div class="footer-banner">
+            <div class="well">
               <h3 class="footer-title">Table of contents</h3>
-              <ul>
+              <ul class="nav nav-list">
                  {% for item in master_index %}
                 <li>
                   <a href="{{ link(item.relative_path) }}">
