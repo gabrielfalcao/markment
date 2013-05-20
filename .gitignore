@@ -1,2 +1,6 @@
-
-_html/
+.markment.yml
+dist/
+markment.egg-info/
+.coverage
+_html
+_public/
