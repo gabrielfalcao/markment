@@ -15,13 +15,21 @@ src: url('../fonts/Harabara.ttf')
 }
 
 .logo h1 {
-  font-family: Harabara;
+  font-family: Harabara, Lato, "Helvetica Neue", Helvetica;
   font-size: 48px;
   color: #5083a6;
   position: relative;
   margin: 10px 0 0 10px;
   padding: 0;
   display: block;
+  font-weight:400
+}
+
+.logo h1 em {
+  font-family: Lato, "Helvetica Neue", Helvetica;
+  font-size: 18px;
+  color: #555;
+  font-weight:300
 }
 
 .logo small {
@@ -40,9 +48,17 @@ src: url('../fonts/Harabara.ttf')
   width: 280px
 }
 
-*, .markment * {
+body {
+  background: #f8fbff;
+}
+a, p, small {
   font-family: Lato;
   font-weight: 300;
+}
+pre, code, .markment pre, .markment code {
+  font-family: Monaco, monospace;
+  font-weight:normal;
+  font-size: 12px;
 }
 .markment a:hover {
   color: #5083a6;
