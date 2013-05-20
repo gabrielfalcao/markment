@@ -19,7 +19,7 @@ integration: clean
 
 docs: clean
 	@steadymark spec/*.md
-	@python markment/bin.py -o _html -t self spec
+	@python markment/bin.py -o . -t self spec
 
 clean:
 	@printf "Cleaning up files that are already in .gitignore... "
