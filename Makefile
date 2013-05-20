@@ -33,7 +33,7 @@ prepare:
 	@mkdir -p output
 
 theme:
-	@python markment/bin.py -t flat-ui-full --server example
+	@python markment/bin.py -t bootstrap --server example
 
 run: clean
 	@reset && python markment/server.py
