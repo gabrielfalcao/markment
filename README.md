@@ -1,6 +1,7 @@
 # Markment
 
-![logo.png](logo.png)
-[![Build Status](https://secure.travis-ci.org/gabrielfalcao/markment.png?branch=master)](http://travis-ci.org/#!/gabrielfalcao/markment)
+![logo](markment/themes/self/assets/images/logo.png)
 
 Generate beautiful documentation for your github projects
+
+[gabrielfalcao.github.io/markment](http://gabrielfalcao.github.io/markment)
