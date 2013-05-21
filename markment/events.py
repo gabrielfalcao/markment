@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import unicode_literals
-from markment.bus import Speaker
+from speakers import Speaker
 
 EVENTS = [
     'all',

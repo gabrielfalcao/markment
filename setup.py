@@ -29,16 +29,7 @@ def get_packages():
 
     return packages
 
-requirements = [
-    "Pygments==1.5",
-    "misaka==1.0.2",
-    "couleur==0.5.0",
-    "cssselect==0.8",
-    "lxml==3.1.2",
-    "PyYAML==3.10",
-    "Flask==0.9",
-    "Jinja2==2.6",
-]
+requirements = filter(bool, [l.strip() for l in open("requirements.txt").read().splitlines()])
 
 setup(name='markment',
       version='0.2.5',
