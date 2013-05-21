@@ -136,8 +136,8 @@ def test_index_toc_links_point_to_html_files(context):
     l1, l2, l3, l4 = links
 
     l1.attrib.should.have.key('href').being.equal('./index.html')
-    l2.attrib.should.have.key('href').being.equal('./docs/output.html')
-    l3.attrib.should.have.key('href').being.equal('./docs/strings.html')
+    l2.attrib.should.have.key('href').being.to.match('./docs/\w+.html')
+    l3.attrib.should.have.key('href').being.to.match('./docs/\w+.html')
     l4.attrib.should.have.key('href').being.equal('./docs/even/deeper/item.html')
 
 
@@ -214,8 +214,8 @@ def test_second_level_has_correct_links_for_md_files(context):
     l1, l2, l3, l4 = links
 
     l1.attrib.should.have.key('href').being.equal('../index.html')
-    l2.attrib.should.have.key('href').being.equal('./output.html')
-    l3.attrib.should.have.key('href').being.equal('./strings.html')
+    l2.attrib.should.have.key('href').being.to.match('./\w+.html')
+    l3.attrib.should.have.key('href').being.to.match('./\w+.html')
     l4.attrib.should.have.key('href').being.equal('./even/deeper/item.html')
 
 
@@ -242,8 +242,8 @@ def test_second_level_toc_links_point_to_html_files(context):
     l1, l2, l3, l4 = links
 
     l1.attrib.should.have.key('href').being.equal('../index.html')
-    l2.attrib.should.have.key('href').being.equal('./output.html')
-    l3.attrib.should.have.key('href').being.equal('./strings.html')
+    l2.attrib.should.have.key('href').being.to.match('./\w+.html')
+    l3.attrib.should.have.key('href').being.to.match('./\w+.html')
     l4.attrib.should.have.key('href').being.equal('./even/deeper/item.html')
 
 
