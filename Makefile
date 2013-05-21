@@ -19,7 +19,15 @@ integration: clean
 
 docs: clean
 	@steadymark spec/*.md
-	@git co gh-pages && git merge master && python markment/bin.py -o . -t bootstrap spec && git add . && git commit -am 'documentation' && git push
+	@git co master && \
+		(git br -D gh-pages || printf "") && \
+		git checkout --orphan gh-pages && \
+		python markment/bin.py -o . -t self spec && \
+		git add . && \
+		git commit -am 'documentation' && \
+		git push --force origin gh-pages && \
+		git checkout master
+
 clean:
 	@printf "Cleaning up files that are already in .gitignore... "
 	@for pattern in `cat .gitignore`; do rm -rf $$pattern; find . -name "$$pattern" -exec rm -rf {} \;; done
