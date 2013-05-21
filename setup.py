@@ -32,7 +32,7 @@ def get_packages():
 requirements = filter(bool, [l.strip() for l in open("requirements.txt").read().splitlines()])
 
 setup(name='markment',
-      version='0.2.5',
+      version='0.2.6',
       description=(u'Structured documentation generator for markdown'),
       author=u'Gabriel Falcao',
       author_email='gabriel@nacaolivre.org',
