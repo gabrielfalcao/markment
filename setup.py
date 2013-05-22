@@ -29,10 +29,20 @@ def get_packages():
 
     return packages
 
-requirements = filter(bool, [l.strip() for l in open("requirements.txt").read().splitlines()])
+
+requirements = [
+    "Jinja2==2.6",
+    "PyYAML==3.10",
+    "Pygments==1.5",
+    "lxml==3.1.2",
+    "misaka==1.0.2",
+    "cssselect==0.8",
+    "flask==0.9",
+    "speakers==0.0.3",
+]
 
 setup(name='markment',
-      version='0.2.6',
+      version='0.2.9',
       description=(u'Structured documentation generator for markdown'),
       author=u'Gabriel Falcao',
       author_email='gabriel@nacaolivre.org',
