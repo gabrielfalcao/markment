@@ -72,9 +72,10 @@ class Theme(object):
 
     @classmethod
     def load_from_path(cls, path):
-        if not Node(path).contains(cls.index_filename):
+        node = Node(path)
+        if not node.contains(cls.index_filename):
             m = ('The folder "{0}" should contain a {1} file but '
-                 'doesn\'t'.format(path, cls.index_filename))
+                 'doesn\'t'.format(node.path, cls.index_filename))
 
             raise InvalidThemePackage(m)
 
