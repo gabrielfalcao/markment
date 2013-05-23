@@ -17,19 +17,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from setuptools import setup
+from setuptools import setup, find_packages
 
-
-def get_packages():
-    # setuptools can't do the job :(
-    packages = []
-    for root, dirnames, filenames in os.walk('markment'):
-        if '__init__.py' in filenames:
-            packages.append(".".join(os.path.split(root)).strip("."))
-
-    return packages
-
-requirements = filter(bool, [l.strip() for l in open("requirements.txt").read().splitlines()])
+requirements = filter(None, [l.strip() for l in open("requirements.txt")])
 
 setup(name='markment',
       version='0.2.6',
@@ -37,7 +27,7 @@ setup(name='markment',
       author=u'Gabriel Falcao',
       author_email='gabriel@nacaolivre.org',
       url='http://github.com/gabrielfalcao/markment',
-      packages=get_packages(),
+      packages=find_packages(exclude=("tests", "tests.*")),
       install_requires=requirements,
       entry_points={
           'console_scripts': ['markment = markment.bin:main'],
