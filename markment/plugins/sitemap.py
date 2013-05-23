@@ -23,7 +23,7 @@ from lxml import etree
 
 
 @after.all
-def save_sitemap(self, args, project, theme, generated):
+def save_sitemap(event, args, project, theme, generated):
     if not args.SITEMAP_PREFIX:
         return
 

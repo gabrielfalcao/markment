@@ -16,6 +16,8 @@ functional: clean prepare
 
 integration: clean
 	@python markment/bin.py -t slate -o ./_public/ example
+	@python markment/bin.py --porcelain -t slate -o ./_public/ example
+	@python markment/bin.py --porcelain -t slate -o ./_public/ --sitemap-for=http://falcao.it/markment example
 
 docs: clean
 	@steadymark spec/*.md

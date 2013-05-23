@@ -93,9 +93,8 @@ parser.add_argument(
     help="Just list the names of the available themes. Skips documentation generation")
 
 parser.add_argument(
-    '--sitemap-for', dest='SITEMAP_PREFIX', action="store_false",
-    default=False,
-    help="Doesn't generate a sitemap of the documentation")
+    '--sitemap-for', dest='SITEMAP_PREFIX', default="",
+    help="Generates a sitemap pointing to the given url prefix.")
 
 parser.add_argument(
     '--porcelain', dest='PORCELAIN', action="store_true", default=False,
@@ -175,7 +174,7 @@ def main():
 
     destination = Generator(project, theme)
     generated = destination.persist(output_path, gently=True)
-    after.all.shout(generated)
+    after.all.shout(args, project, theme, generated)
 
 
 if __name__ == '__main__':

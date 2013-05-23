@@ -130,7 +130,7 @@ def before_all(self, args):
 
 
 @after.all
-def after_all(self, generated):
+def after_all(event, args, project, theme, generated):
     sh.white("\nMarkment took ")
     now = datetime.now()
     took = (now - before.started)
