@@ -85,6 +85,11 @@ parser.add_argument(
     help='Enables the builtin HTTP server')
 
 parser.add_argument(
+    '--autoindex', dest='AUTOINDEX', action="store_true",
+    default=True,
+    help='Generates an index.html file if it does not exist in the destination folder.')
+
+parser.add_argument(
     '-o', '--output-path', dest='OUTPUT', default='./_public/',
     help='Where markment should output the new documentation')
 
@@ -134,6 +139,9 @@ def main():
         from markment.plugins import porcelain_output
     if args.SITEMAP_PREFIX:
         from markment.plugins import sitemap
+
+    if args.AUTOINDEX:
+        from markment.plugins import autoindex
 
     if args.JUST_LIST_THEMES:
         if not args.PORCELAIN:

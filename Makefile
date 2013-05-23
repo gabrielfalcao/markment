@@ -15,8 +15,8 @@ functional: clean prepare
 	@nosetests --stop -v -s tests/functional
 
 integration: clean
-	@python markment/bin.py -t slate -o ./_public/ example
-	@python markment/bin.py --porcelain -t slate -o ./_public/ example
+	@python markment/bin.py -o ./_public/ .
+	@python markment/bin.py --porcelain -o ./_public/ example
 	@python markment/bin.py --porcelain -t slate -o ./_public/ --sitemap-for=http://falcao.it/markment example
 
 docs: clean
