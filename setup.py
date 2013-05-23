@@ -39,6 +39,7 @@ requirements = [
     "cssselect==0.8",
     "flask==0.9",
     "speakers==0.0.3",
+    "couleur==0.5.0",
 ]
 
 setup(name='markment',
