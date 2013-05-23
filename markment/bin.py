@@ -29,7 +29,6 @@ from markment.fs import Generator, Node
 from markment.ui import Theme, InvalidThemePackage
 from markment.server import server
 from markment.events import before, after
-from markment.plugins.couleur_output import *
 from markment.version import version
 
 LOGO = """
@@ -94,6 +93,11 @@ parser.add_argument(
     help="Just list the names of the available themes. Skips documentation generation")
 
 parser.add_argument(
+    '--sitemap-for', dest='SITEMAP_PREFIX', action="store_false",
+    default=False,
+    help="Doesn't generate a sitemap of the documentation")
+
+parser.add_argument(
     '--porcelain', dest='PORCELAIN', action="store_true", default=False,
     help="Tells markment to use a format that is less visually rich and more machine-friendly")
 
@@ -124,6 +128,13 @@ def list_themes(porcelain=False):
 
 def main():
     args = parser.parse_args()
+
+    if not args.PORCELAIN:
+        from markment.plugins import couleur_output
+    else:
+        from markment.plugins import porcelain_output
+    if args.SITEMAP_PREFIX:
+        from markment.plugins import sitemap
 
     if args.JUST_LIST_THEMES:
         if not args.PORCELAIN:
