@@ -31,6 +31,6 @@ def generate_index(event, args, project, theme, generated):
         return
 
     renamed = re.sub(r'[.](md|markdown)$', '.html', index, re.I)
-    dst = destination.join(renamed)
-    src = destination.join('index.html')
+    src = destination.join(renamed)
+    dst = destination.join('index.html')
     copy2(src, dst)
