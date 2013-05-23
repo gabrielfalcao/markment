@@ -24,7 +24,7 @@ docs: clean
 	@git co master && \
 		(git br -D gh-pages || printf "") && \
 		git checkout --orphan gh-pages && \
-		python markment/bin.py -o . -t self spec && \
+		python markment/bin.py -o . -t self --sitemap-for="http://falcao.it/markment" spec && \
 		git add . && \
 		git commit -am 'documentation' && \
 		git push --force origin gh-pages && \
