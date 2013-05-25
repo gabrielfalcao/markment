@@ -1,6 +1,6 @@
 # Markment
 
-![logo](markment/themes/self/assets/images/logo.png)
+![logo](spec/images/logo.png)
 
 Generate beautiful documentation for your github projects
 
