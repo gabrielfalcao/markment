@@ -7,11 +7,11 @@ src: url('../fonts/Harabara.ttf')
 
 .logo {
   display: block;
-  position: fixed;
-  background: url("../images/logo.png") no-repeat;
+  position: relative;
   width: 270px;
-  height: 400px;
-  margin-top: 30px;
+}
+.logo img {
+  position: absolute;
 }
 
 .logo h1 {
@@ -43,8 +43,7 @@ src: url('../fonts/Harabara.ttf')
 }
 
 .menu {
-  position:fixed;
-  margin-top: 180px;
+  position:relative;
   width: 280px
 }
 
@@ -79,3 +78,26 @@ a {
 footer {
   background: white;
 }
+
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 11px;
+}
+
+h2, h3, h4, h5, h6 {
+  margin-top: 22px;
+  margin-bottom: 10px;
+}
+
+a code, h1 code, h2 code, h3 code, h4 code, h5 code, h6 code {
+  border: 0;
+  background: transparent;
+  background-color: transparent;
+}
+
+h1 code {font-size: 38.5px;}
+h2 code {font-size: 31.5px;}
+h3 code {font-size: 24.5px;}
+h5 code {font-size: 17.5px;}
+h5 code {font-size: 13.5px;}
+h6 code {font-size: 11.9px;}

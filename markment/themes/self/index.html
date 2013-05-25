@@ -11,7 +11,7 @@
     <link href="{{ static_file('css/markment.css') }}" rel="stylesheet">
 
     <link href="{{ static_file('css/github.css') }}" rel="stylesheet">
-    <link rel="shortcut icon" href="{{ static_file('images/favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ static_file('images/favicon.png') }}">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
     <!--[if lt IE 9]>
@@ -19,8 +19,16 @@
     <![endif]-->
   </head>
   <body>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
+  ga('create', 'UA-1277640-18', 'falcao.it');
+  ga('send', 'pageview');
 
+</script>
 {% macro render_menu_item(header) -%}
     <li>
     <a class="btn-large"
@@ -29,7 +37,7 @@
     </a>
     </li>
 
-  {% if 'child' in header %}
+  {% if 'child' in header and header.level < 2 %}
     {% for child in header['child'] %}
       {{ render_menu_item(child) }}
     {% endfor %}
@@ -37,6 +45,7 @@
 {%- endmacro %}
     <div class="container">
       <div class="logo">
+        <img src="{{ link(project.logo_path) }}" style="{{ project.logo_inline_css }}" alt="{{ project.name }}" />
         <h1>{{ project.name }}
          <em>v{{ project.version }}</em>
 </h1>
@@ -47,14 +56,24 @@
       <div class="row">
         <div class="span4">
           <ul class="nav nav-list menu">
-            <li><h3><a href="#init">Sections</a></h3></li>
+            <li class="bold"><h3><a href="#init">Sections</a></h3></li>
               {% for item in index %}
                 {{ render_menu_item(item) }}
+              {% endfor %}
+              <li class="bold"><h3><a href="#init">Table of contents</a></h3></li>
+              {% for item in master_index %}
+                <li class="bold">
+                  <h4>
+                    <a href="{{ link(item.relative_path) }}{{ item.indexes[0].anchor }}">
+                        {{ item.indexes[0].text }}
+                    </a>
+                  </h4>
+                </li>
               {% endfor %}
           </ul>
 
         </div><!-- .span4 -->
-        <div class="span8" style="padding-bottom: 150px;margin-top: 90px;">
+        <div class="span8">
           <a href="#init" id="init" name="init"></a>
           {{ documentation|safe }}
         </div>
@@ -65,26 +84,10 @@
         <div class="row">
           <div class="span3">
             <h3 class="footer-title">{{ project.name }}</h3>
-            <p>{{ project.name }} is maintained by {{ project.github_maintainer }}. <br />
+            <p>{{ project.name }} is maintained by <a href="http://github.com/{{ project.github_maintainer }}">{{ project.github_maintainer }}</a>. <br />
               This documentation was generated automatically by <a href="http://octomarks.io/gabrielfalcao/markment">Markment</a>.
             </p>
           </div> <!-- /span8 -->
-          <div class="span4">
-          </div>
-          <div class="span5">
-            <div class="well">
-              <h3 class="footer-title">Table of contents</h3>
-              <ul class="nav nav-list">
-                 {% for item in master_index %}
-                <li>
-                  <a href="{{ link(item.relative_path) }}">
-                        {{ item.relative_path.split('/')[-1] }}
-                  </a>
-                </li>
-                 {% endfor %}
-              </ul>
-            </div>
-          </div>
         </div>
       </div>
     </footer>

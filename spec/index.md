@@ -76,12 +76,3 @@ We have internally a lot of documentation, but it just wasn't exposed
 appropriately. Markment can now
 
 You can see it live[here](http://octomarks.io/gabrielfalcao/markment)
-
-
-## Documentation index
-
-* Configure your project [themes](docs/configuring.md)
-
-* Create your own [themes](docs/themes.md)
-
-* Learn how to use the power of markment in your own script in the [api documentation](docs/api.md)
