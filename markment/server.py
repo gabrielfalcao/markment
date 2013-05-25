@@ -83,13 +83,8 @@ def server(source_path, theme):
         items = list(g.project.generate(theme, static_url_cb=static_url_callback, link_cb=link))
 
         for generated in items:
-            print "." * 10
-            print
-
             if generated['relative_path'].endswith(path):
                 return Response(generated['html'])
-
-        print len(items)
 
         return Response('not found', status=404)
 
