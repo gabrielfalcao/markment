@@ -5,4 +5,4 @@ python:
 install:
   - pip install -r development.txt
 
-script: make
+script: make unit integration
