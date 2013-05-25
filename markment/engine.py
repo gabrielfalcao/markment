@@ -119,9 +119,9 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
         if prefixed:
             url = prefixed
 
-        element = '<a href="{0}" title="{1}">{2}</a>'.format(
+        element = '<a href="{0}"{1}>{2}</a>'.format(
             url,
-            title,
+            title and 'title="{1}"'.format(title) or '',
             content,
         )
         memory = {'element': element}

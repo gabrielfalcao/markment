@@ -7,8 +7,6 @@
 
     <!-- Loading Bootstrap -->
     <link href="{{ static_file('css/bootstrap.css') }}" rel="stylesheet">
-
-    <!-- Loading Flat UI -->
     <link href="{{ static_file('css/flat-ui.css') }}" rel="stylesheet">
     <link href="{{ static_file('css/github.css') }}" rel="stylesheet">
     <link rel="shortcut icon" href="{{ static_file('images/favicon.ico') }}">
@@ -20,10 +18,13 @@
   </head>
   <body>
 {% macro render_menu_item(header) -%}
-    <a class="btn btn-inverse btn-block btn-large"
+    <li>
+    <a class="btn-large"
        href="{{ header.anchor }}">
        {{ header.text|safe }}
     </a>
+    </li>
+
   {% if 'child' in header %}
     {% for child in header['child'] %}
       {{ render_menu_item(child) }}
@@ -31,51 +32,55 @@
   {% endif %}
 {%- endmacro %}
     <div class="container">
-      <div class="demo-headline">
+      <div class="demo-headline" style="position:fixed;background:white;width: 100%">
         <h1 class="demo-logo">{{ project.name }}
           <small>{{ project.description }}</small></h1>
       </div>
       <div class="row">
         <div class="span4">
-          <div class="sidebar-nav">
-            <div class="btn btn-primary btn-block btn-large">
-              <h3>Sections</h3>
-            </div>
+          <ul class="nav nav-list" style="position:fixed; margin-top: 90px;width: 280px">
+            <li><h3><a href="#init">Sections</a></h3></li>
             {% for page in master_index %}
+              <li class="nav-header">{{ page.relative_path.split('/')[-1].split('.')[0].title() }}</li>
               {% for item in page.indexes %}
                 {{ render_menu_item(item) }}
+
               {% endfor %}
             {% endfor %}
+          </ul>
+
+        <footer>
+          <div class="container">
+            <div class="row">
+              <div class="span3">
+                <div class="footer-banner" style="position:fixed;bottom:0; width: 300px;padding-bottom: 20px">
+                  <h3 class="footer-title">{{ project.name }}</h3>
+                    {% if project.github_maintainer %}
+                    <p>{{ project.name }} is maintained by <a href="http://github.com/{{ project.github_maintainer }}">{{ project.github_maintainer }}</a>. <br />
+                      This documentation was generated automatically by <a href="http://octomarks.io/gabrielfalcao/markment">Markment</a>.
+                    </p>
+                    {% else %}
+                    <p>{{ project.description }}</p>
+                    {% endif %}
+                  <p>
+                    This theme was written by Gabriel Falcão using <a href="http://twitter.github.io/bootstrap/">twitter bootstrap</a>
+                  </p>
+                </div>
+              </div> <!-- /span8 -->
+            </div>
           </div>
-        </div>
-        <div class="span8" style="padding-bottom: 150px">
+        </footer>
+
+        </div><!-- .span4 -->
+        <div class="span8" style="padding-bottom: 150px;margin-top: 90px;">
+          <a href="#init" id="init" name="init"></a>
           {% for page in master_index %}
-          <h1>{{ page.relative_path }}</h1>
+          <h1>{{ page.relative_path.split('.')[0].title() }}</h1>
             {{ page.documentation|safe }}
           {% if not loop.last %}<hr />{% endif %}
           {% endfor %}
         </div>
       </div>
     </div> <!-- /container -->
-    <footer>
-      <div class="container">
-        <div class="row">
-          <div class="span12">
-            <div class="footer-banner">
-              <h3 class="footer-title">{{ project.name }}</h3>
-              <p>{{ project.name }} is maintained by {{ project.github_maintainer }}. <br />
-              This documentation was generated automatically by <a href="http://octomarks.io/gabrielfalcao/markment">Markment</a>.
-              </p>
-              <p>
-              This theme was written by Gabriel Falcão using the <a href="http://designmodo.github.io/Flat-UI/">Flat-UI</a> library by
-                <a class="footer-brand" href="http://designmodo.com" target="_blank">
-                  <img src="{{ static_file('images/footer/logo.png') }}" alt="Designmodo.com">
-                </a>
-              </p>
-            </div>
-          </div> <!-- /span8 -->
-        </div>
-      </div>
-    </footer>
   </body>
 </html>

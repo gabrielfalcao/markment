@@ -310,7 +310,7 @@ class DocumentIndexer(object):
                 'type': 'blob',
             }
             after.file_indexed.shout(
-                folder_info, position, total_results, grep_result)
+                file_info, position, total_results, grep_result)
 
             yield file_info
 
