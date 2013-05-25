@@ -22,14 +22,14 @@ src: url('../fonts/Harabara.ttf')
   margin: 10px 0 0 10px;
   padding: 0;
   display: block;
-  font-weight:400
+  font-weight:400;
 }
 
 .logo h1 em {
   font-family: Lato, "Helvetica Neue", Helvetica;
   font-size: 18px;
   color: #555;
-  font-weight:300
+  font-weight:300;
 }
 
 .logo small {
@@ -93,11 +93,44 @@ a code, h1 code, h2 code, h3 code, h4 code, h5 code, h6 code {
   border: 0;
   background: transparent;
   background-color: transparent;
+  font-family: Lato, "Helvetica Neue", Helvetica;
+  font-weight:400;
 }
 
+a code, h1 code, h2 code, h3 code, h4 code, h5 code, h6 code {
+  border: 0;
+  background: transparent;
+  background-color: transparent;
+}
+
+.menu a code, .menu h1 code, .menu h2 code, .menu h3 code, .menu h4 code, .menu h5 code, .menu h6 code {
+  font-family: Lato, "Helvetica Neue", Helvetica;
+  font-weight:400;
+  color:#A66E25;
+}
+
+a code {font-size: 17.5px;}
 h1 code {font-size: 38.5px;}
 h2 code {font-size: 31.5px;}
 h3 code {font-size: 24.5px;}
-h5 code {font-size: 17.5px;}
+h4 code {font-size: 17.5px;}
 h5 code {font-size: 13.5px;}
 h6 code {font-size: 11.9px;}
+.documentation, .documentation p, .documentation code {
+  font-size: 18px;
+}
+
+.documentation p code {
+  padding: 3px 9px;
+  margin: 3px;
+  display: inline-block;
+  color: #4D846B;
+}
+
+.documentation h6 code {
+  border: 0;
+  text-align:left;
+  padding: 0 0 3px 0;
+  margin: 0;
+  border-bottom: 3px solid #5083a6;
+}

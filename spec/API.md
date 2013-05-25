@@ -1,7 +1,4 @@
-# API
-
-
-## The `Markment` class
+# The `Markment` class
 
 ```python
 from markment import Markment
