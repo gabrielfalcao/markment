@@ -1,8 +1,11 @@
 # Markment
 
-![logo](spec/images/logo.png)
+[![Build Status](https://secure.travis-ci.org/gabrielfalcao/markment.png?branch=master)](http://travis-ci.org/#!/gabrielfalcao/markment)
 
-Ever wanted to generate beautiful documentation for your project, github is great for it, supports markdown and generates pages for you. They even have a handful of themes you can choose from. And everything is just a few clicks away.
+Ever wanted to generate beautiful documentation for your project,
+github is great for it, supports markdown and generates pages for
+you. They even have a handful of themes you can choose from. And
+everything is just a few clicks away.
 
 But you are a hacker and you are really excited about your new
 project, and your documentation is bigger than just a README file. And
