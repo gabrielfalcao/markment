@@ -40,3 +40,47 @@ Here is where you will specify the names of the files below.
 index_template: template.html
 assets_path: static-files
 ```
+
+# Available Themes:
+
+Check out the themes markment has available builtin
+
+# bootstrap-full.png
+
+![screenshots/bootstrap-full.png](screenshots/bootstrap-full.png)
+
+# bootstrap.png
+
+![screenshots/bootstrap.png](screenshots/bootstrap.png)
+
+# flat-ui-full.png
+
+![screenshots/flat-ui-full.png](screenshots/flat-ui-full.png)
+
+# flat-ui.png
+
+![screenshots/flat-ui.png](screenshots/flat-ui.png)
+
+# leap-day.png
+
+![screenshots/leap-day.png](screenshots/leap-day.png)
+
+# merlot.png
+
+![screenshots/merlot.png](screenshots/merlot.png)
+
+# midnight.png
+
+![screenshots/midnight.png](screenshots/midnight.png)
+
+# minimal.png
+
+![screenshots/minimal.png](screenshots/minimal.png)
+
+# slate.png
+
+![screenshots/slate.png](screenshots/slate.png)
+
+# time-machine.png
+
+![screenshots/time-machine.png](screenshots/time-machine.png)
