@@ -18,7 +18,7 @@
 from __future__ import unicode_literals
 
 import os
-from os.path import relpath
+from os.path import relpath, join
 from markment.core import Project
 from markment.ui import Theme
 from .base import CWD_FILE
@@ -27,7 +27,7 @@ from .base import CWD_FILE
 def test_project_should_find_metadata():
     "core.Project.discover() should find metadata in a .markment.yml file"
 
-    project = Project.discover(os.getcwdu())
+    project = Project.discover(join(os.getcwdu(), "spec"))
 
     project.should.be.a(Project)
     project.should.have.property('name').being.equal('Markment')
@@ -42,7 +42,7 @@ def test_project_should_render_all_markdown_files_with_certain_theme():
 
     theme = Theme.load_by_name('touch-of-pink')
 
-    project = Project.discover(os.getcwdu())
+    project = Project.discover(join(os.getcwdu(), 'spec'))
 
     generated = list(sorted(project.generate(theme), key=lambda x: len(x['relative_path'])))
 
@@ -59,5 +59,5 @@ def test_project_should_render_all_markdown_files_with_certain_theme():
     readme.should.have.key('relative_path')
 
     len(readme['html']).should.be.above(len(readme['documentation']))
-    readme['path'].should.equal(CWD_FILE('index.md'))
-    readme['relative_path'].should.equal(relpath(CWD_FILE('index.md')))
+    readme['path'].should.equal(CWD_FILE('spec/API.md'))
+    readme['relative_path'].should.equal(relpath(CWD_FILE('API.md')))
