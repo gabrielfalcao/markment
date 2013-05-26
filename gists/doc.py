@@ -14,7 +14,7 @@ from markment.server import server
 
 local_node = Node(__file__).dir
 
-themes = [x.dir for x in reversed(local_node.cd('markment/themes').grep('markment.yml'))]
+themes = [x.dir for x in reversed(local_node.parent.cd('markment/themes').grep('markment.yml'))]
 output_path = local_node.join('_output')
 
 

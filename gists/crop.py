@@ -9,7 +9,7 @@ for image in screenshots:
     sys.stdout.write("cropping {0}...".format(image.basename))
     im = Image.open(image.path)
     try:
-        im.crop((0, 0, 1200, 500))
+        im = im.crop((0, 0, 1200, 500))
     except Exception as e:
         print "FAILED:", e
         continue

@@ -10,4 +10,4 @@ response = browser.get("http://localhost:5000", config={
     'height': 600,
 })
 
-response.save_screenshot("{0}.png".format(sys.argv[1]))
+response.save_screenshot("../spec/screenshots/{0}.png".format(sys.argv[1]))
