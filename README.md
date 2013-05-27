@@ -1,29 +1,80 @@
-# Markment
+# Supercharge your project's documentation
 
 Looking for the documentation? [http://falcao.it/markment](http://falcao.it/markment)
 
 [![Build Status](https://secure.travis-ci.org/gabrielfalcao/markment.png?branch=master)](http://travis-ci.org/#!/gabrielfalcao/markment)
+[github page](https://github.com/gabrielfalcao/markment)
 
-Ever wanted to generate beautiful documentation for your project,
-github is great for it, supports markdown and generates pages for
-you. They even have a handful of themes you can choose from. And
-everything is just a few clicks away.
+Markment reads a `README.md` or `README.markdown` finds any references
+to other `.md` or `.markdown` files and generates documentation for
+them.
 
-But you are a hacker and you are really excited about your new
-project, and your documentation is bigger than just a README file. And
-you want to choose other themes than the ones that github provide, or
-even just use their themes but among all your markdown files.
+Markment is mostly compatible with github-flavored markdown
 
-Markment is here for you.
 
-Markment is a tool for generating beautiful documentation for projects
-that use markdown. Markment is actually a set of tools but you don't
-need to use them separately, unless you want.
+## Crash course in 3 simple steps
 
-Markment is composed of:
 
-* A command line tool for generating static documentation pages
+#### 1. Install markment
 
-* A builtin server so you can preview your documentation.
+```console
+pip install markment
+```
 
-* An API for parsing and generating beautiful html from markdown with github-like syntax highlighting and a clever way to render relative links.
+#### 2. Go to a project that has one or more markdown files
+
+```console
+cd myproject
+```
+
+
+#### 3. Run markment!
+
+```console
+markment --output=./_generated-docs/
+```
+
+#### Done!
+
+
+## Features
+
+* Finds markdown files recursively in the given directory tree and generates documentation for them.
+
+* Support to [metadata](docs/configuring.md) related to your
+  project. (You can set project title, description, github url,
+  download url and the themes might make use of it)
+
+* Currently has 1 builtin theme [slate](https://github.com/jsncostello/slate) from github, but [I had forked](https://github.com/markment) and
+  am already working on migrating some github-pages themes to Goals.
+
+* You can write your own theme and use it right away through the simple [theme development api](docs/themes.md).
+
+* Seriously, creating new themes is a breeze.
+
+* Builtin [flask](http://flask.pocoo.org/) server so you can develop
+  your themes preview the documentation before generating all of it.
+
+
+## Future
+
+These are some goals I want to achieve with markment for the next releases.
+
+* Full-text search API + template.
+
+* API documentation generation for python files (Similar to
+  doxygen). I personally love markdown so much that I actually like to
+  use as my documentation language inside of python docstrings.
+
+## Purpose
+
+Markment was initially created to empower the documentation pages at
+[octomarks.io](http://octomarks.io), but only the programatic [api](docs/api.md) was being used.
+
+Until one day at [Yipit](http://yipit.com/about/team) I had to do a [retrospective item](http://www.mountaingoatsoftware.com/scrum/sprint-retrospective/) to
+improve our documentation. So I went ahead and turned markment into a full documentation generator.
+
+We have internally a lot of documentation, but it just wasn't exposed
+appropriately. Markment can now
+
+You can see it live[here](http://octomarks.io/gabrielfalcao/markment)
