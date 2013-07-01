@@ -4,7 +4,10 @@ filename=markment-`python -c 'import markment.version;print markment.version.ver
 
 export PYTHONPATH:=  ${PWD}
 
-test: clean unit functional integration
+test: deps clean unit functional integration
+
+deps:
+	@pip install -q -r requirements-dev.txt
 
 unit: clean
 	@echo "Running unit tests"
