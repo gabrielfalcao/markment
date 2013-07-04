@@ -4,6 +4,7 @@ project:
   description: A markdown-based automatic documentation generator
 
   github_maintainer: gabrielfalcao
+  github_maintainer_name: Gabriel Falc&atilde;o
   github_maintainer_url: http://github.com/gabrielfalcao
   github_maintainer_gravatar: https://secure.gravatar.com/avatar/3fa0df5c54f5ac0f8652d992d7d24039?s=64
 

@@ -46,7 +46,7 @@ prepare:
 	@mkdir -p output
 
 theme:
-	@python markment/bin.py -t self --server spec
+	@python markment/bin.py -t plant --server spec
 
 run: clean
 	@reset && python markment/server.py
