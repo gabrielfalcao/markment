@@ -6,7 +6,6 @@ body, html {
   color: white;
   background-color: #0d2e05;
   background-image:url(../img/bg.jpg);
-  background-position:center center;
   background-size:200%;
 }
 a {
@@ -20,7 +19,6 @@ strong {
 }
 a:hover {
   text-decoration:none;
-  opacity: .7;
 }
 .container.planta {
   min-height: 300px;
@@ -53,7 +51,7 @@ h6 {font-size: 30px; line-height: 30px;
 .documentation-span h5,
 .documentation-span h6 {
   padding-bottom: 10px;
-  color: rgba(0,30,30,.9);
+  color: rgba(10,10,0,.9);
 }
 
 .documentation-span h1 a,
@@ -62,7 +60,7 @@ h6 {font-size: 30px; line-height: 30px;
 .documentation-span h4 a,
 .documentation-span h5 a,
 .documentation-span h6 a {
-  color: rgba(0,30,30,.9);
+  color: rgba(10,10,0,.9);
   font-weight: 300;
 }
 .documentation-span h1 {font-size: 36px; line-height: 36px;}
@@ -190,19 +188,19 @@ code {
   width: 970px;
 }
 .documentation-span {
-  background: rgba(255,255,255, .4);
+  background: rgba(255,255,255, .6);
   float:right;
   margin-top: -115px;
   padding: 30px;
   font-size: 20px; line-height: 20px;
   line-height: 24px;
-  color: rgba(0,30,0,.9);
+  color: rgba(10,10,0,.9);
 
 }
 .documentation-span p {
 
   font-weight: 400;
-  color: rgba(0,30,0,.9);
+  color: rgba(10,10,0,.9);
 }
 .documentation-span p a{
   color: rgba(0,0,0,1);
@@ -236,7 +234,7 @@ ul.toc {
 
 ul.toc li .index {
   font-size: 18px; line-height: 18px;
-  color: rgba(255,255,255, .4);
+  color: white;
   display: inline-block;
   padding: 0 10px;
 }
@@ -246,6 +244,7 @@ ul.toc li {
   font-weight: 300;
   width:230px;
   border-bottom:1px solid rgba(255,255,255,.3);
+  background: rgba(0,0,0,.4)
 }
 ul.toc li.sub {
   padding:15px 10px 15px 40px;
@@ -254,17 +253,16 @@ ul.toc li.sub {
 }
 ul.toc li.sub .index {
   font-size: 14px; line-height: 14px;
-  color: rgba(255,255,255, .4);
   display: inline-block;
   padding: 0 5px;
 }
 
 
 ul.toc li a {
-  color: rgba(255,255,255, .6);
+  color: rgba(255,255,255,.8);
 }
 ul.toc li a:hover {
-  color: rgba(255,255,255, 1);
+  color: white;
   text-decoration:none;
 }
 @keyframes toc-highlight {
