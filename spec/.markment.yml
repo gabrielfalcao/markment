@@ -1,6 +1,6 @@
 project:
   name: "Markment"
-  version: 0.2.13
+  version: 0.2.14
   description: A markdown-based automatic documentation generator
 
   github_maintainer: gabrielfalcao
