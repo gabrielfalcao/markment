@@ -164,6 +164,7 @@ class Project(object):
             static_url_cb=static_url_cb,
             link_cb=link_cb,
             info=info,
+            current=info,
             **kw)
 
         ctx = Context.ready_to_render()
