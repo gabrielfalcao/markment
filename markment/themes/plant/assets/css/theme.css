@@ -1,21 +1,27 @@
-@import url(http://fonts.googleapis.com/css?family=Lato:100,300,400,700);
+@import url(http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900);
 
 body, html {
   font-family: Lato;
   font-weight: 100;
   color: white;
   background: #0d2e05;
-background:url(http://s.cdpn.io/18885/bg.jpg);
+background:url(../img/bg.jpg);
 }
 a {
   color: white;
+}
+em {
+  font-weight: 400;
+}
+strong {
+  font-weight: 900;
 }
 a:hover {
   text-decoration:none;
   opacity: .7;
 }
 .container.planta {
-  background-image: url(http://s.cdpn.io/18885/header_1.png);
+  background-image: url(../img/header.png);
   min-height: 600px;
   background-position: top center;
   background-repeat:no-repeat;
@@ -223,7 +229,7 @@ ul.toc {
   padding:0;
   display:block;
   position:absolute;
-  top:40px;
+  top:48px;
   left:0;
 }
 
