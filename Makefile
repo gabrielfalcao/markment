@@ -4,7 +4,10 @@ filename=markment-`python -c 'import markment.version;print markment.version.ver
 
 export PYTHONPATH:=  ${PWD}
 
-test: deps clean unit functional integration
+test: deps clean unit functional doctests integration
+
+doctests:
+	@steadymark spec/*.md
 
 deps:
 	@pip install -q -r requirements-dev.txt
@@ -22,8 +25,7 @@ integration: clean
 	@python markment/bin.py --porcelain -o ./_public/ example
 	@python markment/bin.py --porcelain -t slate -o ./_public/ --sitemap-for=http://falcao.it/markment example
 
-docs: clean
-	@steadymark spec/*.md
+docs: clean doctests
 	@git co master && \
 		(git br -D gh-pages || printf "") && \
 		git checkout --orphan gh-pages && \
@@ -38,7 +40,7 @@ clean:
 	@for pattern in `cat .gitignore`; do rm -rf $$pattern; find . -name "$$pattern" -exec rm -rf {} \;; done
 	@echo "OK!"
 
-release: test
+release: test docs
 	@./.release
 	@python setup.py sdist register upload
 
