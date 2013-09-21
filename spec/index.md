@@ -54,7 +54,7 @@ markment --output=./_generated-docs/
   your themes preview the documentation before generating all of it.
 
 
-## Future
+## Future ॐ
 
 These are some goals I want to achieve with markment for the next releases.
 
