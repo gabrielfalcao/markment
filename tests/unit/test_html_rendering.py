@@ -14,6 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+from __future__ import unicode_literals
 
 from markment import Markment
 from markment.engine import MarkmentRenderer
@@ -317,32 +318,23 @@ def test_markment_doesnt_fail_if_has_no_headers():
     mm.index().should.equal([])
 
 
-def test_markment_renders_tables():
-    "Markment should be able to render tables"
+def test_markment_header_accepts_unicode_characters():
+    "Markment supports unicode (at least in the headers :)"
 
     MD = MARKDOWN('''
-    | button                                     | code                                         |
-    | ---------------------------                | :-------------------------------:            |
-    | <a class="btn btn-success">Success</a>     | `<a class="btn btn-success">Success</a>`     |
+    # Curdling
+
+    ## Curdle /ˈkərdl/
+
     ''')
 
     mm = Markment(MD)
 
     dom = lhtml.fromstring(mm.rendered)
 
-    table = dom.cssselect("table.table")
+    headers = dom.cssselect("h2 a")
 
-    table.should_not.be.empty
+    headers.should_not.be.empty
 
-    table_data = dom.cssselect('tr > td')
-    table_data.should.have.length_of(2)
-
-    column1, column2 = table_data
-
-    button = column1.getchildren()
-    button.should_not.be.empty
-    button[0].text.should.equal('Success')
-
-    code = column2.getchildren()
-    code.should_not.be.empty
-    code[0].text.should.equal('<a class="btn btn-success">Success</a>')
+    h2 = headers[0]
+    h2.text.should.equal('Curdle /ˈkərdl/')

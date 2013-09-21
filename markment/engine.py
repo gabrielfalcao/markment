@@ -130,7 +130,7 @@ class MarkmentRenderer(HtmlRenderer, SmartyPants):
 
     def header(self, text, level):
         item = {
-            'text': str(text),
+            'text': text,
             'anchor': '#{0}'.format(slugify(text)),
             'level': int(level),
         }
