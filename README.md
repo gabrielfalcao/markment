@@ -3,7 +3,7 @@
 Looking for the documentation? [http://falcao.it/markment](http://falcao.it/markment)
 
 [![Build Status](https://secure.travis-ci.org/gabrielfalcao/markment.png?branch=master)](http://travis-ci.org/#!/gabrielfalcao/markment)
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/gabrielfalcao/markment/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+[![instanc.es Badge](https://instanc.es/bin/gabrielfalcao/markment.png)](http://instanc.es)
 
 [github page](https://github.com/gabrielfalcao/markment)
 
