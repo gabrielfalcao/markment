@@ -426,7 +426,6 @@ class Generator(object):
         missed_files = []
         total_files_to_copy = len(self.files_to_copy)
         for position, src in enumerate(self.files_to_copy, start=1):
-            src = relpath(src)
             in_theme = self.theme.node.find(src)
             in_local = self.project.node.find(src)
 
