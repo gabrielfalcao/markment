@@ -157,6 +157,7 @@ class Project(object):
 
         Context = TemplateContext(
             project=self.meta['project'],
+            meta=self.meta,
             documentation=md.rendered,
             index=md.index(),
             master_index=list(master_index),
