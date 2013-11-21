@@ -10,7 +10,7 @@ doctests:
 	@steadymark spec/*.md
 
 deps:
-	@pip install -q -r requirements-dev.txt
+	@curd install -r requirements-dev.txt
 
 unit: clean
 	@echo "Running unit tests"
