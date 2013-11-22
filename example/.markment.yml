@@ -12,3 +12,8 @@ project:
 
 documentation:
   index: index.md
+
+
+toc:
+  - docs/string.md
+  - index.md

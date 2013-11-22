@@ -55,7 +55,7 @@ class Project(object):
                 'index': documentation_index_fallback
             }
         }
-        self._found_files = OrderedDict()
+        self._found_files = []
         self.load(path)
 
     def load(self, path):
@@ -96,19 +96,29 @@ class Project(object):
 
         for info in blobs:
             name = info['relative_path']
-            self._found_files[name] = info
+            self._found_files.append(info)
 
         return self._found_files
 
-    def generate(self, theme, static_url_cb=None, link_cb=None, **kw):
-        master_index = list(self.find_markdown_files().values())
 
-        if not static_url_cb:
-            static_url_cb = lambda link, *a, **kw: link
+    def get_master_index(self):
+        """returns the master index, respecting any existing toc"""
+        original_master_index = self.find_markdown_files()
+        master_index = []
+        table_of_contents = self.meta.get('toc', [])
+        for toc_item in table_of_contents:
+            for item in original_master_index:
+                if toc_item == item['relative_path']:
+                    master_index.append(item)
 
-        if not link_cb:
-            link_cb = lambda link, *a, **kw: link
+        for item in original_master_index:
+            if item not in master_index:
+                master_index.append(item)
 
+        return master_index
+
+    def pre_render(self, theme, static_url_cb, link_cb, **kw):
+        master_index = self.get_master_index()
         total_indexes = len(master_index)
         for position, info in enumerate(master_index, start=1):
             partial_link_cb = partial(link_cb, current_document_info=info)
@@ -130,7 +140,9 @@ class Project(object):
             after.partially_rendering_markdown.shout(
                 info, theme, kw, position, total_indexes, master_index)
 
-        # rendering again, now with the full master_index
+    def post_render(self, theme, static_url_cb, link_cb, **kw):
+        master_index = self.get_master_index()
+        total_indexes = len(master_index)
         for position, info in enumerate(master_index, start=1):
             info.update(self.render_html_from_markdown_info(
                         info['markment'], info, theme,
@@ -140,6 +152,17 @@ class Project(object):
                 info, theme, kw, position, total_indexes, master_index)
 
         return master_index
+    def generate(self, theme, static_url_cb=None, link_cb=None, **kw):
+        if not static_url_cb:
+            static_url_cb = lambda link, *a, **kw: link
+
+        if not link_cb:
+            link_cb = lambda link, *a, **kw: link
+
+        self.pre_render(theme, static_url_cb, link_cb, **kw)
+
+        # rendering again, now with the full master_index
+        return self.post_render(theme, static_url_cb, link_cb, **kw)
 
     def load_markment(self, info, link_cb, **kw):
         with self.node.open(info['path']) as f:
