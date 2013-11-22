@@ -18,4 +18,12 @@ project:
 
 documentation:
   index: TODO.md  # the file that should be considered the main one. Defaults to README.md
+
+toc:
+  - introduction.md
+  - tutorial/step1.md
+  - tutorial/step2.md
+  - tutorial/step3.md
+  - reference/core.md
+  - reference/api.md
 ```
