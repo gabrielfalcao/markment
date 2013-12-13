@@ -31,7 +31,7 @@ def test_project_should_find_metadata():
 
     project.should.be.a(Project)
     project.should.have.property('name').being.equal('Markment')
-    project.should.have.property('version').being.equal('0.2.19')
+    project.should.have.property('version').being.equal('0.2.20')
     project.should.have.property('description').being.equal(
         'A markdown-based automatic documentation generator')
 
