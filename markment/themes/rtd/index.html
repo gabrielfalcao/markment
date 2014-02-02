@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>{{ project.name.title() }} by {{ project.github_maintainer }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="python requests for filesystem, api for humans">
+  <meta property="og:site_name" content="Plant" />
+  <meta property="og:type" content="WeedLabs" />
+  <meta property="og:title" content="Plant, python filesystem for humans">
+  <meta property="og:url" content="http://falcao.it/plant" />
+  <meta property="og:image" content="http://falcao.it/plant/logo.png" />
+  <meta property="og:description" content="python requests for filesystem, api for humans" />
+
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700' rel='stylesheet' type='text/css'>
+  <script type="text/javascript" src="{{ static_file('js/jquery-2.0.3.min.js') }}"></script>
+  <script type="text/javascript" src="{{ static_file('js/jquery-migrate-1.2.1.min.js') }}"></script>
+
+  <link rel="stylesheet" href="{{ static_file('css/sphinx_rtd_theme.css') }}" type="text/css" />
+  <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+</head>
+{% macro render_menu_item(header, relative_path) -%}
+  {% if header['level'] == 1  %}
+  <li class="toctree-l1 {% if current.relative_path == relative_path %} current {% endif %}"><a class="reference internal" href="{{ link(relative_path) }}{{ header.anchor }}">{{ header.text|safe }}</a>
+  {% elif header['level'] == 2 %}
+  <li class="toctree-l2"><a class="reference internal" href="{{ link(relative_path) }}{{ header.anchor }}">{{ header.text|safe }}</a></li>
+  {% endif %}
+      {% if 'child' in header %}
+       <ul class="{% if current.relative_path == relative_path %}current{% endif %}">
+        {% for child in header['child'] %}
+          {{ render_menu_item(child, relative_path) }}
+        {% endfor %}
+       </ul>
+      {% endif %}
+  {% if header['level'] == 1  %}
+    </li>
+  {% endif %}
+{%- endmacro %}
+    <body class="wy-body-for-nav">
+      <div class="wy-grid-for-nav">
+        <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+          <div class="wy-side-nav-search" style="padding-bottom:0;">
+            <a style="font-size: 22px" href="{{ link(meta['documentation']['index']) }}">{{ project.name.title() }} {{ project.version }}</a>
+          </div>
+
+          <div class="wy-menu wy-menu-vertical" data-spy="affix">
+            <ul>
+          {% for page in master_index %}
+            {% for item in page.indexes %}
+            {{ render_menu_item(item, page.relative_path) }}
+            {% endfor %}
+          {% endfor %}
+            </ul>
+          </div>
+      &nbsp;
+        </nav>
+
+        <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+          <nav class="wy-nav-top">
+            <i data-toggle="wy-nav-top" class="icon icon-reorder"></i>
+            <a href="{{ link(meta['documentation']['index']) }}">{{ project.name.title() }}</a>
+          </nav>
+
+          <div class="wy-nav-content">
+            <div class="rst-content">
+              <ul class="wy-breadcrumbs">
+                <li><a href="/">Docs</a> &raquo;</li>
+                {% for part in current.indexes %}
+                   <li><a href="{{ part.anchor }}">{{ part.text }}</a></li>
+                {% endfor %}
+              </ul>
+              <hr/>
+              <div class="section">{{ documentation|safe }}</div>
+              <footer>
+                <hr/>
+                <a href="{{ project.github_url }}">&copy; {{ project.name }}</a>
+                <a href="{{ project.github_maintainer_url }}">{{ project.github_maintainer }}</a>
+                <a href="https://pypi.python.org/pypi/sphinx_rtd_theme">Original Theme</a>
+              </footer>
+            </div>
+          </div>
+        </section>
+      </div>
+    </body>
+</html>

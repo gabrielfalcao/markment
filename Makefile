@@ -48,7 +48,7 @@ prepare:
 	@mkdir -p output
 
 theme:
-	@python markment/bin.py -t HTTPretty --server spec
+	@python markment/bin.py -t rtd --server spec
 
 run: clean
 	@reset && python markment/server.py

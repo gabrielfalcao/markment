@@ -31,19 +31,19 @@ def get_packages():
 
 
 requirements = [
-    "Jinja2>=2.6",
-    "PyYAML>=3.10",
-    "Pygments>=1.6",
-    "lxml>=3.1.2",
-    "misaka>=1.0.2",
-    "cssselect>=0.8",
-    "flask>=0.9",
-    "speakers>=0.0.3",
-    "couleur>=0.5.0",
+    "Jinja2==2.6",
+    "PyYAML==3.10",
+    "Pygments==1.6",
+    "lxml==3.1.2",
+    "misaka==1.0.2",
+    "cssselect==0.8",
+    "flask==0.9",
+    "speakers==0.0.3",
+    "couleur==0.5.0",
 ]
 
 setup(name='markment',
-      version='0.2.20',
+      version='0.2.18',
       description=(u'Structured documentation generator for markdown'),
       author=u'Gabriel Falcao',
       author_email='gabriel@nacaolivre.org',
