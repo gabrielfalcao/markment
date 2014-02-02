@@ -10,6 +10,7 @@ doctests:
 	@steadymark spec/*.md
 
 deps:
+	@pip install curdling
 	@curd install -r requirements-dev.txt
 
 unit: clean
