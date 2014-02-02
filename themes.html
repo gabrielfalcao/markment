@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Markment by gabrielfalcao</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="python requests for filesystem, api for humans">
+  <meta property="og:site_name" content="Plant" />
+  <meta property="og:type" content="WeedLabs" />
+  <meta property="og:title" content="Plant, python filesystem for humans">
+  <meta property="og:url" content="http://falcao.it/plant" />
+  <meta property="og:image" content="http://falcao.it/plant/logo.png" />
+  <meta property="og:description" content="python requests for filesystem, api for humans" />
+
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700' rel='stylesheet' type='text/css'>
+  <script type="text/javascript" src="./assets/js/jquery-2.0.3.min.js"></script>
+  <script type="text/javascript" src="./assets/js/jquery-migrate-1.2.1.min.js"></script>
+
+  <link rel="stylesheet" href="./assets/css/sphinx_rtd_theme.css" type="text/css" />
+  <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+</head>
+
+    <body class="wy-body-for-nav">
+      <div class="wy-grid-for-nav">
+        <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+          <div class="wy-side-nav-search" style="padding-bottom:0;">
+            <a style="font-size: 22px" href="./index.html">Markment 0.2.20</a>
+          </div>
+
+          <div class="wy-menu wy-menu-vertical" data-spy="affix">
+            <ul>
+          
+            
+            
+  <li class="toctree-l1 "><a class="reference internal" href="./API.html#the--code-markment--code--class">The <code>Markment</code> class</a>
+  
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+  
+        
+          
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./API.html#retrieving-the-rendered-html">retrieving the rendered html</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./API.html#retrieving-indexes">retrieving indexes</a></li>
+  
+      
+  
+        
+       </ul>
+      
+  
+    </li>
+  
+            
+          
+            
+            
+  <li class="toctree-l1 "><a class="reference internal" href="./configuring.html#configuring-your-project">Configuring your project</a>
+  
+      
+  
+    </li>
+  
+            
+          
+            
+            
+  <li class="toctree-l1 "><a class="reference internal" href="./events.html#events">Events</a>
+  
+      
+       <ul class="">
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#before-all">before.all</a></li>
+  
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#after-all">after.all</a></li>
+  
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+  
+        
+          
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#after-folder_indexed">after.folder_indexed</a></li>
+  
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+  
+        
+          
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#after-file_indexed">after.file_indexed</a></li>
+  
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+  
+        
+          
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#before-file_copied">before.file_copied</a></li>
+  
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+  
+        
+          
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#after-file_copied">after.file_copied</a></li>
+  
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+  
+        
+          
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#after-missed_file">after.missed_file</a></li>
+  
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#before-folder_created">before.folder_created</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#theme_file_found">theme_file_found</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#project_file_found">project_file_found</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#html_persisted">html_persisted</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#markdown_table">markdown_table</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#markdown_link">markdown_link</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#markdown_image">markdown_image</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#markdown_header">markdown_header</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#markdown_code">markdown_code</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#document_found">document_found</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#partially_rendering_markdown">partially_rendering_markdown</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#rendering_markdown">rendering_markdown</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#rendering_html">rendering_html</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#more-examples">More examples</a></li>
+  
+      
+  
+        
+       </ul>
+      
+  
+    </li>
+  
+            
+          
+            
+            
+  <li class="toctree-l1 "><a class="reference internal" href="./features.html#features">Features</a>
+  
+      
+       <ul class="">
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./features.html#themes">Themes</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./features.html#generating-a-sitemap">Generating a sitemap</a></li>
+  
+      
+  
+        
+       </ul>
+      
+  
+    </li>
+  
+            
+          
+            
+            
+  <li class="toctree-l1 "><a class="reference internal" href="./index.html#supercharge-your-project--39-s-documentation">Supercharge your project&#39;s documentation</a>
+  
+      
+       <ul class="">
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./index.html#crash-course-in-3-simple-steps">Crash course in 3 simple steps</a></li>
+  
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+  
+        
+          
+      
+  
+        
+          
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./index.html#features">Features</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./index.html#future--">Future ॐ</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./index.html#purpose">Purpose</a></li>
+  
+      
+  
+        
+       </ul>
+      
+  
+    </li>
+  
+            
+          
+            
+            
+  <li class="toctree-l1 "><a class="reference internal" href="./theme-list.html#available-themes">Available Themes</a>
+  
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+  
+        
+          
+      
+  
+        
+          
+      
+  
+        
+          
+      
+  
+        
+          
+      
+  
+        
+          
+      
+  
+        
+          
+      
+  
+        
+          
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+    </li>
+  
+            
+          
+            
+            
+  <li class="toctree-l1  current "><a class="reference internal" href="./themes.html#developing-markment-themes">Developing markment themes</a>
+  
+      
+       <ul class="current">
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./themes.html#the-static-assets-folder">The static assets folder</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./themes.html#the-template-file">The template file</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./themes.html#the-metadata-file">The metadata file</a></li>
+  
+      
+       <ul class="current">
+        
+          
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+    </li>
+  
+            
+          
+            </ul>
+          </div>
+      &nbsp;
+        </nav>
+
+        <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+          <nav class="wy-nav-top">
+            <i data-toggle="wy-nav-top" class="icon icon-reorder"></i>
+            <a href="./index.html">Markment</a>
+          </nav>
+
+          <div class="wy-nav-content">
+            <div class="rst-content">
+              <ul class="wy-breadcrumbs">
+                <li><a href="/">Docs</a> &raquo;</li>
+                
+                   <li><a href="#developing-markment-themes">Developing markment themes</a></li>
+                
+              </ul>
+              <hr/>
+              <div class="section"><h1 id="developing-markment-themes" name="developing-markment-themes"><a href="#developing-markment-themes">Developing markment themes</a></h1>
+<p>Markment themes are simply a folder containing a metadata file
+called <code>markment.yml</code> (don&#39;t confuse with the <code>.markment.yml</code> for <a href="./configuring.html">configuration</a>)</p>
+
+<p>This is an example structure of a theme:</p>
+<div class="highlight"><pre name="developing-markment-themes-example-1"><span class="go">theme-folder-name/</span>
+<span class="go">  |</span>
+<span class="go">  |.. markment.yml</span>
+<span class="go">  |.. template.html</span>
+<span class="go">  |.. static-files/</span>
+<span class="go">        |.. css/</span>
+<span class="go">              |.. style.css</span>
+<span class="go">        |.. img/</span>
+<span class="go">              |.. logo.png</span>
+<span class="go">              |.. so on and on...</span>
+</pre></div>
+
+<p>There are some things to consider here:</p>
+<h2 id="the-static-assets-folder" name="the-static-assets-folder"><a href="#the-static-assets-folder">The static assets folder</a></h2>
+<p>Can be named however you want, but if you don&#39;t specify it defaults to <code>assets</code></p>
+<h2 id="the-template-file" name="the-template-file"><a href="#the-template-file">The template file</a></h2>
+<p>Also can be given any name, defaults to index.html</p>
+<h2 id="the-metadata-file" name="the-metadata-file"><a href="#the-metadata-file">The metadata file</a></h2>
+<p>Here is where you will specify the names of the files below.</p>
+<h3 id="example--code-markment-yml--code-" name="example--code-markment-yml--code-"><a href="#example--code-markment-yml--code-">example <code>markment.yml</code></a></h3><div class="highlight"><pre name="developing-markment-themes-example-2"><span class="l-Scalar-Plain">index_template</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">template.html</span>
+<span class="l-Scalar-Plain">assets_path</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">static-files</span>
+</pre></div>
+</div>
+              <footer>
+                <hr/>
+                <a href="http://github.com/gabrielfalcao/markment">&copy; Markment</a>
+                <a href="http://github.com/gabrielfalcao">gabrielfalcao</a>
+                <a href="https://pypi.python.org/pypi/sphinx_rtd_theme">Original Theme</a>
+              </footer>
+            </div>
+          </div>
+        </section>
+      </div>
+    </body>
+</html>

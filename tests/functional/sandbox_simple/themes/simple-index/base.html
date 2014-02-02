@@ -1,0 +1,4 @@
+<article>{{ documentation|safe }}</article>
+{% for item in master_index %}
+<p><a class="index" href="{{ link(item.relative_path) }}">{{ link(item.relative_path) }}</a></p>
+{% endfor %}

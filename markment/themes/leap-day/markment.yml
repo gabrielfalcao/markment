@@ -1,0 +1,8 @@
+index_template: page.html
+assets_path: assets
+author:
+  name: Matt Graham
+  username: mattgraham
+  website: http://madebygraham.com/
+
+github_url: https://github.com/mattgraham/Leap-Day

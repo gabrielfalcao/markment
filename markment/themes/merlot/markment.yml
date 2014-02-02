@@ -1,0 +1,8 @@
+index_template: page.html
+assets_path: assets
+author:
+  name: Cameron McEfee
+  username: cameronmcefee
+  website: http://www.cameronmcefee.com/
+
+github_url: https://github.com/cameronmcefee/merlot

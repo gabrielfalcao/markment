@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Slate is a responsive theme for GitHub Pages" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ static_file('stylesheets/github.css') }}">
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ static_file('stylesheets/stylesheet.css') }}">
+    <title>{{ project.name }}</title>
+  </head>
+
+  <body>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          {% if project.github_url %}
+            <a id="forkme_banner" href="{{ project.github_url }}">View on GitHub</a>
+          {% endif %}
+
+          {% if project.name %}<h1 id="project_title">{{ project.name }}</h1>{% endif %}
+          {% if project.description %}<h2 id="project_tagline">{{ project.description }}</h2>{% endif %}
+          {% if project.github_url %}
+          <section id="downloads">
+            <a class="zip_download_link" href="{{ project.zipball_download_url }}">Download this project as a .zip file</a>
+            <a class="tar_download_link" href="{{ project.tarball_download_url }}">Download this project as a tar.gz file</a>
+          </section>
+          {% endif %}
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        {{ documentation|safe }}
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Slate theme maintained by <a href="https://github.com/jsncostello">Jason Costello</a></p>
+        <p>This documentation was generated in a few seconds with <a href="http://octomarks.io/gabrielfalcao/markment">Markment</a></p>
+      </footer>
+    </div>
+  </body>
+</html>

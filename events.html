@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Markment by gabrielfalcao</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="python requests for filesystem, api for humans">
+  <meta property="og:site_name" content="Plant" />
+  <meta property="og:type" content="WeedLabs" />
+  <meta property="og:title" content="Plant, python filesystem for humans">
+  <meta property="og:url" content="http://falcao.it/plant" />
+  <meta property="og:image" content="http://falcao.it/plant/logo.png" />
+  <meta property="og:description" content="python requests for filesystem, api for humans" />
+
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700' rel='stylesheet' type='text/css'>
+  <script type="text/javascript" src="./assets/js/jquery-2.0.3.min.js"></script>
+  <script type="text/javascript" src="./assets/js/jquery-migrate-1.2.1.min.js"></script>
+
+  <link rel="stylesheet" href="./assets/css/sphinx_rtd_theme.css" type="text/css" />
+  <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+</head>
+
+    <body class="wy-body-for-nav">
+      <div class="wy-grid-for-nav">
+        <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+          <div class="wy-side-nav-search" style="padding-bottom:0;">
+            <a style="font-size: 22px" href="./index.html">Markment 0.2.20</a>
+          </div>
+
+          <div class="wy-menu wy-menu-vertical" data-spy="affix">
+            <ul>
+          
+            
+            
+  <li class="toctree-l1 "><a class="reference internal" href="./API.html#the--code-markment--code--class">The <code>Markment</code> class</a>
+  
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+  
+        
+          
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./API.html#retrieving-the-rendered-html">retrieving the rendered html</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./API.html#retrieving-indexes">retrieving indexes</a></li>
+  
+      
+  
+        
+       </ul>
+      
+  
+    </li>
+  
+            
+          
+            
+            
+  <li class="toctree-l1 "><a class="reference internal" href="./configuring.html#configuring-your-project">Configuring your project</a>
+  
+      
+  
+    </li>
+  
+            
+          
+            
+            
+  <li class="toctree-l1  current "><a class="reference internal" href="./events.html#events">Events</a>
+  
+      
+       <ul class="current">
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#before-all">before.all</a></li>
+  
+      
+       <ul class="current">
+        
+          
+      
+       <ul class="current">
+        
+          
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#after-all">after.all</a></li>
+  
+      
+       <ul class="current">
+        
+          
+      
+       <ul class="current">
+        
+          
+      
+       <ul class="current">
+        
+          
+      
+       <ul class="current">
+        
+          
+      
+  
+        
+          
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#after-folder_indexed">after.folder_indexed</a></li>
+  
+      
+       <ul class="current">
+        
+          
+      
+       <ul class="current">
+        
+          
+      
+       <ul class="current">
+        
+          
+      
+       <ul class="current">
+        
+          
+      
+  
+        
+          
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#after-file_indexed">after.file_indexed</a></li>
+  
+      
+       <ul class="current">
+        
+          
+      
+       <ul class="current">
+        
+          
+      
+       <ul class="current">
+        
+          
+      
+       <ul class="current">
+        
+          
+      
+  
+        
+          
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#before-file_copied">before.file_copied</a></li>
+  
+      
+       <ul class="current">
+        
+          
+      
+       <ul class="current">
+        
+          
+      
+       <ul class="current">
+        
+          
+      
+       <ul class="current">
+        
+          
+      
+  
+        
+          
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#after-file_copied">after.file_copied</a></li>
+  
+      
+       <ul class="current">
+        
+          
+      
+       <ul class="current">
+        
+          
+      
+       <ul class="current">
+        
+          
+      
+       <ul class="current">
+        
+          
+      
+  
+        
+          
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#after-missed_file">after.missed_file</a></li>
+  
+      
+       <ul class="current">
+        
+          
+      
+       <ul class="current">
+        
+          
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#before-folder_created">before.folder_created</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#theme_file_found">theme_file_found</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#project_file_found">project_file_found</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#html_persisted">html_persisted</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#markdown_table">markdown_table</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#markdown_link">markdown_link</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#markdown_image">markdown_image</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#markdown_header">markdown_header</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#markdown_code">markdown_code</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#document_found">document_found</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#partially_rendering_markdown">partially_rendering_markdown</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#rendering_markdown">rendering_markdown</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#rendering_html">rendering_html</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./events.html#more-examples">More examples</a></li>
+  
+      
+  
+        
+       </ul>
+      
+  
+    </li>
+  
+            
+          
+            
+            
+  <li class="toctree-l1 "><a class="reference internal" href="./features.html#features">Features</a>
+  
+      
+       <ul class="">
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./features.html#themes">Themes</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./features.html#generating-a-sitemap">Generating a sitemap</a></li>
+  
+      
+  
+        
+       </ul>
+      
+  
+    </li>
+  
+            
+          
+            
+            
+  <li class="toctree-l1 "><a class="reference internal" href="./index.html#supercharge-your-project--39-s-documentation">Supercharge your project&#39;s documentation</a>
+  
+      
+       <ul class="">
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./index.html#crash-course-in-3-simple-steps">Crash course in 3 simple steps</a></li>
+  
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+  
+        
+          
+      
+  
+        
+          
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./index.html#features">Features</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./index.html#future--">Future ॐ</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./index.html#purpose">Purpose</a></li>
+  
+      
+  
+        
+       </ul>
+      
+  
+    </li>
+  
+            
+          
+            
+            
+  <li class="toctree-l1 "><a class="reference internal" href="./theme-list.html#available-themes">Available Themes</a>
+  
+      
+       <ul class="">
+        
+          
+      
+       <ul class="">
+        
+          
+      
+  
+        
+          
+      
+  
+        
+          
+      
+  
+        
+          
+      
+  
+        
+          
+      
+  
+        
+          
+      
+  
+        
+          
+      
+  
+        
+          
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+    </li>
+  
+            
+          
+            
+            
+  <li class="toctree-l1 "><a class="reference internal" href="./themes.html#developing-markment-themes">Developing markment themes</a>
+  
+      
+       <ul class="">
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./themes.html#the-static-assets-folder">The static assets folder</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./themes.html#the-template-file">The template file</a></li>
+  
+      
+  
+        
+          
+  <li class="toctree-l2"><a class="reference internal" href="./themes.html#the-metadata-file">The metadata file</a></li>
+  
+      
+       <ul class="">
+        
+          
+      
+  
+        
+       </ul>
+      
+  
+        
+       </ul>
+      
+  
+    </li>
+  
+            
+          
+            </ul>
+          </div>
+      &nbsp;
+        </nav>
+
+        <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+          <nav class="wy-nav-top">
+            <i data-toggle="wy-nav-top" class="icon icon-reorder"></i>
+            <a href="./index.html">Markment</a>
+          </nav>
+
+          <div class="wy-nav-content">
+            <div class="rst-content">
+              <ul class="wy-breadcrumbs">
+                <li><a href="/">Docs</a> &raquo;</li>
+                
+                   <li><a href="#events">Events</a></li>
+                
+              </ul>
+              <hr/>
+              <div class="section"><h1 id="events" name="events"><a href="#events">Events</a></h1>
+<p>Markment uses <a href="http://falcao.it/speakers/">speakers</a> for a simple, steady and synchonous <a href="http://en.wikipedia.org/wiki/Software_bus">event system</a>.</p>
+
+<p>Under <code>markment.events</code> <a href="https://github.com/gabrielfalcao/markment/blob/master/markment/events.py">you can find</a> its code in github, to see a full and up-to-date list of events.</p>
+
+<p>Here is a list of the basic events you can listen in your own code when <a href="extending.md">extending</a> markment.</p>
+<h2 id="before-all" name="before-all"><a href="#before-all">before.all</a></h2>
+<p><code>before.all.shout(args)</code></p>
+
+<p>Called right after markment parses the command line arguments.</p>
+<h4 id="arguments" name="arguments"><a href="#arguments">arguments</a></h4><h6 id="-code-args--code-" name="-code-args--code-"><a href="#-code-args--code-"><code>args</code></a></h6>
+<p>An instance of <a href="http://docs.python.org/2/library/argparse.html#argparse.ArgumentParser"><code>ArgumentParser</code></a> with
+the command line arguments passed to the markment executable.</p>
+
+<p>Check the examples section below to see how to use it.</p>
+<h2 id="after-all" name="after-all"><a href="#after-all">after.all</a></h2>
+<p><code>after.all.shout(args, project, theme, generated)</code></p>
+
+<p>Called after markment is done with everything.</p>
+<h4 id="arguments" name="arguments"><a href="#arguments">arguments</a></h4><h6 id="-code-args--code-" name="-code-args--code-"><a href="#-code-args--code-"><code>args</code></a></h6>
+<p>An instance of <a href="http://docs.python.org/2/library/argparse.html#argparse.ArgumentParser"><code>ArgumentParser</code></a> with
+the command line arguments passed to the markment executable.</p>
+<h6 id="-code-project--code-" name="-code-project--code-"><a href="#-code-project--code-"><code>project</code></a></h6>
+<p>An instance of <a href="../markment/core.py@Project"><code>markment.core.Project</code></a> referencing the current documentation folder.</p>
+<h6 id="-code-theme--code-" name="-code-theme--code-"><a href="#-code-theme--code-"><code>theme</code></a></h6>
+<p>An instance of <a href="../markment/ui.py@Theme"><code>markment.ui.Theme</code></a> referencing the current chosen theme.</p>
+<h6 id="-code-generated--code-" name="-code-generated--code-"><a href="#-code-generated--code-"><code>generated</code></a></h6>
+<p>A list of strings containing the relative paths of the generated documentation files.</p>
+<h2 id="after-folder_indexed" name="after-folder_indexed"><a href="#after-folder_indexed">after.folder_indexed</a></h2>
+<p><code>after.folder_indexed.shout(folder_info, position, total_results, grep_result)</code></p>
+
+<p>Happens after markment finds a folder that contains one or more markdown files.</p>
+<h4 id="arguments" name="arguments"><a href="#arguments">arguments</a></h4><h6 id="-code-folder_info--code-" name="-code-folder_info--code-"><a href="#-code-folder_info--code-"><code>folder_info</code></a></h6>
+<p>A dictionary with metadata about the folder</p>
+<h6 id="-code-position--code-" name="-code-position--code-"><a href="#-code-position--code-"><code>position</code></a></h6>
+<p>An <code>int</code>. The current position in the operation of indexing folders and files. Always off by 1 (starts from 1)</p>
+<h6 id="-code-total_results--code-" name="-code-total_results--code-"><a href="#-code-total_results--code-"><code>total_results</code></a></h6>
+<p>Also an <code>int</code>. The total number of items that will be indexed.</p>
+<h6 id="-code-grep_result--code-" name="-code-grep_result--code-"><a href="#-code-grep_result--code-"><code>grep_result</code></a></h6>
+<p>A list of <a href="../markment/fs.py@Node"><code>markment.fs.Node</code></a> with each markdown file that was found.</p>
+<h2 id="after-file_indexed" name="after-file_indexed"><a href="#after-file_indexed">after.file_indexed</a></h2>
+<p><code>after.file_indexed.shout(file_info, position, total_results, grep_result)</code></p>
+
+<p>Happens after markment finds a file that contains one or more markdown files.</p>
+<h4 id="arguments" name="arguments"><a href="#arguments">arguments</a></h4><h6 id="-code-file_info--code-" name="-code-file_info--code-"><a href="#-code-file_info--code-"><code>file_info</code></a></h6>
+<p>A dictionary with metadata about the file</p>
+<h6 id="-code-position--code-" name="-code-position--code-"><a href="#-code-position--code-"><code>position</code></a></h6>
+<p>An <code>int</code>. The current position in the operation of indexing files and files. Always off by 1 (starts from 1)</p>
+<h6 id="-code-total_results--code-" name="-code-total_results--code-"><a href="#-code-total_results--code-"><code>total_results</code></a></h6>
+<p>Also an <code>int</code>. The total number of items that will be indexed.</p>
+<h6 id="-code-grep_result--code-" name="-code-grep_result--code-"><a href="#-code-grep_result--code-"><code>grep_result</code></a></h6>
+<p>A list of <a href="../markment/fs.py@Node"><code>markment.fs.Node</code></a> with each markdown file that was found.</p>
+<h2 id="before-file_copied" name="before-file_copied"><a href="#before-file_copied">before.file_copied</a></h2>
+<p><code>before.file_copied.shout(source, destiny, position, total_files_to_copy)</code></p>
+
+<p>Happens right before markment makes a call to <a href="http://docs.python.org/2/library/shutil.html#shutil.copy2"><code>shutil.copy2</code></a></p>
+<h4 id="arguments" name="arguments"><a href="#arguments">arguments</a></h4><h6 id="-code-source--code-" name="-code-source--code-"><a href="#-code-source--code-"><code>source</code></a></h6>
+<p>A string with the source path.</p>
+<h6 id="-code-destiny--code-" name="-code-destiny--code-"><a href="#-code-destiny--code-"><code>destiny</code></a></h6>
+<p>A string with the destination path.</p>
+<h6 id="-code-position--code-" name="-code-position--code-"><a href="#-code-position--code-"><code>position</code></a></h6>
+<p>An <code>int</code>. The current position in the list of files to be copied</p>
+<h6 id="-code-total_files_to_copy--code-" name="-code-total_files_to_copy--code-"><a href="#-code-total_files_to_copy--code-"><code>total_files_to_copy</code></a></h6>
+<p>Also an <code>int</code>. The total number of items that have to be copied.</p>
+<h2 id="after-file_copied" name="after-file_copied"><a href="#after-file_copied">after.file_copied</a></h2>
+<p><code>after.file_copied.shout(source, destiny, position, total_files_to_copy)</code></p>
+
+<p>Happens right after markment calls <a href="http://docs.python.org/2/library/shutil.html#shutil.copy2"><code>shutil.copy2</code></a></p>
+<h4 id="arguments" name="arguments"><a href="#arguments">arguments</a></h4><h6 id="-code-source--code-" name="-code-source--code-"><a href="#-code-source--code-"><code>source</code></a></h6>
+<p>A string with the source path.</p>
+<h6 id="-code-destiny--code-" name="-code-destiny--code-"><a href="#-code-destiny--code-"><code>destiny</code></a></h6>
+<p>A string with the destination path.</p>
+<h6 id="-code-position--code-" name="-code-position--code-"><a href="#-code-position--code-"><code>position</code></a></h6>
+<p>An <code>int</code>. The current position in the list of files to be copied</p>
+<h6 id="-code-total_files_to_copy--code-" name="-code-total_files_to_copy--code-"><a href="#-code-total_files_to_copy--code-"><code>total_files_to_copy</code></a></h6>
+<p>Also an <code>int</code>. The total number of items that have to be copied.</p>
+<h2 id="after-missed_file" name="after-missed_file"><a href="#after-missed_file">after.missed_file</a></h2>
+<p><code>after.missed_file.shout(path)</code></p>
+
+<p>Happens right after markment tried to look for a file that was referenced in a markdown link or image,
+but the file could not be found within the current project.</p>
+<h4 id="arguments" name="arguments"><a href="#arguments">arguments</a></h4><h6 id="-code-path--code-" name="-code-path--code-"><a href="#-code-path--code-"><code>path</code></a></h6><h2 id="before-folder_created" name="before-folder_created"><a href="#before-folder_created">before.folder_created</a></h2><h2 id="theme_file_found" name="theme_file_found"><a href="#theme_file_found">theme_file_found</a></h2><h2 id="project_file_found" name="project_file_found"><a href="#project_file_found">project_file_found</a></h2><h2 id="html_persisted" name="html_persisted"><a href="#html_persisted">html_persisted</a></h2><h2 id="markdown_table" name="markdown_table"><a href="#markdown_table">markdown_table</a></h2><h2 id="markdown_link" name="markdown_link"><a href="#markdown_link">markdown_link</a></h2><h2 id="markdown_image" name="markdown_image"><a href="#markdown_image">markdown_image</a></h2><h2 id="markdown_header" name="markdown_header"><a href="#markdown_header">markdown_header</a></h2><h2 id="markdown_code" name="markdown_code"><a href="#markdown_code">markdown_code</a></h2><h2 id="document_found" name="document_found"><a href="#document_found">document_found</a></h2><h2 id="partially_rendering_markdown" name="partially_rendering_markdown"><a href="#partially_rendering_markdown">partially_rendering_markdown</a></h2><h2 id="rendering_markdown" name="rendering_markdown"><a href="#rendering_markdown">rendering_markdown</a></h2><h2 id="rendering_html" name="rendering_html"><a href="#rendering_html">rendering_html</a></h2><h2 id="more-examples" name="more-examples"><a href="#more-examples">More examples</a></h2>
+<p>Markment uses the event system for printing messages in the console, generating sitemaps and a few other cool things.</p>
+
+<p>You can check out those examples in the <a href="https://github.com/gabrielfalcao/markment/tree/master/markment/plugins">plugins directory</a>.</p>
+</div>
+              <footer>
+                <hr/>
+                <a href="http://github.com/gabrielfalcao/markment">&copy; Markment</a>
+                <a href="http://github.com/gabrielfalcao">gabrielfalcao</a>
+                <a href="https://pypi.python.org/pypi/sphinx_rtd_theme">Original Theme</a>
+              </footer>
+            </div>
+          </div>
+        </section>
+      </div>
+    </body>
+</html>

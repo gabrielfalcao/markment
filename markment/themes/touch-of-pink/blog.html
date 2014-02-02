@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>{{ project.name }}</title>
+    <link rel="shortcut icon" href="{{ static_file('img/favicon.png') }}">
+    <link rel="alternate" type="application/rss+xml" href="{{ static_file('img/favicon.png') }}">
+    <meta name="description" content="{{ project.description }}" />
+    <link rel="stylesheet" href="http://octomarks.io/static/themes/tango.css" type="text/css" media="screen" />
+    <link class="theme-asset" rel="stylesheet" href="{{ static_file('style.css') }}">
+    <style type="text/css">
+    .post, .cover{background: #F2F2F2;}
+    a{color: #EB374B;}
+    a:hover, #header h1 a:hover{color:#05b2c2;}
+    .date p, .shadow{background: #EB374B;}
+    </style>
+  </head>
+
+{% macro render_menu_item(header) -%}
+  <a class="anchor" href="{{ header.anchor }}">{{ header.text|safe }}</a>
+  {% if 'child' in header %}
+    {% for child in header['child'] %}
+      {{ render_menu_item(child) }}{% if not loop.last %},{% endif %}
+    {% endfor %}
+  {% endif %}
+{%- endmacro %}
+
+
+  <body>
+    <div id="wrapper">
+      <div id="header" role="banner">
+	<h1><a href="/">{{ project.name }}</a></h1>
+	<div id="description">
+	  <p>{{ project.description }}</p>
+          <div style="margin: 20px auto; border-top: 4px solid #FEFEFE;border-bottom: 4px solid #FEFEFE;width:680px;padding: 10px 0;background: rgba(100,100,0,.03)">
+            <h4>Chapters</h4>
+            {% for item in index %}
+              {{ render_menu_item(item) }}{% if not loop.last %},{% endif %}
+            {% endfor %}
+          </div>
+
+	</div>
+      </div>
+      <div id="navigation">
+	<div class="wrapper">
+	  <ul class="pages links" role="navigation">
+	    <li><a href="{URL}">{{ project.name }}</a></li>
+	  </ul>
+          <div style="float: right;font-family: Helvetica;Sans-Serif;margin-top: 3px;font-size: 18px;color: #666">
+            version <strong>{{ project.version }}</strong>
+          </div>
+	</div>
+      </div>
+      <div id="content" role="main">
+	<div class="post text">
+	  <div class="content">
+            {{ documentation|safe }}
+	  </div>
+	</div>
+      </div>
+    </div>
+    <div id="footer">
+      <div class="wrapper">
+      {% for item in master_index %}
+        <a class="toc" href="{{ link(item.relative_path) }}">{{ link(item.relative_path) }}</a>
+      {% endfor %}
+	<p class="info-theme" role="contentinfo">Powered by <a href="http://github.com/gabrielfalcao/markment">Markment</a> and designed by <a href="http://kcmr.tumblr.com">Kcmr</a>.</p>
+      </div>
+    </div>
+  </body>
+</html>
