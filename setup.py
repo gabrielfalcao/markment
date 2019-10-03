@@ -32,7 +32,7 @@ def get_packages():
 
 requirements = [
     "Jinja2==2.6",
-    "PyYAML==3.10",
+    "PyYAML==5.1",
     "Pygments==1.6",
     "lxml==3.1.2",
     "misaka==1.0.2",
