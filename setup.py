@@ -37,7 +37,7 @@ requirements = [
     "lxml==3.1.2",
     "misaka==1.0.2",
     "cssselect==0.8",
-    "flask==0.9",
+    "flask==1.0",
     "speakers==0.0.3",
     "couleur==0.5.0",
 ]

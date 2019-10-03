@@ -1,7 +1,7 @@
 bpython==0.11
 cssselect==0.8
 distribute==0.6.31
-Flask==0.9
+Flask==1.0
 ipython==0.13
 Jinja2==2.6
 lxml==3.1.2
