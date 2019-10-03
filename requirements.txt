@@ -14,5 +14,5 @@ PyYAML==3.10
 requests==1.2.2
 speakers==0.0.3
 virtualenv==1.9.1
-Werkzeug==0.8.3
+Werkzeug==0.15.3
 curdling
